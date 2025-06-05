@@ -13,8 +13,7 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class BookServiceImplTest {
@@ -56,11 +55,9 @@ class BookServiceImplTest {
     void shouldThrowBookNotFoundExceptionWhenBookNotFound() {
         UUID id = UUID.randomUUID();
         when(bookRepository.findById(id)).thenReturn(Optional.empty());
-
-
+        
         try {
-            Book result = bookService.getBookById(id);
-
+            bookService.getBookById(id);
             fail("Book found");
         } catch (BookNotFoundException e) {
             assertThat(e).hasMessage("Book not found with id: " + id);
@@ -84,5 +81,15 @@ class BookServiceImplTest {
         bookService.updateBook(book);
 
         verify(bookRepository).save(book);
+    }
+
+    @Test
+    void shouldDeleteBook() {
+        UUID id = UUID.randomUUID();
+        doNothing().when(bookRepository).deleteById(id);
+
+        bookService.deleteBook(id);
+
+        verify(bookRepository).deleteById(id);
     }
 }

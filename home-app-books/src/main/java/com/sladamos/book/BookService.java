@@ -8,4 +8,5 @@ public interface BookService {
     Book getBookById(UUID id) throws BookNotFoundException;
     void createBook(Book book);
     void updateBook(Book book);
+    void deleteBook(UUID id);
 }

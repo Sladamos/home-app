@@ -45,4 +45,55 @@ class BookRepositoryTest {
                 () -> assertThat(foundBook.get().getGenres()).containsExactly("Genre")
         );
     }
+
+    @Test
+    void shouldUpdateBook() {
+        Book book = Book.builder()
+                .id(UUID.randomUUID())
+                .title("Original Title")
+                .isbn("1234567890")
+                .publisher("Publisher")
+                .description("Desc")
+                .pages(100)
+                .coverImage(new byte[]{})
+                .authors(List.of("Author"))
+                .genres(List.of("Genre"))
+                .build();
+
+        bookRepository.save(book);
+
+        book.setTitle("Updated Title");
+        book.setPages(200);
+        bookRepository.save(book);
+
+        Optional<Book> updatedBook = bookRepository.findById(book.getId());
+        assertAll("Updates book",
+                () -> assertThat(updatedBook).isPresent(),
+                () -> assertThat(updatedBook.get().getTitle()).isEqualTo("Updated Title"),
+                () -> assertThat(updatedBook.get().getPages()).isEqualTo(200)
+        );
+    }
+
+    @Test
+    void shouldDeleteBook() {
+        Book book = Book.builder()
+                .id(UUID.randomUUID())
+                .title("To Delete")
+                .isbn("1234567890")
+                .publisher("Publisher")
+                .description("Desc")
+                .pages(100)
+                .coverImage(new byte[]{})
+                .authors(List.of("Author"))
+                .genres(List.of("Genre"))
+                .build();
+
+        bookRepository.save(book);
+        UUID id = book.getId();
+
+        bookRepository.deleteById(id);
+
+        Optional<Book> deleted = bookRepository.findById(id);
+        assertThat(deleted).isNotPresent();
+    }
 }
