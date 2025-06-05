@@ -5,18 +5,23 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.UUID;
 
 @Entity
-@Data
 @Builder
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Book {
 
     @Id
-    private Long id;
+    private UUID id;
 
     @NotBlank(message = "Title cannot be blank")
     private String title;

@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
@@ -112,7 +113,7 @@ class BookValidationTest {
 
     private Book validBook() {
         return Book.builder()
-                .id(1L)
+                .id(UUID.randomUUID())
                 .title("Valid Title")
                 .isbn("1234567890")
                 .publisher("Valid Publisher")
