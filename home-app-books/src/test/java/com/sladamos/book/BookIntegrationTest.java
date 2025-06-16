@@ -114,16 +114,16 @@ class BookIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk());
-        Book updated = bookRepository.findById(id).orElseThrow();
+        Book created = bookRepository.findById(id).orElseThrow();
         assertAll(
-                () -> assertThat(updated.getId()).isEqualTo(id),
-                () -> assertThat(updated.getTitle()).isEqualTo("New Book"),
-                () -> assertThat(updated.getIsbn()).isEqualTo("0987654321"),
-                () -> assertThat(updated.getPublisher()).isEqualTo("New Publisher"),
-                () -> assertThat(updated.getDescription()).isEqualTo("New description"),
-                () -> assertThat(updated.getPages()).isEqualTo(200),
-                () -> assertThat(updated.getAuthors()).containsExactly("New Author"),
-                () -> assertThat(updated.getGenres()).containsExactly("New Genre")
+                () -> assertThat(created.getId()).isEqualTo(id),
+                () -> assertThat(created.getTitle()).isEqualTo("New Book"),
+                () -> assertThat(created.getIsbn()).isEqualTo("0987654321"),
+                () -> assertThat(created.getPublisher()).isEqualTo("New Publisher"),
+                () -> assertThat(created.getDescription()).isEqualTo("New description"),
+                () -> assertThat(created.getPages()).isEqualTo(200),
+                () -> assertThat(created.getAuthors()).containsExactly("New Author"),
+                () -> assertThat(created.getGenres()).containsExactly("New Genre")
         );
     }
 
