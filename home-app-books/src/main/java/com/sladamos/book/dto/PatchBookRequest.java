@@ -1,19 +1,23 @@
 package com.sladamos.book.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class PatchBookRequest {
-    private final String title;
-    private final String isbn;
-    private final String publisher;
-    private final String description;
-    private final Integer pages;
-    private final byte[] coverImage;
-    private final List<String> authors;
-    private final List<String> genres;
+    private String title;
+    private String isbn;
+    private String publisher;
+    private String description;
+    private Integer pages;
+    private byte[] coverImage;
+    private List<String> authors;
+    private List<String> genres;
 }

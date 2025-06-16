@@ -1,6 +1,8 @@
 // plik: src/test/java/com/sladamos/book/BookServiceImplTest.java
 package com.sladamos.book;
 
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -9,10 +11,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -20,6 +24,9 @@ class BookServiceImplTest {
 
     @Mock
     private BookRepository bookRepository;
+
+    @Mock
+    private Validator validator;
 
     @InjectMocks
     private BookServiceImpl bookService;
@@ -36,26 +43,20 @@ class BookServiceImplTest {
     }
 
     @Test
-    void shouldReturnBookById() {
+    void shouldReturnBookById() throws BookNotFoundException {
         UUID id = UUID.randomUUID();
         Book book = new Book();
         when(bookRepository.findById(id)).thenReturn(Optional.of(book));
 
-        try {
-            Book result = bookService.getBookById(id);
-
-            assertThat(result).isEqualTo(book);
-            verify(bookRepository).findById(id);
-        } catch (BookNotFoundException e) {
-            fail("Book not found");
-        }
+        Book result = bookService.getBookById(id);
+        assertThat(result).isEqualTo(book);
+        verify(bookRepository).findById(id);
     }
 
     @Test
     void shouldThrowBookNotFoundExceptionWhenBookNotFound() {
         UUID id = UUID.randomUUID();
         when(bookRepository.findById(id)).thenReturn(Optional.empty());
-        
         try {
             bookService.getBookById(id);
             fail("Book found");
@@ -66,7 +67,7 @@ class BookServiceImplTest {
     }
 
     @Test
-    void shouldCreateBook() {
+    void shouldCreateBook() throws BookValidationException {
         Book book = new Book();
 
         bookService.createBook(book);
@@ -75,7 +76,16 @@ class BookServiceImplTest {
     }
 
     @Test
-    void shouldUpdateBook() {
+    void shouldThrowBookValidationExceptionWhenCreatingNotValidBook() {
+        Book book = Book.builder().isbn("123").build();
+        Set<ConstraintViolation<Book>> violations = Set.of(mock(ConstraintViolation.class));
+        when(validator.validate(book)).thenReturn(violations);
+
+        assertThatThrownBy(() -> bookService.updateBook(book)).isInstanceOf(BookValidationException.class);
+    }
+
+    @Test
+    void shouldUpdateBook() throws BookValidationException {
         Book book = new Book();
 
         bookService.updateBook(book);
@@ -84,12 +94,37 @@ class BookServiceImplTest {
     }
 
     @Test
-    void shouldDeleteBook() {
+    void shouldThrowBookValidationExceptionWhenUpdatingNotValidBook() {
+        Book book = Book.builder().isbn("123").build();
+        Set<ConstraintViolation<Book>> violations = Set.of(mock(ConstraintViolation.class));
+        when(validator.validate(book)).thenReturn(violations);
+
+        assertThatThrownBy(() -> bookService.createBook(book)).isInstanceOf(BookValidationException.class);
+    }
+
+    @Test
+    void shouldDeleteExistingBook() throws BookNotFoundException {
         UUID id = UUID.randomUUID();
-        doNothing().when(bookRepository).deleteById(id);
+        Book book = Book.builder().id(id).build();
+        doNothing().when(bookRepository).delete(book);
+        when(bookRepository.findById(id)).thenReturn(Optional.of(book));
 
         bookService.deleteBook(id);
 
-        verify(bookRepository).deleteById(id);
+        verify(bookRepository).delete(book);
+    }
+
+    @Test
+    void shouldThrowBookNotFoundExceptionWhenDeletingNotExistingBook() {
+        UUID id = UUID.randomUUID();
+        when(bookRepository.findById(id)).thenReturn(Optional.empty());
+
+        try {
+            bookService.deleteBook(id);
+            fail("Book found");
+        } catch (BookNotFoundException e) {
+            assertThat(e).hasMessage("Book not found with id: " + id);
+            verify(bookRepository).findById(id);
+        }
     }
 }

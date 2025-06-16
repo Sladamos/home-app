@@ -25,7 +25,7 @@ class BookValidationTest {
 
     @Test
     void shouldReturnValidationErrorWhenTitleIsBlank() {
-        Book book = validBook();
+        Book book = createValidBook();
         book.setTitle(" ");
 
         Set<ConstraintViolation<Book>> violations = validator.validate(book);
@@ -37,7 +37,7 @@ class BookValidationTest {
 
     @Test
     void shouldReturnValidationErrorWhenIsbnIsInvalid() {
-        Book book = validBook();
+        Book book = createValidBook();
         book.setIsbn("12345");
 
         Set<ConstraintViolation<Book>> violations = validator.validate(book);
@@ -49,7 +49,7 @@ class BookValidationTest {
 
     @Test
     void shouldReturnValidationErrorWhenDescriptionIsTooLong() {
-        Book book = validBook();
+        Book book = createValidBook();
         book.setDescription("a".repeat(2001));
 
         Set<ConstraintViolation<Book>> violations = validator.validate(book);
@@ -61,7 +61,7 @@ class BookValidationTest {
 
     @Test
     void shouldReturnValidationErrorWhenPagesIsNegative() {
-        Book book = validBook();
+        Book book = createValidBook();
         book.setPages(-5);
 
         Set<ConstraintViolation<Book>> violations = validator.validate(book);
@@ -73,7 +73,7 @@ class BookValidationTest {
 
     @Test
     void shouldNotReturnValidationErrorWhenAuthorsListIsEmpty() {
-        Book book = validBook();
+        Book book = createValidBook();
         book.setAuthors(List.of());
 
         Set<ConstraintViolation<Book>> violations = validator.validate(book);
@@ -83,7 +83,7 @@ class BookValidationTest {
 
     @Test
     void shouldNotReturnValidationErrorWhenGenresListIsEmpty() {
-        Book book = validBook();
+        Book book = createValidBook();
         book.setGenres(List.of());
 
         Set<ConstraintViolation<Book>> violations = validator.validate(book);
@@ -93,7 +93,7 @@ class BookValidationTest {
 
     @Test
     void shouldReturnValidationErrorWhenAuthorIsBlank() {
-        Book book = validBook();
+        Book book = createValidBook();
         book.setAuthors(List.of(" "));
 
         Set<ConstraintViolation<Book>> violations = validator.validate(book);
@@ -103,7 +103,7 @@ class BookValidationTest {
 
     @Test
     void shouldReturnValidationErrorWhenGenreIsBlank() {
-        Book book = validBook();
+        Book book = createValidBook();
         book.setGenres(List.of(" "));
 
         Set<ConstraintViolation<Book>> violations = validator.validate(book);
@@ -111,7 +111,7 @@ class BookValidationTest {
         assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().contains("genres"));
     }
 
-    private Book validBook() {
+    private Book createValidBook() {
         return Book.builder()
                 .id(UUID.randomUUID())
                 .title("Valid Title")

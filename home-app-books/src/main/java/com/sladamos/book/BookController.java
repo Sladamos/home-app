@@ -13,7 +13,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.UUID;
 
-@RestController("/api/books")
+@RestController
+@RequestMapping("/api/books")
 @RequiredArgsConstructor
 public class BookController {
 
@@ -28,22 +29,32 @@ public class BookController {
     }
 
     @PutMapping("/{id}")
-    public void putBook(@PathVariable UUID id, PutBookRequest request) {
-        service.createBook(requestToBook.apply(id, request));
+    public void putBook(@PathVariable("id") UUID id, @RequestBody PutBookRequest request) {
+        try {
+            service.createBook(requestToBook.apply(id, request));
+        } catch (BookValidationException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PatchMapping("/{id}")
-    public void patchBook(@PathVariable UUID id, PatchBookRequest request) {
+    public void patchBook(@PathVariable("id") UUID id, @RequestBody PatchBookRequest request) {
         try {
             Book book = service.getBookById(id);
             service.updateBook(requestToUpdateBook.apply(book, request));
         } catch (BookNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        } catch (BookValidationException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
     }
 
     @DeleteMapping("/{id}")
-    public void deleteBook(@PathVariable UUID id) {
-        service.deleteBook(id);
+    public void deleteBook(@PathVariable("id") UUID id) {
+        try {
+            service.deleteBook(id);
+        } catch (BookNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
     }
 }

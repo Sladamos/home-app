@@ -38,7 +38,7 @@ class BookControllerTest {
     private BookController controller;
 
     @Test
-    void shouldReturnBooksResponse() {
+    void shouldReturnBooksProperly() {
         Book book = Book.builder().id(UUID.randomUUID()).title("A").build();
         List<Book> books = List.of(book);
         GetBooksResponse response = GetBooksResponse.builder()
@@ -55,7 +55,7 @@ class BookControllerTest {
     }
 
     @Test
-    void shouldPutBook() {
+    void shouldPutBookProperly() throws BookValidationException {
         UUID id = UUID.randomUUID();
         PutBookRequest req = PutBookRequest.builder().title("T").build();
         Book book = Book.builder().id(id).title("T").build();
@@ -68,7 +68,7 @@ class BookControllerTest {
     }
 
     @Test
-    void shouldPatchBook() throws BookNotFoundException {
+    void shouldPatchExistingBook() throws BookNotFoundException, BookValidationException {
         UUID id = UUID.randomUUID();
         PatchBookRequest req = PatchBookRequest.builder().title("T2").build();
         Book book = Book.builder().id(id).title("T1").build();
@@ -85,7 +85,7 @@ class BookControllerTest {
     }
 
     @Test
-    void shouldDeleteBook() {
+    void shouldDeleteExistingBook() throws BookNotFoundException {
         UUID id = UUID.randomUUID();
 
         doNothing().when(service).deleteBook(id);
@@ -102,6 +102,16 @@ class BookControllerTest {
         when(service.getBookById(id)).thenThrow(new BookNotFoundException("not found"));
 
         assertThatThrownBy(() -> controller.patchBook(id, req))
+                .isInstanceOf(org.springframework.web.server.ResponseStatusException.class)
+                .hasMessageContaining("404");
+    }
+
+    @Test
+    void shouldThrowResponseStatusExceptionWhenDeletedBookNotFound() throws BookNotFoundException {
+        UUID id = UUID.randomUUID();
+        doThrow(new BookNotFoundException("not found")).when(service).deleteBook(id);
+
+        assertThatThrownBy(() -> controller.deleteBook(id))
                 .isInstanceOf(org.springframework.web.server.ResponseStatusException.class)
                 .hasMessageContaining("404");
     }

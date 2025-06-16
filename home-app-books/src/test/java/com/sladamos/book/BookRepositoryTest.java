@@ -47,7 +47,7 @@ class BookRepositoryTest {
     }
 
     @Test
-    void shouldUpdateBook() {
+    void shouldUpdateExistingBook() {
         Book book = Book.builder()
                 .id(UUID.randomUUID())
                 .title("Original Title")
@@ -75,7 +75,7 @@ class BookRepositoryTest {
     }
 
     @Test
-    void shouldDeleteBook() {
+    void shouldDeleteExistingBook() {
         Book book = Book.builder()
                 .id(UUID.randomUUID())
                 .title("To Delete")
