@@ -7,6 +7,8 @@ import jakarta.validation.ValidatorFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -111,6 +113,26 @@ class BookValidationTest {
         assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().contains("genres"));
     }
 
+    @Test
+    void shouldReturnValidationErrorWhenRatingIsLowerThanOne() {
+        Book book = createValidBook();
+        book.setRating(0);
+
+        Set<ConstraintViolation<Book>> violations = validator.validate(book);
+
+        assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().contains("rating"));
+    }
+
+    @Test
+    void shouldReturnValidationErrorWhenRatingExceedsFive() {
+        Book book = createValidBook();
+        book.setRating(6);
+
+        Set<ConstraintViolation<Book>> violations = validator.validate(book);
+
+        assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().contains("rating"));
+    }
+
     private Book createValidBook() {
         return Book.builder()
                 .id(UUID.randomUUID())
@@ -120,6 +142,11 @@ class BookValidationTest {
                 .description("This is a valid description.")
                 .pages(100)
                 .coverImage(new byte[]{})
+                .rating(3)
+                .creationDate(Instant.now())
+                .modificationDate(Instant.now())
+                .readDate(LocalDate.now())
+                .status(BookStatus.AVAILABLE)
                 .authors(List.of("Author One", "Author Two"))
                 .genres(List.of("Genre One", "Genre Two"))
                 .build();

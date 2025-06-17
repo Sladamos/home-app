@@ -5,5 +5,5 @@ public enum BookStatus {
     WANT_TO_READ,
     CURRENTLY_READING,
     FINISHED_READING,
-    BORROWED,
+    BORROWED, AVAILABLE,
 }

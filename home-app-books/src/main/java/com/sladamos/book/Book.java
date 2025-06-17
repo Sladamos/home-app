@@ -38,12 +38,14 @@ public class Book {
     @PositiveOrZero(message = "Number of pages cannot be negative")
     private Integer pages;
 
-    @Min(1)
-    @Max(5)
+    @Min(value = 1, message = "Rating must be at least 1")
+    @Max(value = 5, message = "Rating cannot exceed 5")
     private Integer rating;
 
     @Lob
     private byte[] coverImage;
+
+    private boolean isFavorite;
 
     private Instant creationDate;
 
