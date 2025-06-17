@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Data
@@ -16,8 +17,13 @@ public class PutBookRequest {
     private String isbn;
     private String publisher;
     private String description;
+    private String borrowedTo;
+    private String status;
     private Integer pages;
+    private Integer rating;
     private byte[] coverImage;
+    private boolean isFavorite;
+    private LocalDate readDate;
     private List<String> authors;
     private List<String> genres;
 }

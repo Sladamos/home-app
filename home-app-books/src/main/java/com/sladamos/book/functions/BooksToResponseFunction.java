@@ -5,6 +5,7 @@ import com.sladamos.book.dto.GetBooksResponse;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 
 @Component
@@ -24,6 +25,13 @@ public class BooksToResponseFunction implements Function<List<Book>, GetBooksRes
                                         .coverImage(book.getCoverImage())
                                         .description(book.getDescription())
                                         .genres(book.getGenres())
+                                        .borrowedTo(book.getBorrowedTo())
+                                        .rating(book.getRating())
+                                        .isFavorite(book.isFavorite())
+                                        .creationDate(book.getCreationDate())
+                                        .modificationDate(book.getModificationDate())
+                                        .readDate(book.getReadDate())
+                                        .status(Optional.ofNullable(book.getStatus()).map(Enum::name).orElse(null))
                                         .build())
                                 .toList()
                 )

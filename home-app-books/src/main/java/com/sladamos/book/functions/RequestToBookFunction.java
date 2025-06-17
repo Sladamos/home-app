@@ -1,9 +1,12 @@
 package com.sladamos.book.functions;
 
 import com.sladamos.book.Book;
+import com.sladamos.book.BookStatus;
 import com.sladamos.book.dto.PutBookRequest;
 import org.springframework.stereotype.Component;
 
+import java.time.Instant;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.function.BiFunction;
 
@@ -21,6 +24,13 @@ public class RequestToBookFunction implements BiFunction<UUID, PutBookRequest, B
                 .coverImage(request.getCoverImage())
                 .authors(request.getAuthors())
                 .genres(request.getGenres())
+                .borrowedTo(request.getBorrowedTo())
+                .rating(request.getRating())
+                .isFavorite(request.isFavorite())
+                .creationDate(Instant.now())
+                .modificationDate(Instant.now())
+                .readDate(request.getReadDate())
+                .status(Optional.ofNullable(request.getStatus()).map(BookStatus::valueOf).orElse(null))
                 .build();
     }
 }
