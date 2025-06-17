@@ -1,4 +1,3 @@
-// plik: src/test/java/com/sladamos/book/BookServiceImplTest.java
 package com.sladamos.book;
 
 import jakarta.validation.ConstraintViolation;

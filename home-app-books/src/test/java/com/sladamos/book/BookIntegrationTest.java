@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -50,6 +51,14 @@ class BookIntegrationTest {
                 .pages(100)
                 .authors(List.of("Author1"))
                 .genres(List.of("Genre1"))
+                .borrowedTo("Jan Kowalski")
+                .status(BookStatus.AVAILABLE)
+                .rating(5)
+                .isFavorite(true)
+                .readDate(LocalDate.of(2023, 1, 1))
+                .coverImage("testImage".getBytes())
+                .creationDate(java.time.Instant.parse("2023-01-01T10:00:00Z"))
+                .modificationDate(java.time.Instant.parse("2023-01-02T10:00:00Z"))
                 .build();
         bookRepository.save(existingBook);
     }
@@ -109,6 +118,12 @@ class BookIntegrationTest {
                 .pages(200)
                 .authors(List.of("New Author"))
                 .genres(List.of("New Genre"))
+                .borrowedTo("Adam Nowak")
+                .status("BORROWED")
+                .rating(4)
+                .isFavorite(true)
+                .readDate(LocalDate.of(2024, 3, 3))
+                .coverImage("newImage".getBytes())
                 .build();
         mockMvc.perform(put("/api/books/" + id)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -123,7 +138,13 @@ class BookIntegrationTest {
                 () -> assertThat(created.getDescription()).isEqualTo("New description"),
                 () -> assertThat(created.getPages()).isEqualTo(200),
                 () -> assertThat(created.getAuthors()).containsExactly("New Author"),
-                () -> assertThat(created.getGenres()).containsExactly("New Genre")
+                () -> assertThat(created.getGenres()).containsExactly("New Genre"),
+                () -> assertThat(created.getBorrowedTo()).isEqualTo("Adam Nowak"),
+                () -> assertThat(created.getStatus()).isEqualTo(BookStatus.BORROWED),
+                () -> assertThat(created.getRating()).isEqualTo(4),
+                () -> assertThat(created.isFavorite()).isTrue(),
+                () -> assertThat(created.getReadDate()).isEqualTo(LocalDate.of(2024, 3, 3)),
+                () -> assertThat(created.getCoverImage()).isEqualTo("newImage".getBytes())
         );
     }
 
@@ -138,6 +159,12 @@ class BookIntegrationTest {
                 .pages(200)
                 .authors(List.of("New Author"))
                 .genres(List.of("New Genre"))
+                .borrowedTo("Adam Nowak")
+                .status("BORROWED")
+                .rating(4)
+                .isFavorite(false)
+                .readDate(LocalDate.of(2024, 4, 4))
+                .coverImage("replaceImage".getBytes())
                 .build();
         mockMvc.perform(put("/api/books/" + existingId)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -152,7 +179,13 @@ class BookIntegrationTest {
                 () -> assertThat(updated.getDescription()).isEqualTo("New description"),
                 () -> assertThat(updated.getPages()).isEqualTo(200),
                 () -> assertThat(updated.getAuthors()).containsExactly("New Author"),
-                () -> assertThat(updated.getGenres()).containsExactly("New Genre")
+                () -> assertThat(updated.getGenres()).containsExactly("New Genre"),
+                () -> assertThat(updated.getBorrowedTo()).isEqualTo("Adam Nowak"),
+                () -> assertThat(updated.getStatus()).isEqualTo(BookStatus.BORROWED),
+                () -> assertThat(updated.getRating()).isEqualTo(4),
+                () -> assertThat(updated.isFavorite()).isFalse(),
+                () -> assertThat(updated.getReadDate()).isEqualTo(LocalDate.of(2024, 4, 4)),
+                () -> assertThat(updated.getCoverImage()).isEqualTo("replaceImage".getBytes())
         );
     }
 
