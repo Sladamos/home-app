@@ -1,0 +1,15 @@
+.books--wrapper {
+    -fx-background-color: linear-gradient(
+            from 0% 0% to 100% 100%,
+            #6000a2,
+            #5a009a
+    );
+}
+
+.books--container--wrapper {
+    -fx-background-color: transparent;
+}
+
+.books--container--wrapper > .viewport {
+    -fx-background-color: transparent;
+}

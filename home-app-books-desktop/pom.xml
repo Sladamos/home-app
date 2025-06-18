@@ -83,7 +83,7 @@
           <execution>
             <id>default-cli</id>
             <configuration>
-              <mainClass>com.sladamos.homeappbooksdesktop.BooksApp</mainClass>
+              <mainClass>com.sladamos.book.app.BooksApp</mainClass>
               <launcher>app</launcher>
               <jlinkZipName>app</jlinkZipName>
               <jlinkImageName>app</jlinkImageName>

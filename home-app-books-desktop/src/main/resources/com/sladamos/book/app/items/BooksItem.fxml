@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<HBox spacing="15.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/11.0.14-internal"
+      fx:controller="com.sladamos.book.app.items.BookItemController"
+      styleClass="book-item">
+    <VBox>
+        <Label fx:id="titleLabel" styleClass="book-title" />
+        <Label fx:id="isbnLabel" />
+        <Label fx:id="descriptionLabel" />
+    </VBox>
+    <VBox>
+        <Label fx:id="publisherLabel" />
+        <Label fx:id="borrowedToLabel" />
+        <Label fx:id="pagesLabel" />
+    </VBox>
+    <VBox>
+        <Label fx:id="ratingLabel" />
+        <Label fx:id="favoriteLabel" />
+        <Label fx:id="statusLabel" />
+        <Label fx:id="authorsLabel" />
+        <Label fx:id="genresLabel" />
+    </VBox>
+   <stylesheets>
+      <URL value="@books-item.css" />
+      <URL value="@books-common.css" />
+   </stylesheets>
+</HBox>

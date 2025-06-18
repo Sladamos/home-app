@@ -1,4 +1,4 @@
-package com.sladamos.homeappbooksdesktop;
+package com.sladamos.book.app;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -19,9 +19,10 @@ public class BooksApp extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("BooksModule.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("items/BooksItems.fxml"));
         loader.setControllerFactory(context::getBean);
         Scene scene = new Scene(loader.load());
+        stage.setTitle("Bookcase application");
         stage.setScene(scene);
         stage.show();
     }

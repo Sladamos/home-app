@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane styleClass="books--wrapper" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sladamos.book.app.items.BooksItemsController">
+   <padding>
+      <Insets bottom="20.0" left="30.0" right="30.0" top="20.0" />
+   </padding>
+   <top>
+     <HBox BorderPane.alignment="CENTER">
+       <BorderPane.margin>
+         <Insets bottom="20.0" />
+       </BorderPane.margin>
+       <Label text="Bookcase">
+         <font>
+           <Font name="Segoe UI Black Italic" size="36.0" />
+         </font>
+       </Label>
+     </HBox>
+   </top>
+   <center>
+     <VBox BorderPane.alignment="CENTER">
+       <ScrollPane fitToWidth="true" prefWidth="760.0" styleClass="books--container--wrapper">
+         <VBox fx:id="booksContainer" spacing="10" />
+       </ScrollPane>
+     </VBox>
+   </center>
+   <stylesheets>
+      <URL value="@books-items.css" />
+      <URL value="@books-common.css" />
+   </stylesheets>
+</BorderPane>
