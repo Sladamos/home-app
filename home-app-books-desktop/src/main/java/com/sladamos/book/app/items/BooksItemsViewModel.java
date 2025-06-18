@@ -1,6 +1,7 @@
 package com.sladamos.book.app.items;
 
 import com.sladamos.book.BookService;
+import jakarta.transaction.Transactional;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import lombok.Getter;
@@ -16,6 +17,7 @@ public class BooksItemsViewModel {
     @Getter
     private final ObservableList<BookItemViewModel> books = FXCollections.observableArrayList();
 
+    @Transactional
     public void loadBooks() {
         books.clear();
         bookService.getAllBooks().stream()

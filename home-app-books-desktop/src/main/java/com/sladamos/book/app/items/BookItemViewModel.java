@@ -31,7 +31,7 @@ public class BookItemViewModel {
         rating.set(Optional.ofNullable(book.getRating()).orElse(0));
         favorite.set(book.isFavorite());
         status.set(book.getStatus() != null ? book.getStatus().name() : "");
-        //authors.set(String.join(", ", book.getAuthors()));
-        //genres.set(String.join(", ", book.getGenres()));
+        authors.set(String.join(", ", book.getAuthors()));
+        genres.set(String.join(", ", book.getGenres()));
     }
 }
