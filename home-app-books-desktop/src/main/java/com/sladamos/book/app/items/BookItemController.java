@@ -2,6 +2,8 @@ package com.sladamos.book.app.items;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
+import javafx.scene.text.Text;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -14,7 +16,7 @@ public class BookItemController {
     @FXML
     private Label isbnLabel;
     @FXML
-    private Label descriptionLabel;
+    private Text descriptionText;
     @FXML
     private Label publisherLabel;
     @FXML
@@ -31,12 +33,14 @@ public class BookItemController {
     private Label authorsLabel;
     @FXML
     private Label genresLabel;
+    @FXML
+    private ImageView coverImageView;
 
     @FXML
     public void initialize() {
         titleLabel.textProperty().bind(viewModel.getTitle());
         isbnLabel.textProperty().bind(viewModel.getIsbn());
-        descriptionLabel.textProperty().bind(viewModel.getDescription());
+        descriptionText.textProperty().bind(viewModel.getDescription());
         publisherLabel.textProperty().bind(viewModel.getPublisher());
         borrowedToLabel.textProperty().bind(viewModel.getBorrowedTo());
         pagesLabel.textProperty().bind(viewModel.getPages().asString());
@@ -45,5 +49,6 @@ public class BookItemController {
         statusLabel.textProperty().bind(viewModel.getStatus());
         authorsLabel.textProperty().bind(viewModel.getAuthors());
         genresLabel.textProperty().bind(viewModel.getGenres());
+        coverImageView.imageProperty().bind(viewModel.getCoverImage());
     }
 }

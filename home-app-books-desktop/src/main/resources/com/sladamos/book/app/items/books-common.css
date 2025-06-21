@@ -1,3 +1,7 @@
 .label {
     -fx-text-fill: #efefef;
 }
+
+Text {
+    -fx-fill: #efefef;
+}

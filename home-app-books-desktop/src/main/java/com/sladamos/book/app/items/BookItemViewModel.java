@@ -2,8 +2,10 @@ package com.sladamos.book.app.items;
 
 import com.sladamos.book.Book;
 import javafx.beans.property.*;
+import javafx.scene.image.Image;
 import lombok.Getter;
 
+import java.io.ByteArrayInputStream;
 import java.util.Optional;
 
 @Getter
@@ -20,6 +22,7 @@ public class BookItemViewModel {
     private final StringProperty status = new SimpleStringProperty();
     private final StringProperty authors = new SimpleStringProperty();
     private final StringProperty genres = new SimpleStringProperty();
+    private final ObjectProperty<Image> coverImage = new SimpleObjectProperty<>();
 
     public BookItemViewModel(Book book) {
         title.set(book.getTitle());
@@ -33,5 +36,8 @@ public class BookItemViewModel {
         status.set(book.getStatus() != null ? book.getStatus().name() : "");
         authors.set(String.join(", ", book.getAuthors()));
         genres.set(String.join(", ", book.getGenres()));
+        if (book.getCoverImage() != null) {
+            coverImage.set(new Image(new ByteArrayInputStream(book.getCoverImage())));
+        }
     }
 }

@@ -1,31 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.net.*?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<HBox spacing="15.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/11.0.14-internal"
-      fx:controller="com.sladamos.book.app.items.BookItemController"
-      styleClass="book-item">
-    <VBox>
-        <Label fx:id="titleLabel" styleClass="book-title" />
-        <Label fx:id="isbnLabel" />
-        <Label fx:id="descriptionLabel" />
-    </VBox>
-    <VBox>
-        <Label fx:id="publisherLabel" />
-        <Label fx:id="borrowedToLabel" />
-        <Label fx:id="pagesLabel" />
-    </VBox>
-    <VBox>
-        <Label fx:id="ratingLabel" />
-        <Label fx:id="favoriteLabel" />
-        <Label fx:id="statusLabel" />
-        <Label fx:id="authorsLabel" />
-        <Label fx:id="genresLabel" />
-    </VBox>
-   <stylesheets>
-      <URL value="@books-item.css" />
-      <URL value="@books-common.css" />
-   </stylesheets>
-</HBox>
+<VBox xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sladamos.book.app.items.BookItemController">
+    <Label fx:id="titleLabel" styleClass="book--title" text="Author" />
+    <HBox spacing="30.0" styleClass="book--item">
+        <ImageView fx:id="coverImageView" fitHeight="300.0" fitWidth="200.0" preserveRatio="true" />
+        <VBox>
+            <Text fx:id="descriptionText" textAlignment="JUSTIFY" wrappingWidth="300.0" />
+            <Label fx:id="isbnLabel" />
+            <Label fx:id="publisherLabel" />
+            <Label fx:id="borrowedToLabel" />
+            <Label fx:id="pagesLabel" />
+            <Label fx:id="ratingLabel" />
+            <Label fx:id="favoriteLabel" />
+            <Label fx:id="statusLabel" />
+            <Label fx:id="authorsLabel" />
+            <Label fx:id="genresLabel" />
+        </VBox>
+       <padding>
+          <Insets bottom="50.0" left="50.0" right="50.0" top="20.0" />
+       </padding>
+    </HBox>
+    <stylesheets>
+        <URL value="@books-common.css" />
+        <URL value="@books-item.css" />
+    </stylesheets>
+</VBox>
