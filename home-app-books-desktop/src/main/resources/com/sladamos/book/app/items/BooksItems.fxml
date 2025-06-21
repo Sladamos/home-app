@@ -1,36 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.net.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
+<?import java.net.*?>
 
-<BorderPane prefHeight="675.0" prefWidth="1200.0" styleClass="books--wrapper" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sladamos.book.app.items.BooksItemsController">
-   <padding>
-      <Insets bottom="20.0" left="30.0" right="30.0" top="20.0" />
-   </padding>
-   <top>
-     <HBox BorderPane.alignment="CENTER">
-       <BorderPane.margin>
-         <Insets bottom="20.0" />
-       </BorderPane.margin>
-       <Label text="Bookcase">
-         <font>
-           <Font name="Segoe UI Black Italic" size="36.0" />
-         </font>
-       </Label>
-     </HBox>
-   </top>
-   <center>
-     <VBox alignment="CENTER" BorderPane.alignment="CENTER">
-       <ScrollPane fitToWidth="true" maxWidth="800.0" styleClass="books--container--wrapper">
-         <VBox fx:id="booksContainer" spacing="40" />
-       </ScrollPane>
-     </VBox>
-   </center>
-   <stylesheets>
-      <URL value="@books-items.css" />
-      <URL value="@books-common.css" />
-   </stylesheets>
+<BorderPane xmlns="http://javafx.com/javafx/11.0.14-internal"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.sladamos.book.app.items.BooksItemsController"
+            prefHeight="675.0" prefWidth="1200.0"
+            VBox.vgrow="ALWAYS"
+            styleClass="books--wrapper">
+    <padding>
+        <Insets bottom="20.0" left="30.0" right="30.0" top="20.0" />
+    </padding>
+    <top>
+        <HBox BorderPane.alignment="CENTER">
+            <BorderPane.margin>
+                <Insets bottom="20.0" />
+            </BorderPane.margin>
+            <Label text="Bookcase">
+                <font>
+                    <Font name="Segoe UI Black Italic" size="36.0" />
+                </font>
+            </Label>
+        </HBox>
+    </top>
+    <center>
+        <VBox alignment="CENTER" BorderPane.alignment="CENTER">
+            <ScrollPane fitToWidth="true" maxWidth="800.0" styleClass="books--container--wrapper">
+                <VBox fx:id="booksContainer" spacing="40"/>
+                <padding>
+                    <Insets bottom="16.0" right="16.0"/>
+                </padding>
+            </ScrollPane>
+        </VBox>
+    </center>
+    <stylesheets>
+        <URL value="@books-items.css"/>
+        <URL value="@books-common.css"/>
+    </stylesheets>
 </BorderPane>

@@ -5,27 +5,49 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.shape.*?>
 
 <VBox xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sladamos.book.app.items.BookItemController">
-    <Label fx:id="titleLabel" styleClass="book--title" text="Author" />
-    <HBox spacing="30.0" styleClass="book--item">
+    <Label fx:id="titleLabel" styleClass="book--title" text="Author">
+      <VBox.margin>
+         <Insets left="25.0" />
+      </VBox.margin>
+    </Label>
+    <HBox spacing="15.0" styleClass="book--item">
         <ImageView fx:id="coverImageView" fitHeight="300.0" fitWidth="200.0" preserveRatio="true" />
-        <VBox>
-            <Text fx:id="descriptionText" textAlignment="JUSTIFY" wrappingWidth="300.0" />
-            <Label fx:id="isbnLabel" />
-            <Label fx:id="publisherLabel" />
-            <Label fx:id="borrowedToLabel" />
-            <Label fx:id="pagesLabel" />
-            <Label fx:id="ratingLabel" />
-            <Label fx:id="favoriteLabel" />
-            <Label fx:id="statusLabel" />
-            <Label fx:id="authorsLabel" />
-            <Label fx:id="genresLabel" />
+        <VBox spacing="20.0">
+            <VBox>
+            <HBox alignment="CENTER_LEFT" spacing="5">
+                <Circle fill="white" radius="3" />
+                <Label fx:id="authorsLabel" styleClass="book--detail" text="Title" wrapText="true" />
+            </HBox>
+            <HBox alignment="CENTER_LEFT" spacing="5">
+                <Circle fill="white" radius="3" />
+                <Label fx:id="genresLabel" styleClass="book--detail" text="Genre" wrapText="true" />
+            </HBox>
+            <HBox alignment="CENTER_LEFT" spacing="5">
+                <Circle fill="white" radius="3" />
+                <Label fx:id="publisherLabel" styleClass="book--detail" text="Publisher" wrapText="true" />
+            </HBox>
+            <HBox alignment="CENTER_LEFT" spacing="5">
+                <Circle fill="white" radius="3" />
+                <Label fx:id="pagesLabel" styleClass="book--detail" text="Pages" wrapText="true" />
+            </HBox>
+            <HBox alignment="CENTER_LEFT" spacing="5">
+                <Circle fill="white" radius="3" />
+                <Label fx:id="ratingLabel" styleClass="book--detail" text="Rating" wrapText="true" />
+            </HBox>
+            <HBox alignment="CENTER_LEFT" spacing="5">
+                <Circle fill="white" radius="3" />
+                <Label fx:id="statusLabel" styleClass="book--detail" text="Status" wrapText="true" />
+            </HBox>
         </VBox>
-       <padding>
-          <Insets bottom="50.0" left="50.0" right="50.0" top="20.0" />
-       </padding>
+
+            <Label fx:id="descriptionLabel" styleClass="book--description" textAlignment="JUSTIFY" wrapText="true" />
+        </VBox>
+        <padding>
+          <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+        </padding>
     </HBox>
     <stylesheets>
         <URL value="@books-common.css" />

@@ -11,6 +11,8 @@
 
 	<modules>
 		<module>home-app-books</module>
+		<module>home-app-books-desktop</module>
+		<module>home-app-desktop</module>
 	</modules>
 
 	<properties>
