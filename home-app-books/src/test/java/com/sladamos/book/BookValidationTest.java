@@ -52,13 +52,13 @@ class BookValidationTest {
     @Test
     void shouldReturnValidationErrorWhenDescriptionIsTooLong() {
         Book book = createValidBook();
-        book.setDescription("a".repeat(2001));
+        book.setDescription("a".repeat(301));
 
         Set<ConstraintViolation<Book>> violations = validator.validate(book);
 
         assertThat(violations)
                 .anyMatch(v -> v.getPropertyPath().toString().equals("description")
-                        && v.getMessage().contains("cannot exceed 2000 characters"));
+                        && v.getMessage().contains("cannot exceed 300 characters"));
     }
 
     @Test
@@ -146,7 +146,7 @@ class BookValidationTest {
                 .creationDate(Instant.now())
                 .modificationDate(Instant.now())
                 .readDate(LocalDate.now())
-                .status(BookStatus.AVAILABLE)
+                .status(BookStatus.ON_SHELF)
                 .authors(List.of("Author One", "Author Two"))
                 .genres(List.of("Genre One", "Genre Two"))
                 .build();

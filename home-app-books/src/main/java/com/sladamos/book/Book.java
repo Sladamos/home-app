@@ -28,7 +28,7 @@ public class Book {
     @Pattern(regexp = "\\d{10}|\\d{13}", message = "ISBN must have 10 or 13 digits")
     private String isbn;
 
-    @Size(max = 2000, message = "Description cannot exceed 2000 characters")
+    @Size(max = 300, message = "Description cannot exceed 300 characters")
     private String description;
 
     private String publisher;

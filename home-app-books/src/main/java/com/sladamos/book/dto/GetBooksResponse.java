@@ -25,13 +25,13 @@ public class GetBooksResponse {
         private String status;
         private Integer pages;
         private Integer rating;
-        private byte[] coverImage;
         private boolean isFavorite;
         private Instant creationDate;
         private Instant modificationDate;
         private LocalDate readDate;
         private List<String> authors;
         private List<String> genres;
+        private byte[] coverImage;
     }
 
     @Singular

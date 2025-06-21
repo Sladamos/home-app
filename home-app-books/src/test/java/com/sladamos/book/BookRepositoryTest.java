@@ -31,7 +31,7 @@ class BookRepositoryTest {
                 .coverImage(new byte[]{1, 2, 3})
                 .authors(List.of("Author"))
                 .genres(List.of("Genre"))
-                .status(BookStatus.AVAILABLE)
+                .status(BookStatus.ON_SHELF)
                 .readDate(LocalDate.of(2000, 1, 1))
                 .creationDate(instantNow)
                 .modificationDate(instantNow)
@@ -46,7 +46,7 @@ class BookRepositoryTest {
                 () -> assertThat(foundBook.get().getIsbn()).isEqualTo("1234567890"),
                 () -> assertThat(foundBook.get().getDescription()).isEqualTo("Test description"),
                 () -> assertThat(foundBook.get().getCoverImage()).isEqualTo(new byte[]{1, 2, 3}),
-                () -> assertThat(foundBook.get().getStatus()).isEqualTo(BookStatus.AVAILABLE),
+                () -> assertThat(foundBook.get().getStatus()).isEqualTo(BookStatus.ON_SHELF),
                 () -> assertThat(foundBook.get().getReadDate()).isEqualTo(LocalDate.of(2000, 1, 1)),
                 () -> assertThat(foundBook.get().getCreationDate()).isEqualTo(instantNow),
                 () -> assertThat(foundBook.get().getModificationDate()).isEqualTo(instantNow),

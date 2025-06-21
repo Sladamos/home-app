@@ -52,7 +52,7 @@ class BookIntegrationTest {
                 .authors(List.of("Author1"))
                 .genres(List.of("Genre1"))
                 .borrowedTo("Jan Kowalski")
-                .status(BookStatus.AVAILABLE)
+                .status(BookStatus.ON_SHELF)
                 .rating(5)
                 .isFavorite(true)
                 .readDate(LocalDate.of(2023, 1, 1))
