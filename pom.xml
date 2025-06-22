@@ -23,10 +23,11 @@
 		<assertj.version>3.25.3</assertj.version>
 		<mockito.version>5.12.0</mockito.version>
 		<javafx.version>21</javafx.version>
-		<controlsfx.version>11.2.1</controlsfx.version>
+		<controlsfx.version>11.2.2</controlsfx.version>
 		<validatorfx.version>0.5.0</validatorfx.version>
 		<ikonli.version>12.3.1</ikonli.version>
 		<tilesfx.version>21.0.3</tilesfx.version>
+		<jna.version>5.13.0</jna.version>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -123,6 +124,16 @@
 				<groupId>eu.hansolo</groupId>
 				<artifactId>tilesfx</artifactId>
 				<version>${tilesfx.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>net.java.dev.jna</groupId>
+				<artifactId>jna</artifactId>
+				<version>${jna.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>net.java.dev.jna</groupId>
+				<artifactId>jna-platform</artifactId>
+				<version>${jna.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
