@@ -24,7 +24,7 @@ public class RequestToUpdateBookFunction implements BiFunction<Book, PatchBookRe
                 .coverImage(Optional.ofNullable(patchBookRequest.getCoverImage()).orElse(entity.getCoverImage()))
                 .authors(Optional.ofNullable(patchBookRequest.getAuthors()).orElse(entity.getAuthors()))
                 .genres(Optional.ofNullable(patchBookRequest.getGenres()).orElse(entity.getGenres()))
-                .borrowedTo(Optional.ofNullable(patchBookRequest.getBorrowedTo()).orElse(entity.getBorrowedTo()))
+                .lentTo(Optional.ofNullable(patchBookRequest.getLentTo()).orElse(entity.getLentTo()))
                 .rating(Optional.ofNullable(patchBookRequest.getRating()).orElse(entity.getRating()))
                 .isFavorite(Optional.ofNullable(patchBookRequest.getIsFavorite()).orElse(entity.isFavorite()))
                 .creationDate(entity.getCreationDate())

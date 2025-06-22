@@ -20,7 +20,7 @@
             <BorderPane.margin>
                 <Insets bottom="20.0" />
             </BorderPane.margin>
-            <Label text="Bookcase">
+            <Label fx:id="titleLabel">
                 <font>
                     <Font name="Segoe UI Black Italic" size="36.0" />
                 </font>

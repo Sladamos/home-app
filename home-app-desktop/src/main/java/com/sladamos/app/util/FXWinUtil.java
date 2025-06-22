@@ -23,6 +23,15 @@ public class FXWinUtil {
         int pid = Kernel32.INSTANCE.GetCurrentProcessId();
         WinDef.HWND[] found = new WinDef.HWND[1];
 
+        findHandleWithPid(stage, pid, found);
+
+        if (found[0] == null) {
+            throw new RuntimeException("Could not find HWND for stage title: " + stage.getTitle());
+        }
+        return found[0];
+    }
+
+    private static void findHandleWithPid(Stage stage, int pid, WinDef.HWND[] found) {
         User32.INSTANCE.EnumWindows((hwnd, data) -> {
             IntByReference pidRef = new IntByReference();
             User32.INSTANCE.GetWindowThreadProcessId(hwnd, pidRef);
@@ -37,11 +46,6 @@ public class FXWinUtil {
             }
             return true;
         }, null);
-
-        if (found[0] == null) {
-            throw new RuntimeException("Could not find HWND for stage title: " + stage.getTitle());
-        }
-        return found[0];
     }
 
 

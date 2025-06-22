@@ -35,10 +35,6 @@
             </HBox>
             <HBox alignment="CENTER_LEFT" spacing="5">
                 <Circle fill="white" radius="3" />
-                <Label fx:id="ratingLabel" styleClass="book--detail" text="Rating" wrapText="true" />
-            </HBox>
-            <HBox alignment="CENTER_LEFT" spacing="5">
-                <Circle fill="white" radius="3" />
                 <Label fx:id="statusLabel" styleClass="book--detail" text="Status" wrapText="true" />
             </HBox>
         </VBox>

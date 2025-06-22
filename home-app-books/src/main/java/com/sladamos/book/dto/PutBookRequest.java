@@ -17,7 +17,7 @@ public class PutBookRequest {
     private String isbn;
     private String publisher;
     private String description;
-    private String borrowedTo;
+    private String lentTo;
     private String status;
     private Integer pages;
     private Integer rating;

@@ -25,7 +25,7 @@ public class BooksToResponseFunction implements Function<List<Book>, GetBooksRes
                                         .coverImage(book.getCoverImage())
                                         .description(book.getDescription())
                                         .genres(book.getGenres())
-                                        .borrowedTo(book.getBorrowedTo())
+                                        .lentTo(book.getLentTo())
                                         .rating(book.getRating())
                                         .isFavorite(book.isFavorite())
                                         .creationDate(book.getCreationDate())

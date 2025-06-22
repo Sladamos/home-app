@@ -51,7 +51,7 @@ class BookIntegrationTest {
                 .pages(100)
                 .authors(List.of("Author1"))
                 .genres(List.of("Genre1"))
-                .borrowedTo("Jan Kowalski")
+                .lentTo("Jan Kowalski")
                 .status(BookStatus.ON_SHELF)
                 .rating(5)
                 .isFavorite(true)
@@ -118,7 +118,7 @@ class BookIntegrationTest {
                 .pages(200)
                 .authors(List.of("New Author"))
                 .genres(List.of("New Genre"))
-                .borrowedTo("Adam Nowak")
+                .lentTo("Adam Nowak")
                 .status("BORROWED")
                 .rating(4)
                 .isFavorite(true)
@@ -139,7 +139,7 @@ class BookIntegrationTest {
                 () -> assertThat(created.getPages()).isEqualTo(200),
                 () -> assertThat(created.getAuthors()).containsExactly("New Author"),
                 () -> assertThat(created.getGenres()).containsExactly("New Genre"),
-                () -> assertThat(created.getBorrowedTo()).isEqualTo("Adam Nowak"),
+                () -> assertThat(created.getLentTo()).isEqualTo("Adam Nowak"),
                 () -> assertThat(created.getStatus()).isEqualTo(BookStatus.BORROWED),
                 () -> assertThat(created.getRating()).isEqualTo(4),
                 () -> assertThat(created.isFavorite()).isTrue(),
@@ -159,7 +159,7 @@ class BookIntegrationTest {
                 .pages(200)
                 .authors(List.of("New Author"))
                 .genres(List.of("New Genre"))
-                .borrowedTo("Adam Nowak")
+                .lentTo("Adam Nowak")
                 .status("BORROWED")
                 .rating(4)
                 .isFavorite(false)
@@ -180,7 +180,7 @@ class BookIntegrationTest {
                 () -> assertThat(updated.getPages()).isEqualTo(200),
                 () -> assertThat(updated.getAuthors()).containsExactly("New Author"),
                 () -> assertThat(updated.getGenres()).containsExactly("New Genre"),
-                () -> assertThat(updated.getBorrowedTo()).isEqualTo("Adam Nowak"),
+                () -> assertThat(updated.getLentTo()).isEqualTo("Adam Nowak"),
                 () -> assertThat(updated.getStatus()).isEqualTo(BookStatus.BORROWED),
                 () -> assertThat(updated.getRating()).isEqualTo(4),
                 () -> assertThat(updated.isFavorite()).isFalse(),

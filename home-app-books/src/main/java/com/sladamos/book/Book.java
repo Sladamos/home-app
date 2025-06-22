@@ -33,7 +33,7 @@ public class Book {
 
     private String publisher;
 
-    private String borrowedTo;
+    private String lentTo;
 
     @PositiveOrZero(message = "Number of pages cannot be negative")
     private Integer pages;
