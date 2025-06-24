@@ -19,6 +19,8 @@
 		<java.version>21</java.version>
 		<spring.boot.version>3.5.0</spring.boot.version>
 		<lombok.version>1.18.30</lombok.version>
+		<slf4j.version>2.0.17</slf4j.version>
+		<logback.version>1.5.18</logback.version>
 		<junit.jupiter.version>5.10.2</junit.jupiter.version>
 		<assertj.version>3.25.3</assertj.version>
 		<mockito.version>5.12.0</mockito.version>
@@ -48,6 +50,16 @@
 				<version>${lombok.version}</version>
 				<scope>provided</scope>
 			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>${slf4j.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>ch.qos.logback</groupId>
+				<artifactId>logback-classic</artifactId>
+				<version>${logback.version}</version>
+			</dependency>
 
 			<dependency>
 				<groupId>org.openjfx</groupId>
@@ -60,34 +72,9 @@
 				<version>${javafx.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>org.openjfx</groupId>
-				<artifactId>javafx-web</artifactId>
-				<version>${javafx.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.openjfx</groupId>
-				<artifactId>javafx-swing</artifactId>
-				<version>${javafx.version}</version>
-			</dependency>
-			<dependency>
 				<groupId>org.controlsfx</groupId>
 				<artifactId>controlsfx</artifactId>
 				<version>${controlsfx.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>net.synedra</groupId>
-				<artifactId>validatorfx</artifactId>
-				<version>${validatorfx.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.kordamp.ikonli</groupId>
-				<artifactId>ikonli-javafx</artifactId>
-				<version>${ikonli.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>eu.hansolo</groupId>
-				<artifactId>tilesfx</artifactId>
-				<version>${tilesfx.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>net.java.dev.jna</groupId>
