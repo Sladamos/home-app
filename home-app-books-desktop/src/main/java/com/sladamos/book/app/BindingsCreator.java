@@ -31,8 +31,7 @@ public class BindingsCreator {
     public StringBinding createBindingWithKey(String messageKey, StringProperty property) {
         return Bindings.createStringBinding(
                 () -> {
-                    ResourceBundle bundle = ResourceBundle.getBundle("messages", localeProvider.getLocale());
-                    String pattern = bundle.getString(messageKey);
+                    String pattern = getMessage(messageKey);
                     return MessageFormat.format(pattern, property.get());
                 },
                 localeProvider.getLocaleProperty(),
@@ -42,11 +41,12 @@ public class BindingsCreator {
 
     public StringBinding createBinding(String messageKey) {
         return Bindings.createStringBinding(
-                () -> {
-                    ResourceBundle bundle = ResourceBundle.getBundle("messages", localeProvider.getLocale());
-                    return bundle.getString(messageKey);
-                },
+                () -> getMessage(messageKey),
                 localeProvider.getLocaleProperty()
         );
+    }
+
+    private String getMessage(String messageKey) {
+        return ResourceBundle.getBundle("messages", localeProvider.getLocale()).getString(messageKey);
     }
 }

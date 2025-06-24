@@ -54,7 +54,7 @@ class BookIntegrationTest {
                 .lentTo("Jan Kowalski")
                 .status(BookStatus.ON_SHELF)
                 .rating(5)
-                .isFavorite(true)
+                .favorite(true)
                 .readDate(LocalDate.of(2023, 1, 1))
                 .coverImage("testImage".getBytes())
                 .creationDate(java.time.Instant.parse("2023-01-01T10:00:00Z"))
@@ -121,7 +121,7 @@ class BookIntegrationTest {
                 .lentTo("Adam Nowak")
                 .status("BORROWED")
                 .rating(4)
-                .isFavorite(true)
+                .favorite(true)
                 .readDate(LocalDate.of(2024, 3, 3))
                 .coverImage("newImage".getBytes())
                 .build();
@@ -162,7 +162,7 @@ class BookIntegrationTest {
                 .lentTo("Adam Nowak")
                 .status("BORROWED")
                 .rating(4)
-                .isFavorite(false)
+                .favorite(false)
                 .readDate(LocalDate.of(2024, 4, 4))
                 .coverImage("replaceImage".getBytes())
                 .build();

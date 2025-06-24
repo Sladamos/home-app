@@ -27,7 +27,7 @@ public class BooksToResponseFunction implements Function<List<Book>, GetBooksRes
                                         .genres(book.getGenres())
                                         .lentTo(book.getLentTo())
                                         .rating(book.getRating())
-                                        .isFavorite(book.isFavorite())
+                                        .favorite(book.isFavorite())
                                         .creationDate(book.getCreationDate())
                                         .modificationDate(book.getModificationDate())
                                         .readDate(book.getReadDate())

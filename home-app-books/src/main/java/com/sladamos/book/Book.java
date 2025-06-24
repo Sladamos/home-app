@@ -45,7 +45,7 @@ public class Book {
     @Lob
     private byte[] coverImage;
 
-    private boolean isFavorite;
+    private boolean favorite;
 
     private Instant creationDate;
 

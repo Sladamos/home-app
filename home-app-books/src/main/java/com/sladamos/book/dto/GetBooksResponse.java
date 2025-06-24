@@ -25,7 +25,7 @@ public class GetBooksResponse {
         private String status;
         private Integer pages;
         private Integer rating;
-        private boolean isFavorite;
+        private boolean favorite;
         private Instant creationDate;
         private Instant modificationDate;
         private LocalDate readDate;

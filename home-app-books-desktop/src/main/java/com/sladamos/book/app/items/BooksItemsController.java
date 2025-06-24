@@ -6,6 +6,7 @@ import javafx.collections.ListChangeListener.Change;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import lombok.RequiredArgsConstructor;
@@ -14,10 +15,13 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class BooksItemsController {
+
     @FXML
     private VBox booksContainer;
     @FXML
     private Label titleLabel;
+    @FXML
+    private Button addBookButton;
 
     private final BooksItemsViewModel viewModel;
 
@@ -31,6 +35,7 @@ public class BooksItemsController {
         viewModel.loadBooks();
 
         titleLabel.textProperty().bind(bindingsCreator.createBinding("books.title"));
+        addBookButton.textProperty().bind(bindingsCreator.createBinding("books.addBook"));
     }
 
     private void handleChanges(Change<? extends BookItemViewModel> change) {

@@ -26,7 +26,7 @@ public class RequestToBookFunction implements BiFunction<UUID, PutBookRequest, B
                 .genres(request.getGenres())
                 .lentTo(request.getLentTo())
                 .rating(request.getRating())
-                .isFavorite(request.isFavorite())
+                .favorite(request.isFavorite())
                 .creationDate(Instant.now())
                 .modificationDate(Instant.now())
                 .readDate(request.getReadDate())

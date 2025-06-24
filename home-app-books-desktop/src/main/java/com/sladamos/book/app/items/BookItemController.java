@@ -8,6 +8,7 @@ import javafx.beans.binding.StringBinding;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import lombok.RequiredArgsConstructor;
 
 import java.text.MessageFormat;
@@ -38,6 +39,8 @@ public class BookItemController {
     private Label genresLabel;
     @FXML
     private ImageView coverImageView;
+    @FXML
+    private HBox ratingStars;
 
     @FXML
     public void initialize() {
@@ -50,6 +53,7 @@ public class BookItemController {
         authorsLabel.textProperty().bind(bindingsCreator.createBindingWithKey("books.items.authors", viewModel.getAuthors()));
         genresLabel.textProperty().bind(bindingsCreator.createBindingWithKey("books.items.genres", viewModel.getGenres()));
         statusLabel.textProperty().bind(createStatusBinding());
+        createStars();
     }
 
     private StringBinding createStatusBinding() {
@@ -79,4 +83,29 @@ public class BookItemController {
             case BORROWED -> "books.items.status.lent";
         };
     }
+
+    private void createStars() {
+        if (ratingStars.getChildren().isEmpty()) {
+            for (int i = 1; i <= 5; i++) {
+                Label star = new Label();
+                ratingStars.getChildren().add(star);
+            }
+        }
+
+        for (int i = 0; i < 5; i++) {
+            int starIndex = i + 1;
+            Label star = (Label) ratingStars.getChildren().get(i);
+            star.textProperty().bind(Bindings.createStringBinding(() -> {
+                int rating = viewModel.getRating().get();
+                return starIndex <= rating ? "★" : "☆";
+            }, viewModel.getRating()));
+
+            star.styleProperty().bind(Bindings.createStringBinding(() -> {
+                boolean favorite = viewModel.getFavorite().get();
+                String color = favorite ? "#00DCF4" : "#FFD700";
+                return String.format("-fx-font-size: 24; -fx-text-fill: %s;", color);
+            }, viewModel.getFavorite()));
+        }
+    }
+
 }

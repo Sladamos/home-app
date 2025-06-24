@@ -8,11 +8,19 @@
 <?import javafx.scene.shape.*?>
 
 <VBox xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sladamos.book.app.items.BookItemController">
-    <Label fx:id="titleLabel" styleClass="book--title" text="Author">
-      <VBox.margin>
-         <Insets left="25.0" />
-      </VBox.margin>
-    </Label>
+    <HBox>
+        <Label fx:id="titleLabel" styleClass="book--title" text="Author">
+            <HBox.margin>
+                <Insets left="25.0" />
+            </HBox.margin>
+        </Label>
+        <Region HBox.hgrow="ALWAYS" />
+        <HBox fx:id="ratingStars" alignment="CENTER" spacing="5">
+            <HBox.margin>
+                <Insets right="25.0" />
+            </HBox.margin>
+        </HBox>
+    </HBox>
     <HBox spacing="15.0" styleClass="book--item">
         <ImageView fx:id="coverImageView" fitHeight="300.0" fitWidth="200.0" preserveRatio="true" />
         <VBox spacing="20.0">

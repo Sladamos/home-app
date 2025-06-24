@@ -22,7 +22,7 @@ public class PutBookRequest {
     private Integer pages;
     private Integer rating;
     private byte[] coverImage;
-    private boolean isFavorite;
+    private boolean favorite;
     private LocalDate readDate;
     private List<String> authors;
     private List<String> genres;

@@ -22,7 +22,7 @@ public class PatchBookRequest {
     private Integer pages;
     private Integer rating;
     private byte[] coverImage;
-    private Boolean isFavorite;
+    private Boolean favorite;
     private LocalDate readDate;
     private List<String> authors;
     private List<String> genres;
