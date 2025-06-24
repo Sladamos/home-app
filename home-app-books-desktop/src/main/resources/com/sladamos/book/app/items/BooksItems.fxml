@@ -15,7 +15,7 @@
             <BorderPane.margin>
                 <Insets bottom="20.0" />
             </BorderPane.margin>
-            <Label fx:id="titleLabel">
+            <Label fx:id="titleLabel" text="Bookcase">
                 <font>
                     <Font name="Segoe UI Black Italic" size="36.0" />
                 </font>
@@ -38,7 +38,7 @@
     </stylesheets>
    <left>
        <VBox BorderPane.alignment="CENTER">
-           <Button styleClass="books--add-book-button" fx:id="addBookButton" mnemonicParsing="false" text="Add book"/>
+           <Button fx:id="addBookButton" mnemonicParsing="false" styleClass="books--add-book-button" text="Add book" />
        </VBox>
    </left>
 </BorderPane>

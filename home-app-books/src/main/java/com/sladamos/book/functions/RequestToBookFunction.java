@@ -24,7 +24,7 @@ public class RequestToBookFunction implements BiFunction<UUID, PutBookRequest, B
                 .coverImage(request.getCoverImage())
                 .authors(request.getAuthors())
                 .genres(request.getGenres())
-                .lentTo(request.getLentTo())
+                .borrowedBy(request.getBorrowedBy())
                 .rating(request.getRating())
                 .favorite(request.isFavorite())
                 .creationDate(Instant.now())

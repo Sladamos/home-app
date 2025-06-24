@@ -19,6 +19,9 @@ import java.util.UUID;
 @NoArgsConstructor
 public class Book {
 
+    public static final int MAX_RATING = 5;
+    public static final int MIN_RATING = 1;
+
     @Id
     private UUID id;
 
@@ -33,13 +36,13 @@ public class Book {
 
     private String publisher;
 
-    private String lentTo;
+    private String borrowedBy;
 
     @PositiveOrZero(message = "Number of pages cannot be negative")
     private Integer pages;
 
-    @Min(value = 1, message = "Rating must be at least 1")
-    @Max(value = 5, message = "Rating cannot exceed 5")
+    @Min(value = MIN_RATING, message = "Rating must be at least 1")
+    @Max(value = MAX_RATING, message = "Rating cannot exceed 5")
     private Integer rating;
 
     @Lob

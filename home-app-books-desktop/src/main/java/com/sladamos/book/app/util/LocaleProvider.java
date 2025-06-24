@@ -1,4 +1,4 @@
-package com.sladamos.book.app;
+package com.sladamos.book.app.util;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;

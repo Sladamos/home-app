@@ -1,8 +1,9 @@
 package com.sladamos.book.app.items;
 
-import com.sladamos.book.BookStatus;
-import com.sladamos.book.app.LocaleProvider;
-import com.sladamos.book.app.BindingsCreator;
+import com.sladamos.book.app.util.BindingsCreator;
+import com.sladamos.book.app.util.LocaleProvider;
+import com.sladamos.book.app.util.StarsFactory;
+import com.sladamos.book.app.util.StatusMessageKeyProvider;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.fxml.FXML;
@@ -22,6 +23,10 @@ public class BookItemController {
     private final LocaleProvider localeProvider;
 
     private final BindingsCreator bindingsCreator;
+
+    private final StatusMessageKeyProvider statusMessageKeyProvider;
+
+    private final StarsFactory starsFactory;
 
     @FXML
     private Label titleLabel;
@@ -53,59 +58,25 @@ public class BookItemController {
         authorsLabel.textProperty().bind(bindingsCreator.createBindingWithKey("books.items.authors", viewModel.getAuthors()));
         genresLabel.textProperty().bind(bindingsCreator.createBindingWithKey("books.items.genres", viewModel.getGenres()));
         statusLabel.textProperty().bind(createStatusBinding());
-        createStars();
+        ratingStars.getChildren().clear();
+        ratingStars.getChildren().addAll(starsFactory.createStars(viewModel));
     }
 
     private StringBinding createStatusBinding() {
         return Bindings.createStringBinding(
                 () -> {
                     ResourceBundle bundle = ResourceBundle.getBundle("messages", localeProvider.getLocale());
-                    String key = getStatusMessageKey(viewModel.getStatus().get());
-                    if ("books.items.status.lent".equals(key)) {
+                    String key = statusMessageKeyProvider.getStatusMessageKey(viewModel.getStatus().get());
+                    if ("books.items.status.borrowed".equals(key)) {
                         String pattern = bundle.getString(key);
-                        return MessageFormat.format(pattern, viewModel.getLentTo().get());
+                        return MessageFormat.format(pattern, viewModel.getBorrowedBy().get());
                     } else {
                         return bundle.getString(key);
                     }
                 },
                 localeProvider.getLocaleProperty(),
                 viewModel.getStatus(),
-                viewModel.getLentTo()
+                viewModel.getBorrowedBy()
         );
     }
-
-    private String getStatusMessageKey(BookStatus status) {
-        return switch (status) {
-            case ON_SHELF -> "books.items.status.onShelf";
-            case WANT_TO_READ -> "books.items.status.wantToRead";
-            case CURRENTLY_READING -> "books.items.status.currentlyReading";
-            case FINISHED_READING -> "books.items.status.finishedReading";
-            case BORROWED -> "books.items.status.lent";
-        };
-    }
-
-    private void createStars() {
-        if (ratingStars.getChildren().isEmpty()) {
-            for (int i = 1; i <= 5; i++) {
-                Label star = new Label();
-                ratingStars.getChildren().add(star);
-            }
-        }
-
-        for (int i = 0; i < 5; i++) {
-            int starIndex = i + 1;
-            Label star = (Label) ratingStars.getChildren().get(i);
-            star.textProperty().bind(Bindings.createStringBinding(() -> {
-                int rating = viewModel.getRating().get();
-                return starIndex <= rating ? "★" : "☆";
-            }, viewModel.getRating()));
-
-            star.styleProperty().bind(Bindings.createStringBinding(() -> {
-                boolean favorite = viewModel.getFavorite().get();
-                String color = favorite ? "#00DCF4" : "#FFD700";
-                return String.format("-fx-font-size: 24; -fx-text-fill: %s;", color);
-            }, viewModel.getFavorite()));
-        }
-    }
-
 }

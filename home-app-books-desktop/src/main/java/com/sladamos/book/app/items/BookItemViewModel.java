@@ -2,21 +2,23 @@ package com.sladamos.book.app.items;
 
 import com.sladamos.book.Book;
 import com.sladamos.book.BookStatus;
+import com.sladamos.book.app.RateableViewModel;
 import javafx.beans.property.*;
 import javafx.scene.image.Image;
 import lombok.Getter;
 
 import java.io.ByteArrayInputStream;
+import java.util.Objects;
 import java.util.Optional;
 
 @Getter
-public class BookItemViewModel {
+public class BookItemViewModel implements RateableViewModel {
 
     private final StringProperty title = new SimpleStringProperty();
     private final StringProperty isbn = new SimpleStringProperty();
     private final StringProperty description = new SimpleStringProperty();
     private final StringProperty publisher = new SimpleStringProperty();
-    private final StringProperty lentTo = new SimpleStringProperty();
+    private final StringProperty borrowedBy = new SimpleStringProperty();
     private final IntegerProperty pages = new SimpleIntegerProperty();
     private final IntegerProperty rating = new SimpleIntegerProperty();
     private final BooleanProperty favorite = new SimpleBooleanProperty();
@@ -30,7 +32,7 @@ public class BookItemViewModel {
         isbn.set(book.getIsbn());
         description.set(book.getDescription());
         publisher.set(book.getPublisher());
-        lentTo.set(book.getLentTo());
+        borrowedBy.set(book.getBorrowedBy());
         pages.set(book.getPages());
         rating.set(Optional.ofNullable(book.getRating()).orElse(0));
         favorite.set(book.isFavorite());
@@ -39,6 +41,9 @@ public class BookItemViewModel {
         genres.set(String.join(", ", book.getGenres()));
         if (book.getCoverImage() != null) {
             coverImage.set(new Image(new ByteArrayInputStream(book.getCoverImage())));
+        } else {
+            coverImage.set(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/default-cover.jpg"))));
+
         }
     }
 }

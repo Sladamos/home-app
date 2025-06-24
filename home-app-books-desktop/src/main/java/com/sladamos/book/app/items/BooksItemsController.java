@@ -1,7 +1,6 @@
 package com.sladamos.book.app.items;
 
-import com.sladamos.book.app.LocaleProvider;
-import com.sladamos.book.app.BindingsCreator;
+import com.sladamos.book.app.util.BindingsCreator;
 import javafx.collections.ListChangeListener.Change;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -25,9 +24,9 @@ public class BooksItemsController {
 
     private final BooksItemsViewModel viewModel;
 
-    private final LocaleProvider localeProvider;
-
     private final BindingsCreator bindingsCreator;
+
+    private final BookItemControllerFactory bookItemControllerFactory;
 
     @FXML
     public void initialize() {
@@ -49,7 +48,7 @@ public class BooksItemsController {
     private void addItem(BookItemViewModel itemVM) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("BooksItem.fxml"));
-            loader.setControllerFactory(param -> new BookItemController(itemVM, localeProvider, bindingsCreator));
+            loader.setControllerFactory(param -> bookItemControllerFactory.createController(itemVM));
             Node itemRoot = loader.load();
             booksContainer.getChildren().add(itemRoot);
         } catch (Exception e) {
