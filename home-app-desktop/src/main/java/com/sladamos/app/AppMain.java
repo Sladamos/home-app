@@ -26,7 +26,7 @@ public class AppMain extends Application {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("HomeApp.fxml"));
         loader.setControllerFactory(context::getBean);
         Scene scene = new Scene(loader.load());
-        stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("icon.ico"))));
+        stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("icon.jpg"))));
         stage.setTitle("Home app");
         stage.setScene(scene);
         stage.show();
