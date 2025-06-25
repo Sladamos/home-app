@@ -1,5 +1,6 @@
 package com.sladamos.book.app.items;
 
+import com.sladamos.book.BookStatus;
 import com.sladamos.book.app.util.BindingsCreator;
 import com.sladamos.book.app.util.LocaleProvider;
 import com.sladamos.book.app.util.StarsFactory;
@@ -66,11 +67,16 @@ public class BookItemController {
         return Bindings.createStringBinding(
                 () -> {
                     ResourceBundle bundle = ResourceBundle.getBundle("messages", localeProvider.getLocale());
-                    String key = statusMessageKeyProvider.getStatusMessageKey(viewModel.getStatus().get());
-                    if ("books.items.status.borrowed".equals(key)) {
-                        String pattern = bundle.getString(key);
-                        return MessageFormat.format(pattern, viewModel.getBorrowedBy().get());
-                    } else {
+                    var bookStatus = viewModel.getStatus().get();
+                    String key = statusMessageKeyProvider.getStatusMessageKey(bookStatus);
+                    String message = bundle.getString(key);
+                    if (BookStatus.BORROWED.equals(bookStatus)) {
+                        return MessageFormat.format(message, viewModel.getBorrowedBy().get());
+                    }
+                    else if (BookStatus.FINISHED_READING.equals(bookStatus)) {
+                        return MessageFormat.format(message, viewModel.getReadDate().get());
+                    }
+                    else {
                         return bundle.getString(key);
                     }
                 },
