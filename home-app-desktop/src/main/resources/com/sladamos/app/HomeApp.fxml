@@ -6,5 +6,5 @@
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.sladamos.app.AppController"
       prefHeight="675.0" prefWidth="1200.0">
-  <fx:include source="/com/sladamos/book/app/items/BooksItems.fxml"/>
+  <fx:include source="/com/sladamos/book/app/BooksApp.fxml"/>
 </VBox>

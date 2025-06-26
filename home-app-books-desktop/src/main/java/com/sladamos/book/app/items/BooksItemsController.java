@@ -1,14 +1,15 @@
 package com.sladamos.book.app.items;
 
+import com.sladamos.book.app.add.OnAddBookClicked;
 import com.sladamos.book.app.util.BindingsCreator;
 import javafx.collections.ListChangeListener.Change;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -17,8 +18,7 @@ public class BooksItemsController {
 
     @FXML
     private VBox booksContainer;
-    @FXML
-    private Label titleLabel;
+
     @FXML
     private Button addBookButton;
 
@@ -28,13 +28,27 @@ public class BooksItemsController {
 
     private final BookItemControllerFactory bookItemControllerFactory;
 
+    private final ApplicationEventPublisher applicationEventPublisher;
+
     @FXML
     public void initialize() {
         viewModel.getBooks().addListener(this::handleChanges);
-        viewModel.loadBooks();
+        loadBooks();
 
-        titleLabel.textProperty().bind(bindingsCreator.createBinding("books.title"));
-        addBookButton.textProperty().bind(bindingsCreator.createBinding("books.addBook"));
+        addBookButton.textProperty().bind(bindingsCreator.createBinding("books.items.addBook"));
+    }
+
+    private void loadBooks() {
+        if (viewModel.getBooks().isEmpty()) {
+            viewModel.loadBooks();
+        } else {
+            viewModel.getBooks().forEach(this::addItem);
+        }
+    }
+
+    @FXML
+    private void onAddBookClicked() {
+        applicationEventPublisher.publishEvent(new OnAddBookClicked());
     }
 
     private void handleChanges(Change<? extends BookItemViewModel> change) {

@@ -54,7 +54,7 @@
         </padding>
     </HBox>
     <stylesheets>
-        <URL value="@books-common.css" />
+        <URL value="@../books-common.css" />
         <URL value="@books-item.css" />
     </stylesheets>
 </VBox>

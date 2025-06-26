@@ -1,9 +1,30 @@
+.books--wrapper {
+    -fx-background-color: linear-gradient(
+            from 0% 0% to 100% 100%,
+            #7000b2,
+            #4a008a
+    );
+}
+
 .books--container--wrapper {
     -fx-background-color: transparent;
 }
 
 .books--container--wrapper > .viewport {
     -fx-background-color: transparent;
+}
+
+.books--add-book-button {
+    -fx-background-radius: 15px;
+    -fx-background-color:
+            white,
+            #3c005e;
+    -fx-background-insets: 1, 2;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 8px 16px;
+    -fx-border-radius: 8px;
+    -fx-cursor: hand;
 }
 
 .scroll-bar:vertical {

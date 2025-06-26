@@ -19,7 +19,7 @@ public class BooksApp extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("items/BooksItems.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("BooksApp.fxml"));
         loader.setControllerFactory(context::getBean);
         Scene scene = new Scene(loader.load());
         stage.setTitle("Bookcase application");
