@@ -7,10 +7,8 @@ import javafx.beans.property.*;
 import javafx.scene.image.Image;
 import lombok.Getter;
 
-import java.io.ByteArrayInputStream;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.util.Objects;
 import java.util.Optional;
 
 @Getter
@@ -32,7 +30,7 @@ public class BookItemViewModel implements RateableViewModel {
     private final ObjectProperty<Instant> modificationDate = new SimpleObjectProperty<>();
     private final ObjectProperty<Instant> creationDate = new SimpleObjectProperty<>();
 
-    public BookItemViewModel(Book book) {
+    public BookItemViewModel(Book book, Image coverImage) {
         title.set(book.getTitle());
         isbn.set(book.getIsbn());
         description.set(book.getDescription());
@@ -44,11 +42,7 @@ public class BookItemViewModel implements RateableViewModel {
         status.set(book.getStatus());
         authors.set(String.join(", ", book.getAuthors()));
         genres.set(String.join(", ", book.getGenres()));
-        if (book.getCoverImage() != null) {
-            coverImage.set(new Image(new ByteArrayInputStream(book.getCoverImage())));
-        } else {
-            coverImage.set(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/default-cover.jpg"))));
-        }
+        this.coverImage.set(coverImage);
         readDate.set(book.getReadDate());
         modificationDate.set(book.getModificationDate());
         creationDate.set(book.getCreationDate());

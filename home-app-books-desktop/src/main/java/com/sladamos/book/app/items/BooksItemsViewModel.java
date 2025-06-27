@@ -1,6 +1,7 @@
 package com.sladamos.book.app.items;
 
 import com.sladamos.book.BookService;
+import com.sladamos.book.app.util.ImageCoverProvider;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import lombok.Getter;
@@ -14,6 +15,8 @@ public class BooksItemsViewModel {
 
     private final BookService bookService;
 
+    private final ImageCoverProvider imageCoverProvider;
+
     @Getter
     private final ObservableList<BookItemViewModel> books = FXCollections.observableArrayList();
 
@@ -21,7 +24,7 @@ public class BooksItemsViewModel {
     public void loadBooks() {
         books.clear();
         bookService.getAllBooks().stream()
-                .map(BookItemViewModel::new)
+                .map(book -> new BookItemViewModel(book, imageCoverProvider.getImageCover(book.getCoverImage())))
                 .forEach(books::add);
     }
 

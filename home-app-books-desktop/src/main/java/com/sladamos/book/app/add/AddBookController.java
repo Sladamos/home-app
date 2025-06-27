@@ -2,12 +2,12 @@ package com.sladamos.book.app.add;
 
 import com.sladamos.book.app.items.OnDisplayItemsClicked;
 import com.sladamos.book.app.util.BindingsCreator;
+import com.sladamos.book.app.util.ImageCoverProvider;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -17,18 +17,18 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
 @Component
 public class AddBookController {
 
+    public static final int MIN_NUMBER_OF_FIELDS = 1;
     @FXML
     private Button returnToItemsButton;
 
@@ -98,11 +98,117 @@ public class AddBookController {
 
     private final AddBookViewModel viewModel;
 
-    private final List<TextField> authorFields = new ArrayList<>();
-    private final List<TextField> genreFields = new ArrayList<>();
+    private final ImageCoverProvider imageCoverProvider;
 
     @FXML
     public void initialize() {
+        setupBindings();
+
+        updateCoverPreview(viewModel.getCoverImage().get());
+        viewModel.getCoverImage().addListener((obs, oldVal, newVal) -> updateCoverPreview(newVal));
+
+        initializeCollection(authorsBox, viewModel.getAuthors());
+        initializeCollection(genresBox, viewModel.getGenres());
+    }
+
+    @FXML
+    private void onSelectCoverClicked() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Wybierz okładkę");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Obrazy", "*.png", "*.jpg", "*.jpeg", "*.gif")
+        );
+        File file = fileChooser.showOpenDialog(selectCoverButton.getScene().getWindow());
+        if (file != null) {
+            try {
+                byte[] imageBytes = Files.readAllBytes(file.toPath());
+                viewModel.getCoverImage().set(imageBytes);
+            } catch (IOException e) {
+                log.error("Błąd podczas wczytywania obrazka okładki", e);
+            }
+        }
+    }
+
+    @FXML
+    private void onRemoveCoverClicked() {
+        log.info("Remove cover button clicked");
+        viewModel.getCoverImage().set(null);
+    }
+
+    @FXML
+    private void onReturnButtonClicked() {
+        log.info("Return to items button clicked");
+        applicationEventPublisher.publishEvent(new OnDisplayItemsClicked());
+    }
+
+    @FXML
+    private void onAddBookClicked() {
+        log.info("Add book button clicked");
+    }
+
+    @FXML
+    private void onAddAuthorClicked() {
+        log.info("Add author button clicked");
+        addField("", authorsBox, viewModel.getAuthors());
+    }
+
+    @FXML
+    private void onAddGenreClicked() {
+        log.info("Add genre button clicked");
+        addField("", genresBox, viewModel.getGenres());
+    }
+
+    private void addField(String value, VBox fieldsContainer, ObservableList<String> viewModelCollection) {
+        TextField field = new TextField(value);
+        Button removeBtn = createDeleteButton(onDeleteButtonClicked(field, fieldsContainer, viewModelCollection));
+        HBox hBox = new HBox(5, field, removeBtn);
+        fieldsContainer.getChildren().add(hBox);
+        field.textProperty().addListener((obs, oldVal, newVal) -> updateCollectionInViewModel(viewModelCollection, fieldsContainer));
+        updateVisibilityOfDeleteButtons(fieldsContainer);
+    }
+
+    private Button createDeleteButton(EventHandler<ActionEvent> field) {
+        Button removeBtn = new Button("-");
+        removeBtn.getStyleClass().add("delete--field-button");
+        removeBtn.setOnAction(field);
+        return removeBtn;
+    }
+
+    private EventHandler<ActionEvent> onDeleteButtonClicked(TextField field, VBox fieldsContainer,  ObservableList<String> viewModelCollection) {
+        return e -> {
+            log.info("Delete button clicked for field: {}", field.getText());
+            fieldsContainer.getChildren().remove(field.getParent());
+            updateCollectionInViewModel(viewModelCollection, fieldsContainer);
+            updateVisibilityOfDeleteButtons(fieldsContainer);
+        };
+    }
+
+    private void updateVisibilityOfDeleteButtons(VBox fieldsContainer) {
+        fieldsContainer.getChildren().stream()
+                .map(HBox.class::cast)
+                .map(f -> f.getChildren().get(1))
+                .forEach(btn -> btn.setVisible(fieldsContainer.getChildren().size() > MIN_NUMBER_OF_FIELDS));
+    }
+
+    private void updateCollectionInViewModel(ObservableList<String> viewModelCollection, VBox fieldsContainer) {
+        List<TextField> fields = getFields(fieldsContainer);
+        viewModelCollection.setAll(
+                fields.stream()
+                        .map(TextField::getText)
+                        .filter(s -> s != null && !s.isBlank())
+                        .toList()
+        );
+    }
+
+    private List<TextField> getFields(VBox fieldsContainer) {
+        return fieldsContainer.getChildren().stream()
+                .map(HBox.class::cast)
+                .map(e -> e.getChildren().getFirst())
+                .map(TextField.class::cast)
+                .collect(Collectors.toList());
+    }
+
+    private void setupBindings() {
         returnToItemsButton.textProperty().bind(bindingsCreator.createBinding("books.add.returnToBooks"));
         addAuthorButton.textProperty().bind(bindingsCreator.createBinding("books.add.addAuthor"));
         addGenreButton.textProperty().bind(bindingsCreator.createBinding("books.add.addGenre"));
@@ -158,109 +264,18 @@ public class AddBookController {
                 ratingValueLabel.setText(String.valueOf(newVal));
             }
         });
-
-        updateCoverPreview(viewModel.getCoverImage().get());
-        viewModel.getCoverImage().addListener((obs, oldVal, newVal) -> updateCoverPreview(newVal));
-
-        initializeCollection(authorsBox, authorFields, viewModel.getAuthors());
-        initializeCollection(genresBox, genreFields, viewModel.getGenres());
     }
 
-    private void initializeCollection(VBox fieldsContainer, List<TextField> fields, ObservableList<String> viewModelCollection) {
-        fields.clear();
+    private void initializeCollection(VBox fieldsContainer, ObservableList<String> viewModelCollection) {
         if (viewModelCollection.isEmpty()) {
-            addField("", fieldsContainer, fields, viewModelCollection);
+            addField("", fieldsContainer, viewModelCollection);
         } else {
-            viewModelCollection.forEach(author -> addField(author, fieldsContainer, fields, viewModelCollection));
+            viewModelCollection.forEach(author -> addField(author, fieldsContainer, viewModelCollection));
         }
     }
 
     private void updateCoverPreview(byte[] imageBytes) {
-        if (imageBytes != null && imageBytes.length > 0) {
-            coverPreview.setImage(new Image(new ByteArrayInputStream(imageBytes)));
-            removeCoverButton.setVisible(true);
-        } else {
-            coverPreview.setImage(null);
-            removeCoverButton.setVisible(false);
-        }
-    }
-
-    @FXML
-    private void onSelectCoverClicked() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Wybierz okładkę");
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Obrazy", "*.png", "*.jpg", "*.jpeg", "*.gif")
-        );
-        File file = fileChooser.showOpenDialog(selectCoverButton.getScene().getWindow());
-        if (file != null) {
-            try {
-                byte[] imageBytes = Files.readAllBytes(file.toPath());
-                viewModel.getCoverImage().set(imageBytes);
-            } catch (IOException e) {
-                log.error("Błąd podczas wczytywania obrazka okładki", e);
-            }
-        }
-    }
-
-    @FXML
-    private void onRemoveCoverClicked() {
-        log.info("Remove cover button clicked");
-        viewModel.getCoverImage().set(null);
-    }
-
-    @FXML
-    private void onReturnButtonClicked() {
-        log.info("Return to items button clicked");
-        applicationEventPublisher.publishEvent(new OnDisplayItemsClicked());
-    }
-
-    @FXML
-    private void onAddBookClicked() {
-    }
-
-    @FXML
-    private void onAddAuthorClicked() {
-        addField("", authorsBox, authorFields, viewModel.getAuthors());
-        updateCollectionInViewModel(viewModel.getAuthors(), authorFields);
-    }
-
-    @FXML
-    private void onAddGenreClicked() {
-        addField("", genresBox, genreFields, viewModel.getGenres());
-        updateCollectionInViewModel(viewModel.getGenres(), genreFields);
-    }
-
-    private void addField(String value, VBox fieldsContainer, List<TextField> fields, ObservableList<String> viewModelCollection) {
-        TextField field = new TextField(value);
-        Button removeBtn = createDeleteButton(onDeleteButtonClicked(field, fieldsContainer, fields, viewModelCollection));
-        HBox hBox = new HBox(5, field, removeBtn);
-        fieldsContainer.getChildren().add(hBox);
-        fields.add(field);
-        field.textProperty().addListener((obs, oldVal, newVal) -> updateCollectionInViewModel(viewModelCollection, fields));
-    }
-
-    private Button createDeleteButton(EventHandler<ActionEvent> field) {
-        Button removeBtn = new Button("-");
-        removeBtn.getStyleClass().add("delete--field-button");
-        removeBtn.setOnAction(field);
-        return removeBtn;
-    }
-
-    private EventHandler<ActionEvent> onDeleteButtonClicked(TextField field, VBox fieldsContainer, List<TextField> fields, ObservableList<String> viewModelCollection) {
-        return e -> {
-            fieldsContainer.getChildren().remove(field.getParent());
-            fields.remove(field);
-            updateCollectionInViewModel(viewModelCollection, fields);
-        };
-    }
-
-    private void updateCollectionInViewModel(ObservableList<String> viewModelCollection, List<TextField> fields) {
-        viewModelCollection.setAll(
-                fields.stream()
-                        .map(TextField::getText)
-                        .filter(s -> s != null && !s.isBlank())
-                        .toList()
-        );
+        coverPreview.setImage(imageCoverProvider.getImageCover(imageBytes));
+        removeCoverButton.setVisible(imageBytes != null && imageBytes.length > 0);
     }
 }
