@@ -9,9 +9,11 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class BooksItemsController {
@@ -48,6 +50,7 @@ public class BooksItemsController {
 
     @FXML
     private void onAddBookClicked() {
+        log.info("Add book button clicked");
         applicationEventPublisher.publishEvent(new OnAddBookClicked());
     }
 

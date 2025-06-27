@@ -9,12 +9,14 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class BooksAppController {
@@ -32,16 +34,19 @@ public class BooksAppController {
     @FXML
     public void initialize() {
         titleLabel.textProperty().bind(bindingsCreator.createBinding("books.title"));
-        setView("items/BooksItems.fxml");
+        //setView("items/BooksItems.fxml");
+        setView("add/AddBook.fxml");
     }
 
     @EventListener
     public void onAddBook(OnAddBookClicked event) {
+        log.info("Switching to Add Book view");
         setView("add/AddBook.fxml");
     }
 
     @EventListener
     public void onDisplayItems(OnDisplayItemsClicked event) {
+        log.info("Switching to Display Items view");
         setView("items/BooksItems.fxml");
     }
 

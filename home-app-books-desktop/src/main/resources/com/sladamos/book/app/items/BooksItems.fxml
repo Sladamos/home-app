@@ -8,7 +8,7 @@
 <BorderPane xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sladamos.book.app.items.BooksItemsController">
     <right>
         <VBox alignment="CENTER" BorderPane.alignment="CENTER">
-            <ScrollPane fitToWidth="true" maxWidth="800.0" styleClass="books--container--wrapper">
+            <ScrollPane fitToWidth="true" maxWidth="800.0">
                 <VBox fx:id="booksContainer" spacing="40" />
                 <padding>
                     <Insets bottom="16.0" right="16.0" />
@@ -21,7 +21,7 @@
            <Button fx:id="addBookButton"
                    mnemonicParsing="false"
                    onAction="#onAddBookClicked"
-                   styleClass="books--navigation-button"
+                   styleClass="primary--button"
                    text="Add book" />
        </VBox>
    </left>
