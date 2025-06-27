@@ -2,24 +2,19 @@ package com.sladamos.book.app.add;
 
 import com.sladamos.book.app.items.OnDisplayItemsClicked;
 import com.sladamos.book.app.util.BindingsCreator;
-import com.sladamos.book.app.util.ImageCoverProvider;
+import com.sladamos.book.app.common.SelectCoverController;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.FileChooser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,6 +24,7 @@ import java.util.stream.Collectors;
 public class AddBookController {
 
     public static final int MIN_NUMBER_OF_FIELDS = 1;
+
     @FXML
     private Button returnToItemsButton;
 
@@ -72,15 +68,6 @@ public class AddBookController {
     private CheckBox favoriteCheckBox;
 
     @FXML
-    private Button selectCoverButton;
-
-    @FXML
-    private Button removeCoverButton;
-
-    @FXML
-    private ImageView coverPreview;
-
-    @FXML
     private VBox authorsBox;
 
     @FXML
@@ -98,41 +85,16 @@ public class AddBookController {
 
     private final AddBookViewModel viewModel;
 
-    private final ImageCoverProvider imageCoverProvider;
+    private final SelectCoverController selectCoverController;
 
     @FXML
     public void initialize() {
         setupBindings();
 
-        updateCoverPreview(viewModel.getCoverImage().get());
-        viewModel.getCoverImage().addListener((obs, oldVal, newVal) -> updateCoverPreview(newVal));
+        selectCoverController.bindTo(viewModel);
 
         initializeCollection(authorsBox, viewModel.getAuthors());
         initializeCollection(genresBox, viewModel.getGenres());
-    }
-
-    @FXML
-    private void onSelectCoverClicked() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Wybierz okładkę");
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Obrazy", "*.png", "*.jpg", "*.jpeg", "*.gif")
-        );
-        File file = fileChooser.showOpenDialog(selectCoverButton.getScene().getWindow());
-        if (file != null) {
-            try {
-                byte[] imageBytes = Files.readAllBytes(file.toPath());
-                viewModel.getCoverImage().set(imageBytes);
-            } catch (IOException e) {
-                log.error("Błąd podczas wczytywania obrazka okładki", e);
-            }
-        }
-    }
-
-    @FXML
-    private void onRemoveCoverClicked() {
-        log.info("Remove cover button clicked");
-        viewModel.getCoverImage().set(null);
     }
 
     @FXML
@@ -212,8 +174,6 @@ public class AddBookController {
         returnToItemsButton.textProperty().bind(bindingsCreator.createBinding("books.add.returnToBooks"));
         addAuthorButton.textProperty().bind(bindingsCreator.createBinding("books.add.addAuthor"));
         addGenreButton.textProperty().bind(bindingsCreator.createBinding("books.add.addGenre"));
-        selectCoverButton.textProperty().bind(bindingsCreator.createBinding("books.add.selectCover"));
-        removeCoverButton.textProperty().bind(bindingsCreator.createBinding("books.add.removeCover"));
         titleField.textProperty().bindBidirectional(viewModel.getTitle());
         isbnField.textProperty().bindBidirectional(viewModel.getIsbn());
         descriptionArea.textProperty().bindBidirectional(viewModel.getDescription());
@@ -272,10 +232,5 @@ public class AddBookController {
         } else {
             viewModelCollection.forEach(author -> addField(author, fieldsContainer, viewModelCollection));
         }
-    }
-
-    private void updateCoverPreview(byte[] imageBytes) {
-        coverPreview.setImage(imageCoverProvider.getImageCover(imageBytes));
-        removeCoverButton.setVisible(imageBytes != null && imageBytes.length > 0);
     }
 }

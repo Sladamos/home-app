@@ -1,5 +1,6 @@
 package com.sladamos.book.app.add;
 
+import com.sladamos.book.app.common.SelectCoverViewModel;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -10,9 +11,8 @@ import java.time.LocalDate;
 
 @Component
 @Getter
-public class AddBookViewModel {
+public class AddBookViewModel implements SelectCoverViewModel {
     private final StringProperty title = new SimpleStringProperty();
-    private final StringProperty author = new SimpleStringProperty();
     private final StringProperty isbn = new SimpleStringProperty();
     private final StringProperty description = new SimpleStringProperty();
     private final StringProperty publisher = new SimpleStringProperty();

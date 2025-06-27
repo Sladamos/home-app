@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox alignment="CENTER" spacing="16" xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.sladamos.book.app.common.SelectCoverController">
+    <ImageView fx:id="coverPreview" fitHeight="375" fitWidth="250" preserveRatio="true" />
+    <Button fx:id="selectCoverButton" onAction="#onSelectCoverClicked" styleClass="secondary--button" text="Select cover" />
+    <Button fx:id="removeCoverButton" onAction="#onRemoveCoverClicked" text="Delete cover" visible="false">
+        <styleClass>
+            <String fx:value="secondary--button" />
+            <String fx:value="delete--cover-button" />
+        </styleClass>
+    </Button>
+</VBox>

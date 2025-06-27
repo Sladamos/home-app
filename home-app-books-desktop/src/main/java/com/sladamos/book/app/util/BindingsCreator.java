@@ -46,7 +46,7 @@ public class BindingsCreator {
         );
     }
 
-    private String getMessage(String messageKey) {
+    public String getMessage(String messageKey) {
         return ResourceBundle.getBundle("messages", localeProvider.getLocale()).getString(messageKey);
     }
 }

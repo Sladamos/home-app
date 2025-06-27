@@ -1,0 +1,48 @@
+.dialog-pane {
+    -fx-background-color: linear-gradient(
+            from 0% 0% to 100% 100%,
+            #7000b2cc,
+            #4a008acc
+    );
+    -fx-border-width: 2px;
+    -fx-padding: 16px;
+}
+
+.dialog-pane .content.label {
+    -fx-text-fill: #efefef;
+    -fx-font-size: 14px;
+}
+
+.dialog-pane .header-panel {
+    -fx-background-color: transparent;
+}
+
+.dialog-pane .header-label {
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+.button {
+    -fx-background-radius: 15px;
+    -fx-background-color:
+            white,
+            #3c005e;
+    -fx-background-insets: 1, 2;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 8px 16px;
+    -fx-border-radius: 8px;
+    -fx-cursor: hand;
+    -fx-min-width: 80px;
+}
+
+.button:hover {
+    -fx-background-color:
+            white,
+            #6000a2;
+}
+
+.button:focused {
+    -fx-effect: dropshadow( gaussian , rgba(255,255,255,0.7) , 6, 0, 0, 0 );
+}
