@@ -1,7 +1,7 @@
 package com.sladamos.book.app.items;
 
 import com.sladamos.book.app.add.OnAddBookClicked;
-import com.sladamos.book.app.util.BindingsCreator;
+import com.sladamos.app.util.BindingsCreator;
 import javafx.collections.ListChangeListener.Change;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

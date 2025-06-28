@@ -9,7 +9,7 @@ import java.util.Objects;
 
 @Component
 @NoArgsConstructor
-public class ImageCoverProvider {
+public class CoverImageProvider {
 
     public Image getImageCover(byte[] imageCover) {
         if (imageCover != null) {

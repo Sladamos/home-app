@@ -1,8 +1,8 @@
 package com.sladamos.book.app.items;
 
 import com.sladamos.book.BookStatus;
-import com.sladamos.book.app.util.BindingsCreator;
-import com.sladamos.book.app.util.LocaleProvider;
+import com.sladamos.app.util.BindingsCreator;
+import com.sladamos.app.util.LocaleProvider;
 import com.sladamos.book.app.util.StarsFactory;
 import com.sladamos.book.app.util.StatusMessageKeyProvider;
 import javafx.beans.binding.Bindings;

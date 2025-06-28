@@ -1,8 +1,8 @@
 package com.sladamos.book.app.common;
 
-import com.sladamos.book.app.util.BindingsCreator;
-import com.sladamos.book.app.util.ImageCoverProvider;
-import com.sladamos.book.app.util.TemporaryMessagesFactory;
+import com.sladamos.app.util.BindingsCreator;
+import com.sladamos.book.app.util.CoverImageProvider;
+import com.sladamos.app.util.TemporaryMessagesFactory;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
@@ -29,7 +29,7 @@ public class SelectCoverController {
     @FXML
     private ImageView coverPreview;
 
-    private final ImageCoverProvider imageCoverProvider;
+    private final CoverImageProvider coverImageProvider;
 
     private final BindingsCreator bindingsCreator;
 
@@ -81,8 +81,8 @@ public class SelectCoverController {
     }
 
     private void updateCoverPreview(byte[] imageBytes) {
-        if (imageCoverProvider != null) {
-            coverPreview.setImage(imageCoverProvider.getImageCover(imageBytes));
+        if (coverImageProvider != null) {
+            coverPreview.setImage(coverImageProvider.getImageCover(imageBytes));
         }
         removeCoverButton.setVisible(imageBytes != null && imageBytes.length > 0);
     }

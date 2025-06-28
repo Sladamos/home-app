@@ -1,7 +1,7 @@
 package com.sladamos.book.app.add;
 
 import com.sladamos.book.app.items.OnDisplayItemsClicked;
-import com.sladamos.book.app.util.BindingsCreator;
+import com.sladamos.app.util.BindingsCreator;
 import com.sladamos.book.app.common.SelectCoverController;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;

@@ -1,4 +1,4 @@
-package com.sladamos.book.app.util;
+package com.sladamos.app.util;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;

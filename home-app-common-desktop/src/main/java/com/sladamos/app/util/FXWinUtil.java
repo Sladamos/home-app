@@ -7,19 +7,22 @@ import com.sun.jna.platform.win32.User32;
 import com.sun.jna.platform.win32.WinDef;
 import com.sun.jna.ptr.IntByReference;
 import javafx.stage.Stage;
+import org.springframework.stereotype.Component;
 
+@Component
 public class FXWinUtil {
+    private static final int DEFAULT_TITLE_BAR_COLOR = 0x3A007A;
 
-    public static void setTitleBarColor(Stage stage, int rgb) {
+    public void setTitleBarColor(Stage stage) {
         WinDef.HWND hwnd = getNativeHandleForStage(stage);
         Memory mem = new Memory(4);
-        mem.setInt(0, rgbToBgr(rgb));
+        mem.setInt(0, rgbToBgr(DEFAULT_TITLE_BAR_COLOR));
         int titleBarAttribute = 35;
         Dwmapi.INSTANCE.DwmSetWindowAttribute(hwnd, titleBarAttribute, mem, 4);
         refreshWindow(hwnd);
     }
 
-    private static WinDef.HWND getNativeHandleForStage(Stage stage) {
+    private WinDef.HWND getNativeHandleForStage(Stage stage) {
         int pid = Kernel32.INSTANCE.GetCurrentProcessId();
         WinDef.HWND[] found = new WinDef.HWND[1];
 
@@ -31,7 +34,7 @@ public class FXWinUtil {
         return found[0];
     }
 
-    private static void findHandleWithPid(Stage stage, int pid, WinDef.HWND[] found) {
+    private void findHandleWithPid(Stage stage, int pid, WinDef.HWND[] found) {
         User32.INSTANCE.EnumWindows((hwnd, data) -> {
             IntByReference pidRef = new IntByReference();
             User32.INSTANCE.GetWindowThreadProcessId(hwnd, pidRef);
@@ -49,11 +52,11 @@ public class FXWinUtil {
     }
 
 
-    private static void refreshWindow(WinDef.HWND hwnd) {
+    private void refreshWindow(WinDef.HWND hwnd) {
         User32.INSTANCE.SetWindowPos(hwnd, null, 0, 0, 0, 0, User32.SWP_NOMOVE | User32.SWP_NOSIZE | User32.SWP_NOZORDER | User32.SWP_FRAMECHANGED);
     }
 
-    private static int rgbToBgr(int rgb) {
+    private int rgbToBgr(int rgb) {
         int r = (rgb >> 16) & 0xFF;
         int g = (rgb >> 8) & 0xFF;
         int b = rgb & 0xFF;

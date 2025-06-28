@@ -32,6 +32,11 @@
       <artifactId>home-app-books</artifactId>
         <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>com.sladamos</groupId>
+      <artifactId>home-app-common-desktop</artifactId>
+      <version>${project.version}</version>
+    </dependency>
   </dependencies>
 
   <build>
