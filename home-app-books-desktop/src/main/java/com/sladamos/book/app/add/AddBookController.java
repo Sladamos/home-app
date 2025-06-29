@@ -1,29 +1,29 @@
 package com.sladamos.book.app.add;
 
-import com.sladamos.book.app.items.OnDisplayItemsClicked;
 import com.sladamos.app.util.BindingsCreator;
+import com.sladamos.book.app.common.MultipleFieldsController;
+import com.sladamos.book.app.common.MultipleFieldsControllerFactory;
 import com.sladamos.book.app.common.SelectCoverController;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import com.sladamos.book.app.items.OnDisplayItemsClicked;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import lombok.RequiredArgsConstructor;
+import javafx.scene.layout.Pane;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Slf4j
-@RequiredArgsConstructor
 @Component
 public class AddBookController {
 
-    public static final int MIN_NUMBER_OF_FIELDS = 1;
+    @FXML
+    private Pane genresWrapper;
+
+    @FXML
+    private Pane authorsWrapper;
 
     @FXML
     private Button returnToItemsButton;
@@ -68,16 +68,12 @@ public class AddBookController {
     private CheckBox favoriteCheckBox;
 
     @FXML
-    private VBox authorsBox;
-
-    @FXML
     private Button addAuthorButton;
 
     @FXML
-    private VBox genresBox;
-
-    @FXML
     private Button addGenreButton;
+
+    private final SelectCoverController selectCoverController;
 
     private final ApplicationEventPublisher applicationEventPublisher;
 
@@ -85,16 +81,29 @@ public class AddBookController {
 
     private final AddBookViewModel viewModel;
 
-    private final SelectCoverController selectCoverController;
+    private final MultipleFieldsController authorsMultipleFieldsController;
+
+    private final MultipleFieldsController genresMultipleFieldsController;
+
+    public AddBookController(MultipleFieldsControllerFactory multipleFieldsControllerFactory,
+                             SelectCoverController selectCoverController,
+                             ApplicationEventPublisher applicationEventPublisher,
+                             BindingsCreator bindingsCreator,
+                             AddBookViewModel viewModel) {
+        this.selectCoverController = selectCoverController;
+        this.applicationEventPublisher = applicationEventPublisher;
+        this.bindingsCreator = bindingsCreator;
+        this.viewModel = viewModel;
+        authorsMultipleFieldsController = multipleFieldsControllerFactory.createMultipleFieldsController("books.multipleFields.authors");
+        genresMultipleFieldsController = multipleFieldsControllerFactory.createMultipleFieldsController("books.multipleFields.genres");
+    }
 
     @FXML
     public void initialize() {
+        addMultipleFieldsComponent(authorsMultipleFieldsController, authorsWrapper);
+        addMultipleFieldsComponent(genresMultipleFieldsController, genresWrapper);
+
         setupBindings();
-
-        selectCoverController.bindTo(viewModel);
-
-        initializeCollection(authorsBox, viewModel.getAuthors());
-        initializeCollection(genresBox, viewModel.getGenres());
     }
 
     @FXML
@@ -111,66 +120,19 @@ public class AddBookController {
     @FXML
     private void onAddAuthorClicked() {
         log.info("Add author button clicked");
-        addField("", authorsBox, viewModel.getAuthors());
+        authorsMultipleFieldsController.addEmptyField();
     }
 
     @FXML
     private void onAddGenreClicked() {
         log.info("Add genre button clicked");
-        addField("", genresBox, viewModel.getGenres());
-    }
-
-    private void addField(String value, VBox fieldsContainer, ObservableList<String> viewModelCollection) {
-        TextField field = new TextField(value);
-        Button removeBtn = createDeleteButton(onDeleteButtonClicked(field, fieldsContainer, viewModelCollection));
-        HBox hBox = new HBox(5, field, removeBtn);
-        fieldsContainer.getChildren().add(hBox);
-        field.textProperty().addListener((obs, oldVal, newVal) -> updateCollectionInViewModel(viewModelCollection, fieldsContainer));
-        updateVisibilityOfDeleteButtons(fieldsContainer);
-    }
-
-    private Button createDeleteButton(EventHandler<ActionEvent> field) {
-        Button removeBtn = new Button("-");
-        removeBtn.getStyleClass().add("delete--field-button");
-        removeBtn.setOnAction(field);
-        return removeBtn;
-    }
-
-    private EventHandler<ActionEvent> onDeleteButtonClicked(TextField field, VBox fieldsContainer,  ObservableList<String> viewModelCollection) {
-        return e -> {
-            log.info("Delete button clicked for field: {}", field.getText());
-            fieldsContainer.getChildren().remove(field.getParent());
-            updateCollectionInViewModel(viewModelCollection, fieldsContainer);
-            updateVisibilityOfDeleteButtons(fieldsContainer);
-        };
-    }
-
-    private void updateVisibilityOfDeleteButtons(VBox fieldsContainer) {
-        fieldsContainer.getChildren().stream()
-                .map(HBox.class::cast)
-                .map(f -> f.getChildren().get(1))
-                .forEach(btn -> btn.setVisible(fieldsContainer.getChildren().size() > MIN_NUMBER_OF_FIELDS));
-    }
-
-    private void updateCollectionInViewModel(ObservableList<String> viewModelCollection, VBox fieldsContainer) {
-        List<TextField> fields = getFields(fieldsContainer);
-        viewModelCollection.setAll(
-                fields.stream()
-                        .map(TextField::getText)
-                        .filter(s -> s != null && !s.isBlank())
-                        .toList()
-        );
-    }
-
-    private List<TextField> getFields(VBox fieldsContainer) {
-        return fieldsContainer.getChildren().stream()
-                .map(HBox.class::cast)
-                .map(e -> e.getChildren().getFirst())
-                .map(TextField.class::cast)
-                .collect(Collectors.toList());
+        genresMultipleFieldsController.addEmptyField();
     }
 
     private void setupBindings() {
+        selectCoverController.bindTo(viewModel);
+        authorsMultipleFieldsController.bindTo(viewModel::getAuthors);
+        genresMultipleFieldsController.bindTo(viewModel::getGenres);
         returnToItemsButton.textProperty().bind(bindingsCreator.createBinding("books.add.returnToBooks"));
         addAuthorButton.textProperty().bind(bindingsCreator.createBinding("books.add.addAuthor"));
         addGenreButton.textProperty().bind(bindingsCreator.createBinding("books.add.addGenre"));
@@ -181,7 +143,6 @@ public class AddBookController {
         borrowedByField.textProperty().bindBidirectional(viewModel.getBorrowedBy());
         readDatePicker.valueProperty().bindBidirectional(viewModel.getReadDate());
         favoriteCheckBox.selectedProperty().bindBidirectional(viewModel.getFavorite());
-
         pagesSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 10000, 0));
         pagesSpinner.getValueFactory().valueProperty().bindBidirectional(viewModel.getPages().asObject());
 
@@ -226,11 +187,14 @@ public class AddBookController {
         });
     }
 
-    private void initializeCollection(VBox fieldsContainer, ObservableList<String> viewModelCollection) {
-        if (viewModelCollection.isEmpty()) {
-            addField("", fieldsContainer, viewModelCollection);
-        } else {
-            viewModelCollection.forEach(author -> addField(author, fieldsContainer, viewModelCollection));
+    private void addMultipleFieldsComponent(Object multipleFieldsController, Pane multipleFieldsContainer) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../common/MultipleFields.fxml"));
+            loader.setControllerFactory(param -> multipleFieldsController);
+            Node itemRoot = loader.load();
+            multipleFieldsContainer.getChildren().add(itemRoot);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 }

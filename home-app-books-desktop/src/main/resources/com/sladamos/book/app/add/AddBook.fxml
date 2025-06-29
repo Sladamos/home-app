@@ -23,8 +23,7 @@
                     <Label text="Tytuł:*" />
                     <TextField fx:id="titleField" promptText="Tytuł" />
 
-                    <Label text="Autorzy:*" />
-                    <VBox fx:id="authorsBox" spacing="4" />
+                    <Pane fx:id="authorsWrapper" />
 
                     <Label text="ISBN:" />
                     <TextField fx:id="isbnField" promptText="ISBN" />
@@ -54,8 +53,7 @@
                     <Label text="Data przeczytania:" />
                     <DatePicker fx:id="readDatePicker" promptText="Data przeczytania" />
 
-                    <Label text="Gatunki:*" />
-                    <VBox fx:id="genresBox" spacing="4" />
+                    <Pane fx:id="genresWrapper" />
 
                     <Button fx:id="addBookButton" alignment="CENTER" onAction="#onAddBookClicked" styleClass="primary--button" text="Dodaj książkę" />
                 </VBox>

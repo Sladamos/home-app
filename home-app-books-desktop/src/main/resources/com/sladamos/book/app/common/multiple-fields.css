@@ -1,0 +1,16 @@
+.delete--field-button {
+    -fx-background-radius: 50%;
+    -fx-border-radius: 50%;
+    -fx-background-color:
+            white,
+            darkred;
+    -fx-background-insets: 1, 2;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 0;
+    -fx-min-width: 24px;
+    -fx-min-height: 24px;
+    -fx-max-width: 24px;
+    -fx-max-height: 24px;
+    -fx-cursor: hand;
+}
