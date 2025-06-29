@@ -1,11 +1,10 @@
 package com.sladamos.book.app.items;
 
-import com.sladamos.book.app.add.OnAddBookClicked;
 import com.sladamos.app.util.BindingsCreator;
+import com.sladamos.app.util.ComponentsGenerator;
+import com.sladamos.book.app.add.OnAddBookClicked;
 import javafx.collections.ListChangeListener.Change;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +26,8 @@ public class BooksItemsController {
     private final BooksItemsViewModel viewModel;
 
     private final BindingsCreator bindingsCreator;
+
+    private final ComponentsGenerator componentsGenerator;
 
     private final BookItemControllerFactory bookItemControllerFactory;
 
@@ -63,13 +64,6 @@ public class BooksItemsController {
     }
 
     private void addItem(BookItemViewModel itemVM) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("BooksItem.fxml"));
-            loader.setControllerFactory(param -> bookItemControllerFactory.createController(itemVM));
-            Node itemRoot = loader.load();
-            booksContainer.getChildren().add(itemRoot);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        componentsGenerator.addComponent(bookItemControllerFactory.createController(itemVM), booksContainer, getClass().getResource("BooksItem.fxml"));
     }
 }

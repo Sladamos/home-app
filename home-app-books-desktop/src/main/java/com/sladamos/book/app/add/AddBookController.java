@@ -1,13 +1,12 @@
 package com.sladamos.book.app.add;
 
 import com.sladamos.app.util.BindingsCreator;
+import com.sladamos.app.util.ComponentsGenerator;
 import com.sladamos.book.app.common.MultipleFieldsController;
 import com.sladamos.book.app.common.MultipleFieldsControllerFactory;
 import com.sladamos.book.app.common.SelectCoverController;
 import com.sladamos.book.app.items.OnDisplayItemsClicked;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -15,9 +14,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
+import java.net.URL;
+
 @Slf4j
 @Component
 public class AddBookController {
+
+    private static final URL MULTIPLE_FIELDS_COMPONENT_RESOURCE = MultipleFieldsController.class.getResource("MultipleFields.fxml");
 
     @FXML
     private Pane genresWrapper;
@@ -79,6 +82,8 @@ public class AddBookController {
 
     private final BindingsCreator bindingsCreator;
 
+    private final ComponentsGenerator componentsGenerator;
+
     private final AddBookViewModel viewModel;
 
     private final MultipleFieldsController authorsMultipleFieldsController;
@@ -89,10 +94,12 @@ public class AddBookController {
                              SelectCoverController selectCoverController,
                              ApplicationEventPublisher applicationEventPublisher,
                              BindingsCreator bindingsCreator,
+                             ComponentsGenerator componentsGenerator,
                              AddBookViewModel viewModel) {
         this.selectCoverController = selectCoverController;
         this.applicationEventPublisher = applicationEventPublisher;
         this.bindingsCreator = bindingsCreator;
+        this.componentsGenerator = componentsGenerator;
         this.viewModel = viewModel;
         authorsMultipleFieldsController = multipleFieldsControllerFactory.createMultipleFieldsController("books.multipleFields.authors");
         genresMultipleFieldsController = multipleFieldsControllerFactory.createMultipleFieldsController("books.multipleFields.genres");
@@ -100,8 +107,8 @@ public class AddBookController {
 
     @FXML
     public void initialize() {
-        addMultipleFieldsComponent(authorsMultipleFieldsController, authorsWrapper);
-        addMultipleFieldsComponent(genresMultipleFieldsController, genresWrapper);
+        componentsGenerator.addComponent(genresMultipleFieldsController, genresWrapper, MULTIPLE_FIELDS_COMPONENT_RESOURCE);
+        componentsGenerator.addComponent(authorsMultipleFieldsController, authorsWrapper, MULTIPLE_FIELDS_COMPONENT_RESOURCE);
 
         setupBindings();
     }
@@ -185,16 +192,5 @@ public class AddBookController {
                 ratingValueLabel.setText(String.valueOf(newVal));
             }
         });
-    }
-
-    private void addMultipleFieldsComponent(Object multipleFieldsController, Pane multipleFieldsContainer) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../common/MultipleFields.fxml"));
-            loader.setControllerFactory(param -> multipleFieldsController);
-            Node itemRoot = loader.load();
-            multipleFieldsContainer.getChildren().add(itemRoot);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 }
