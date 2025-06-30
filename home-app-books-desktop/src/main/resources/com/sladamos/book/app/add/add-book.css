@@ -13,3 +13,14 @@
             white,
             #3c005e;
 }
+
+.add--header {
+    -fx-font-size: 30px;
+    -fx-font-weight: bold;
+}
+
+.scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-padding: 8 4 8 16;
+    -fx-pref-width: 30px;
+}

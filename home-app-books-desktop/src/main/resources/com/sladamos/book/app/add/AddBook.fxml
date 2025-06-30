@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
 <?import java.net.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
 <BorderPane xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sladamos.book.app.add.AddBookController">
@@ -15,50 +13,52 @@
         </VBox>
     </left>
     <right>
-        <HBox alignment="CENTER" spacing="20.0" styleClass="form--container">
-            <fx:include source="../common/SelectCover.fxml"/>
-            <ScrollPane fitToWidth="true">
-                <VBox spacing="8">
-                    <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Dodaj książkę" />
-                    <Label text="Tytuł:*" />
-                    <TextField fx:id="titleField" promptText="Tytuł" />
+        <VBox alignment="CENTER" spacing="10.0">
+            <Label fx:id="addBookLabel" styleClass="add--header" text="Add book" />
+            <HBox alignment="CENTER" spacing="20.0" styleClass="form--container">
+                <fx:include source="../common/SelectCover.fxml" />
+                <ScrollPane fitToWidth="true">
+                    <VBox spacing="8">
+                        <Label text="Title:*" />
+                        <TextField fx:id="titleField" />
 
-                    <Pane fx:id="authorsWrapper" />
+                        <Pane fx:id="authorsWrapper" />
 
-                    <Label text="ISBN:" />
-                    <TextField fx:id="isbnField" promptText="ISBN" />
+                        <Label text="ISBN:" />
+                        <TextField fx:id="isbnField" />
 
-                    <Label text="Wydawnictwo:" />
-                    <TextField fx:id="publisherField" promptText="Wydawnictwo" />
+                        <Label text="Publisher:" />
+                        <TextField fx:id="publisherField" />
 
-                    <Label text="Pożyczona dla:" />
-                    <TextField fx:id="borrowedByField" promptText="Pożyczona dla" />
+                        <Label text="Borrowed to:" />
+                        <TextField fx:id="borrowedByField" />
 
-                    <Label text="Liczba stron:" />
-                    <Spinner fx:id="pagesSpinner" promptText="Liczba stron" />
+                        <Label text="Pages:" />
+                        <Spinner fx:id="pagesSpinner" />
 
-                    <Label text="Ocena:" />
-                    <HBox alignment="CENTER_LEFT" spacing="8">
-                        <CheckBox fx:id="ratingEnabledCheckBox" text="Ustaw ocenę" />
-                        <Slider fx:id="ratingSlider" blockIncrement="1" disable="true" majorTickUnit="1" max="5" min="1" minorTickCount="0" prefWidth="120" showTickLabels="true" showTickMarks="true" snapToTicks="true" />
-                        <Label fx:id="ratingValueLabel" text="brak" />
-                    </HBox>
+                        <Label text="Rating:" />
+                        <HBox alignment="CENTER_LEFT" spacing="8">
+                            <CheckBox fx:id="ratingEnabledCheckBox" />
+                            <Slider fx:id="ratingSlider" blockIncrement="1" disable="true" majorTickUnit="1" max="5" min="1" minorTickCount="0" prefWidth="120" showTickLabels="true" showTickMarks="true" snapToTicks="true" />
+                            <Label fx:id="ratingValueLabel" text="empty" />
+                        </HBox>
 
-                    <Label text="Ulubiona:" />
-                    <CheckBox fx:id="favoriteCheckBox" />
+                        <Label text="Fav:" />
+                        <CheckBox fx:id="favoriteCheckBox" />
 
-                    <Label text="Opis:" />
-                    <TextArea fx:id="descriptionArea" prefRowCount="3" promptText="Opis" />
+                        <Label text="Description:" />
+                        <TextArea fx:id="descriptionArea" prefRowCount="3" />
 
-                    <Label text="Data przeczytania:" />
-                    <DatePicker fx:id="readDatePicker" promptText="Data przeczytania" />
+                        <Label text="Read date:" />
+                        <DatePicker fx:id="readDatePicker" />
 
-                    <Pane fx:id="genresWrapper" />
+                        <Pane fx:id="genresWrapper" />
 
-                    <Button fx:id="addBookButton" alignment="CENTER" onAction="#onAddBookClicked" styleClass="primary--button" text="Dodaj książkę" />
-                </VBox>
-            </ScrollPane>
-        </HBox>
+                        <Button fx:id="addBookButton" alignment="CENTER" onAction="#onAddBookClicked" styleClass="primary--button" text="Dodaj książkę" />
+                    </VBox>
+                </ScrollPane>
+            </HBox>
+        </VBox>
     </right>
     <stylesheets>
         <URL value="@add-book.css" />

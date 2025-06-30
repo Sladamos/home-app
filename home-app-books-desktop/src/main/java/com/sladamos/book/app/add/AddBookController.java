@@ -23,6 +23,9 @@ public class AddBookController {
     private static final URL MULTIPLE_FIELDS_COMPONENT_RESOURCE = MultipleFieldsController.class.getResource("MultipleFields.fxml");
 
     @FXML
+    private Label addBookLabel;
+
+    @FXML
     private Pane genresWrapper;
 
     @FXML
@@ -140,9 +143,11 @@ public class AddBookController {
         selectCoverController.bindTo(viewModel);
         authorsMultipleFieldsController.bindTo(viewModel::getAuthors);
         genresMultipleFieldsController.bindTo(viewModel::getGenres);
+        addBookLabel.textProperty().bind(bindingsCreator.createBinding("books.add.name"));
         returnToItemsButton.textProperty().bind(bindingsCreator.createBinding("books.add.returnToBooks"));
         addAuthorButton.textProperty().bind(bindingsCreator.createBinding("books.add.addAuthor"));
         addGenreButton.textProperty().bind(bindingsCreator.createBinding("books.add.addGenre"));
+
         titleField.textProperty().bindBidirectional(viewModel.getTitle());
         isbnField.textProperty().bindBidirectional(viewModel.getIsbn());
         descriptionArea.textProperty().bindBidirectional(viewModel.getDescription());

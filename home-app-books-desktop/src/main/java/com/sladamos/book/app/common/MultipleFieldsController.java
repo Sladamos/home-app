@@ -88,7 +88,7 @@ public class MultipleFieldsController {
     }
 
     private void updateCollectionInViewModel() {
-        List<TextField> fields = getFields(fieldsContainer);
+        List<TextField> fields = getFields();
         viewModel.getFields().setAll(
                 fields.stream()
                         .map(TextField::getText)
@@ -97,7 +97,7 @@ public class MultipleFieldsController {
         );
     }
 
-    private List<TextField> getFields(VBox fieldsContainer) {
+    private List<TextField> getFields() {
         return fieldsContainer.getChildren().stream()
                 .map(HBox.class::cast)
                 .map(e -> e.getChildren().getFirst())
