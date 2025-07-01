@@ -74,13 +74,15 @@ class BookValidationTest {
     }
 
     @Test
-    void shouldNotReturnValidationErrorWhenAuthorsListIsEmpty() {
+    void shouldReturnValidationErrorWhenAuthorsListIsEmpty() {
         Book book = createValidBook();
         book.setAuthors(List.of());
 
         Set<ConstraintViolation<Book>> violations = validator.validate(book);
 
-        assertThat(violations).isEmpty();
+        assertThat(violations)
+                .anyMatch(v -> v.getPropertyPath().toString().equals("authors")
+                        && v.getMessage().contains("At least one author is required"));
     }
 
     @Test

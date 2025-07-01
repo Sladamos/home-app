@@ -21,6 +21,8 @@ public class Book {
 
     public static final int MAX_RATING = 5;
     public static final int MIN_RATING = 1;
+    public static final int MIN_NUMBER_OF_AUTHORS = 1;
+    public static final int MIN_NUMBER_OF_GENRES = 0;
 
     @Id
     private UUID id;
@@ -61,7 +63,8 @@ public class Book {
 
     @ElementCollection
     @CollectionTable(name = "book_authors", joinColumns = @JoinColumn(name = "book_id"))
-    @Column(name = "genre")
+    @Column(name = "author")
+    @Size(min = MIN_NUMBER_OF_AUTHORS, message = "At least one author is required")
     private List<@NotBlank String> authors;
 
     @ElementCollection
