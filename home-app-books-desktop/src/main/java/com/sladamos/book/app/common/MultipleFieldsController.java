@@ -15,12 +15,13 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Slf4j
 @RequiredArgsConstructor
 public class MultipleFieldsController {
 
-    public static final int MIN_NUMBER_OF_FIELDS = 1;
+    private final static int INITIAL_NUMBER_OF_FIELDS = 1;
 
     @FXML
     private Label fieldsLabel;
@@ -44,7 +45,8 @@ public class MultipleFieldsController {
 
         ObservableList<String> fields = viewModel.getFields();
         if (fields.isEmpty()) {
-            addEmptyField();
+            int minimalNumberOfFields = Math.max(viewModel.getMinimalNumberOfFields(), INITIAL_NUMBER_OF_FIELDS);
+            IntStream.range(0, minimalNumberOfFields).forEach(i -> addEmptyField());
         } else {
             fields.forEach(this::addField);
         }
@@ -52,6 +54,7 @@ public class MultipleFieldsController {
 
     public void addEmptyField() {
         addField("");
+        updateCollectionInViewModel();
     }
 
     private void addField(String value) {
@@ -81,10 +84,11 @@ public class MultipleFieldsController {
     }
 
     private void updateVisibilityOfDeleteButtons() {
+        int minimalNumberOfFields = viewModel.getMinimalNumberOfFields();
         fieldsContainer.getChildren().stream()
                 .map(HBox.class::cast)
                 .map(f -> f.getChildren().get(1))
-                .forEach(btn -> btn.setVisible(fieldsContainer.getChildren().size() > MIN_NUMBER_OF_FIELDS));
+                .forEach(btn -> btn.setVisible(fieldsContainer.getChildren().size() > minimalNumberOfFields));
     }
 
     private void updateCollectionInViewModel() {
@@ -92,7 +96,6 @@ public class MultipleFieldsController {
         viewModel.getFields().setAll(
                 fields.stream()
                         .map(TextField::getText)
-                        .filter(s -> s != null && !s.isBlank())
                         .toList()
         );
     }

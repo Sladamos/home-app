@@ -85,5 +85,6 @@ public class SelectCoverController {
             coverPreview.setImage(coverImageProvider.getImageCover(imageBytes));
         }
         removeCoverButton.setVisible(imageBytes != null && imageBytes.length > 0);
+        selectCoverButton.requestFocus();
     }
 }

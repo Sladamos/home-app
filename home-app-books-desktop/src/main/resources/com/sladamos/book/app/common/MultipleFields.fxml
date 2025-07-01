@@ -4,15 +4,15 @@
 <?import javafx.scene.layout.VBox?>
 <?import java.net.URL?>
 <?import javafx.scene.layout.HBox?>
-<VBox spacing="8" xmlns="http://javafx.com/javafx"
+<HBox spacing="8" xmlns="http://javafx.com/javafx"
 	  xmlns:fx="http://javafx.com/fxml"
 	  fx:controller="com.sladamos.book.app.common.MultipleFieldsController">
 
 	<Label fx:id="fieldsLabel" />
-	<VBox fx:id="fieldsContainer" spacing="4" />
+	<VBox fx:id="fieldsContainer" spacing="10" />
 	<stylesheets>
 		<URL value="@multiple-fields.css" />
 		<URL value="@../books-common.css" />
 	</stylesheets>
-</VBox>
+</HBox>
 

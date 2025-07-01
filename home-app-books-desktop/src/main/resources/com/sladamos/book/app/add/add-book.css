@@ -1,20 +1,46 @@
 .form--container {
     -fx-background-radius: 8px;
     -fx-border-radius: 8px;
-    -fx-padding: 16;
+    -fx-padding: 32 16;
     -fx-background-color:
             white,
             #3c005e;
 }
 
-.image--container {
+.form--image-container {
     -fx-padding: 0 16;
     -fx-background-color:
             white,
             #3c005e;
 }
 
-.add--header {
+.form--fields-wrapper HBox {
+    -fx-spacing: 10px;
+    -fx-alignment: center-left;
+}
+
+.form--fields-wrapper TextField {
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-background-color:
+            white,
+            #6000a2;
+    -fx-padding: 8;
+    -fx-border-color: transparent;
+    -fx-border-width: 1;
+    -fx-text-fill: #efefef;
+    -fx-font-size: 14px;
+    -fx-font-family: "Noto Sans";
+    -fx-pref-width: 250px;
+}
+
+.form--fields-wrapper .label {
+    -fx-font-family: "Noto Sans";
+    -fx-font-size: 14px;
+    -fx-min-width: 100px;
+}
+
+.form--header {
     -fx-font-size: 30px;
     -fx-font-weight: bold;
 }

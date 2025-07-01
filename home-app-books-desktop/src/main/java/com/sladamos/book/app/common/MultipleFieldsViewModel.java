@@ -1,7 +1,14 @@
 package com.sladamos.book.app.common;
 
 import javafx.collections.ObservableList;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
-public interface MultipleFieldsViewModel {
-    ObservableList<String> getFields();
+@RequiredArgsConstructor
+@Getter
+public class MultipleFieldsViewModel {
+
+    private final ObservableList<String> fields;
+
+    private final Integer minimalNumberOfFields;
 }

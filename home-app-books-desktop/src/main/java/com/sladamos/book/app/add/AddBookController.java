@@ -2,10 +2,13 @@ package com.sladamos.book.app.add;
 
 import com.sladamos.app.util.BindingsCreator;
 import com.sladamos.app.util.ComponentsGenerator;
+import com.sladamos.book.Book;
 import com.sladamos.book.app.common.MultipleFieldsController;
 import com.sladamos.book.app.common.MultipleFieldsControllerFactory;
+import com.sladamos.book.app.common.MultipleFieldsViewModel;
 import com.sladamos.book.app.common.SelectCoverController;
 import com.sladamos.book.app.items.OnDisplayItemsClicked;
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
@@ -16,11 +19,22 @@ import org.springframework.stereotype.Component;
 
 import java.net.URL;
 
+import static com.sladamos.book.Book.MIN_NUMBER_OF_GENRES;
+
 @Slf4j
 @Component
 public class AddBookController {
 
     private static final URL MULTIPLE_FIELDS_COMPONENT_RESOURCE = MultipleFieldsController.class.getResource("MultipleFields.fxml");
+
+    @FXML
+    private Label titleLabel;
+
+    @FXML
+    private Label publisherLabel;
+
+    @FXML
+    private Label borrowedToLabel;
 
     @FXML
     private Label addBookLabel;
@@ -141,12 +155,21 @@ public class AddBookController {
 
     private void setupBindings() {
         selectCoverController.bindTo(viewModel);
-        authorsMultipleFieldsController.bindTo(viewModel::getAuthors);
-        genresMultipleFieldsController.bindTo(viewModel::getGenres);
+        authorsMultipleFieldsController.bindTo(new MultipleFieldsViewModel(viewModel.getAuthors(), Book.MIN_NUMBER_OF_AUTHORS));
+        genresMultipleFieldsController.bindTo(new MultipleFieldsViewModel(viewModel.getGenres(), MIN_NUMBER_OF_GENRES));
+        System.out.println(viewModel.getAuthors().size());
+        System.out.println(viewModel.getGenres().size());
+        genresWrapper.visibleProperty().bind(Bindings.isEmpty(viewModel.getGenres()).not());
+        genresWrapper.managedProperty().bind(genresWrapper.visibleProperty());
+
         addBookLabel.textProperty().bind(bindingsCreator.createBinding("books.add.name"));
         returnToItemsButton.textProperty().bind(bindingsCreator.createBinding("books.add.returnToBooks"));
         addAuthorButton.textProperty().bind(bindingsCreator.createBinding("books.add.addAuthor"));
         addGenreButton.textProperty().bind(bindingsCreator.createBinding("books.add.addGenre"));
+
+        titleLabel.textProperty().bind(bindingsCreator.createBinding("books.add.title"));
+        publisherLabel.textProperty().bind(bindingsCreator.createBinding("books.add.publisher"));
+        borrowedToLabel.textProperty().bind(bindingsCreator.createBinding("books.add.borrowedTo"));
 
         titleField.textProperty().bindBidirectional(viewModel.getTitle());
         isbnField.textProperty().bindBidirectional(viewModel.getIsbn());

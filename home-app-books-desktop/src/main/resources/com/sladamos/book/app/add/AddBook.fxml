@@ -14,27 +14,35 @@
     </left>
     <right>
         <VBox alignment="CENTER" spacing="10.0">
-            <Label fx:id="addBookLabel" styleClass="add--header" text="Add book" />
+            <Label fx:id="addBookLabel" styleClass="form--header" text="Add book" />
             <HBox alignment="CENTER" spacing="20.0" styleClass="form--container">
                 <fx:include source="../common/SelectCover.fxml" />
                 <ScrollPane fitToWidth="true">
-                    <VBox spacing="8">
-                        <Label text="Title:*" />
-                        <TextField fx:id="titleField" />
+                    <VBox spacing="20" styleClass="form--fields-wrapper">
+
+                        <HBox>
+                            <Label fx:id="titleLabel" text="Title:*" />
+                            <TextField fx:id="titleField" />
+                        </HBox>
 
                         <Pane fx:id="authorsWrapper" />
 
-                        <Label text="ISBN:" />
-                        <TextField fx:id="isbnField" />
+                        <HBox>
+                            <Label fx:id="publisherLabel" text="Publisher:" />
+                            <TextField fx:id="publisherField" />
+                        </HBox>
 
-                        <Label text="Publisher:" />
-                        <TextField fx:id="publisherField" />
+                        <Pane fx:id="genresWrapper" />
 
-                        <Label text="Borrowed to:" />
-                        <TextField fx:id="borrowedByField" />
+                        <HBox>
+                            <Label text="ISBN:" />
+                            <TextField fx:id="isbnField" />
+                        </HBox>
 
-                        <Label text="Pages:" />
-                        <Spinner fx:id="pagesSpinner" />
+                        <HBox>
+                            <Label text="Pages:" />
+                            <Spinner fx:id="pagesSpinner" />
+                        </HBox>
 
                         <Label text="Rating:" />
                         <HBox alignment="CENTER_LEFT" spacing="8">
@@ -46,13 +54,16 @@
                         <Label text="Fav:" />
                         <CheckBox fx:id="favoriteCheckBox" />
 
+                        <HBox>
+                            <Label fx:id="borrowedToLabel" text="Borrowed to:" />
+                            <TextField fx:id="borrowedByField" />
+                        </HBox>
+
                         <Label text="Description:" />
                         <TextArea fx:id="descriptionArea" prefRowCount="3" />
 
                         <Label text="Read date:" />
                         <DatePicker fx:id="readDatePicker" />
-
-                        <Pane fx:id="genresWrapper" />
 
                         <Button fx:id="addBookButton" alignment="CENTER" onAction="#onAddBookClicked" styleClass="primary--button" text="Dodaj książkę" />
                     </VBox>

@@ -19,8 +19,7 @@ public class BindingsCreator {
     public StringBinding createBindingWithKey(String messageKey, IntegerProperty property) {
         return Bindings.createStringBinding(
                 () -> {
-                    ResourceBundle bundle = ResourceBundle.getBundle("messages", localeProvider.getLocale());
-                    String pattern = bundle.getString(messageKey);
+                    String pattern = getMessage(messageKey);
                     return MessageFormat.format(pattern, property.get());
                 },
                 localeProvider.getLocaleProperty(),
