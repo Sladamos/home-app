@@ -14,13 +14,26 @@
             #3c005e;
 }
 
+.form--fields-wrapper {
+    -fx-padding: 0 15 0 0;
+}
+
+
 .form--fields-wrapper HBox {
     -fx-spacing: 10px;
     -fx-alignment: center-left;
 }
 
+
+.form--fields-wrapper * {
+    -fx-text-fill: #efefef;
+    -fx-font-size: 14px;
+    -fx-font-family: "Noto Sans";
+}
+
 .form--fields-wrapper TextField,
-.form--fields-wrapper Spinner {
+.form--fields-wrapper Spinner,
+.form--fields-wrapper TextArea {
     -fx-background-radius: 8px;
     -fx-border-radius: 8px;
     -fx-background-color:
@@ -29,17 +42,20 @@
     -fx-padding: 8;
     -fx-border-color: transparent;
     -fx-border-width: 1;
-    -fx-text-fill: #efefef;
-    -fx-font-size: 14px;
-    -fx-font-family: "Noto Sans";
+}
+
+.form--fields-wrapper TextField,
+.form--fields-wrapper Spinner {
     -fx-pref-width: 250px;
 }
 
-.form--fields-wrapper Spinner .text-field {
+.form--fields-wrapper TextArea {
+    -fx-max-width: 350px;
+}
+
+.form--fields-wrapper Spinner .text-field,
+.form--fields-wrapper TextArea .content {
     -fx-background-color: transparent;
-    -fx-text-fill: #efefef;
-    -fx-font-size: 14px;
-    -fx-font-family: "Noto Sans";
     -fx-background-radius: 8px;
     -fx-border-radius: 8px;
     -fx-padding: 0;

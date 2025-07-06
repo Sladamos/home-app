@@ -34,6 +34,12 @@ public class AddBookController {
     private Label publisherLabel;
 
     @FXML
+    private Label pagesLabel;
+
+    @FXML
+    private Label descriptionLabel;
+
+    @FXML
     private Label borrowedToLabel;
 
     @FXML
@@ -168,6 +174,8 @@ public class AddBookController {
         titleLabel.textProperty().bind(bindingsCreator.createBinding("books.add.title"));
         publisherLabel.textProperty().bind(bindingsCreator.createBinding("books.add.publisher"));
         borrowedToLabel.textProperty().bind(bindingsCreator.createBinding("books.add.borrowedTo"));
+        pagesLabel.textProperty().bind(bindingsCreator.createBinding("books.add.pages"));
+        descriptionLabel.textProperty().bind(bindingsCreator.createBinding("books.add.description"));
 
         titleField.textProperty().bindBidirectional(viewModel.getTitle());
         isbnField.textProperty().bindBidirectional(viewModel.getIsbn());

@@ -19,7 +19,6 @@
                 <fx:include source="../common/SelectCover.fxml" />
                 <ScrollPane fitToWidth="true">
                     <VBox spacing="20" styleClass="form--fields-wrapper">
-
                         <HBox>
                             <Label fx:id="titleLabel" text="Title:*" />
                             <TextField fx:id="titleField" />
@@ -40,8 +39,13 @@
                         </HBox>
 
                         <HBox>
-                            <Label text="Pages:" />
+                            <Label fx:id="pagesLabel" text="Pages:" />
                             <Spinner fx:id="pagesSpinner" editable="true" />
+                        </HBox>
+
+                        <HBox>
+                            <Label fx:id="descriptionLabel" text="Description:" />
+                            <TextArea fx:id="descriptionArea" prefRowCount="3" />
                         </HBox>
 
                         <Label text="Rating:" />
@@ -58,9 +62,6 @@
                             <Label fx:id="borrowedToLabel" text="Borrowed to:" />
                             <TextField fx:id="borrowedByField" />
                         </HBox>
-
-                        <Label text="Description:" />
-                        <TextArea fx:id="descriptionArea" prefRowCount="3" />
 
                         <Label text="Read date:" />
                         <DatePicker fx:id="readDatePicker" />
