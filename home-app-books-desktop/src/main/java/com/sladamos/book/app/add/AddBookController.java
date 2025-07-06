@@ -157,8 +157,6 @@ public class AddBookController {
         selectCoverController.bindTo(viewModel);
         authorsMultipleFieldsController.bindTo(new MultipleFieldsViewModel(viewModel.getAuthors(), Book.MIN_NUMBER_OF_AUTHORS));
         genresMultipleFieldsController.bindTo(new MultipleFieldsViewModel(viewModel.getGenres(), MIN_NUMBER_OF_GENRES));
-        System.out.println(viewModel.getAuthors().size());
-        System.out.println(viewModel.getGenres().size());
         genresWrapper.visibleProperty().bind(Bindings.isEmpty(viewModel.getGenres()).not());
         genresWrapper.managedProperty().bind(genresWrapper.visibleProperty());
 

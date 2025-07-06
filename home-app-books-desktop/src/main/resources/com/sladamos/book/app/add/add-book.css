@@ -19,7 +19,8 @@
     -fx-alignment: center-left;
 }
 
-.form--fields-wrapper TextField {
+.form--fields-wrapper TextField,
+.form--fields-wrapper Spinner {
     -fx-background-radius: 8px;
     -fx-border-radius: 8px;
     -fx-background-color:
@@ -32,6 +33,30 @@
     -fx-font-size: 14px;
     -fx-font-family: "Noto Sans";
     -fx-pref-width: 250px;
+}
+
+.form--fields-wrapper Spinner .text-field {
+    -fx-background-color: transparent;
+    -fx-text-fill: #efefef;
+    -fx-font-size: 14px;
+    -fx-font-family: "Noto Sans";
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-padding: 0;
+}
+
+.form--fields-wrapper Spinner .increment-arrow-button,
+.form--fields-wrapper Spinner .decrement-arrow-button {
+    -fx-padding: 0;
+    -fx-background-color: transparent;
+    -fx-shape: "";
+    -fx-pref-width: 0;
+    -fx-pref-height: 0;
+    -fx-min-width: 0;
+    -fx-min-height: 0;
+    -fx-max-width: 0;
+    -fx-max-height: 0;
+    -fx-opacity: 0;
 }
 
 .form--fields-wrapper .label {

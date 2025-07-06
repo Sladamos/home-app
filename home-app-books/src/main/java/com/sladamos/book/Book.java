@@ -43,8 +43,8 @@ public class Book {
     @PositiveOrZero(message = "Number of pages cannot be negative")
     private Integer pages;
 
-    @Min(value = MIN_RATING, message = "Rating must be at least 1")
-    @Max(value = MAX_RATING, message = "Rating cannot exceed 5")
+    @Min(value = MIN_RATING, message = "Rating must be at least " + MIN_RATING)
+    @Max(value = MAX_RATING, message = "Rating cannot exceed" + MAX_RATING)
     private Integer rating;
 
     @Lob

@@ -41,7 +41,7 @@
 
                         <HBox>
                             <Label text="Pages:" />
-                            <Spinner fx:id="pagesSpinner" />
+                            <Spinner fx:id="pagesSpinner" editable="true" />
                         </HBox>
 
                         <Label text="Rating:" />
