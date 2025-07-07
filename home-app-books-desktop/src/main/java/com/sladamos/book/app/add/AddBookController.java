@@ -3,15 +3,11 @@ package com.sladamos.book.app.add;
 import com.sladamos.app.util.BindingsCreator;
 import com.sladamos.app.util.ComponentsGenerator;
 import com.sladamos.book.Book;
-import com.sladamos.book.app.common.MultipleFieldsController;
-import com.sladamos.book.app.common.MultipleFieldsControllerFactory;
-import com.sladamos.book.app.common.MultipleFieldsViewModel;
-import com.sladamos.book.app.common.SelectCoverController;
+import com.sladamos.book.app.common.*;
 import com.sladamos.book.app.items.OnDisplayItemsClicked;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -76,22 +72,7 @@ public class AddBookController {
     private TextField borrowedByField;
 
     @FXML
-    private Spinner<Integer> pagesSpinner;
-
-    @FXML
-    private HBox ratingBox;
-
-    @FXML
-    private CheckBox ratingEnabledCheckBox;
-
-    @FXML
-    private Slider ratingSlider;
-
-    @FXML
-    private Label ratingValueLabel;
-
-    @FXML
-    private CheckBox favoriteCheckBox;
+    private TextField pagesField;
 
     @FXML
     private Button addAuthorButton;
@@ -100,6 +81,8 @@ public class AddBookController {
     private Button addGenreButton;
 
     private final SelectCoverController selectCoverController;
+
+    private final SelectRatingController selectRatingController;
 
     private final ApplicationEventPublisher applicationEventPublisher;
 
@@ -115,11 +98,13 @@ public class AddBookController {
 
     public AddBookController(MultipleFieldsControllerFactory multipleFieldsControllerFactory,
                              SelectCoverController selectCoverController,
+                             SelectRatingController selectRatingController,
                              ApplicationEventPublisher applicationEventPublisher,
                              BindingsCreator bindingsCreator,
                              ComponentsGenerator componentsGenerator,
                              AddBookViewModel viewModel) {
         this.selectCoverController = selectCoverController;
+        this.selectRatingController = selectRatingController;
         this.applicationEventPublisher = applicationEventPublisher;
         this.bindingsCreator = bindingsCreator;
         this.componentsGenerator = componentsGenerator;
@@ -161,6 +146,7 @@ public class AddBookController {
 
     private void setupBindings() {
         selectCoverController.bindTo(viewModel);
+        selectRatingController.bindTo(new SelectRatingViewModel(viewModel.getRating(), viewModel.getFavorite()));
         authorsMultipleFieldsController.bindTo(new MultipleFieldsViewModel(viewModel.getAuthors(), Book.MIN_NUMBER_OF_AUTHORS));
         genresMultipleFieldsController.bindTo(new MultipleFieldsViewModel(viewModel.getGenres(), MIN_NUMBER_OF_GENRES));
         genresWrapper.visibleProperty().bind(Bindings.isEmpty(viewModel.getGenres()).not());
@@ -183,48 +169,23 @@ public class AddBookController {
         publisherField.textProperty().bindBidirectional(viewModel.getPublisher());
         borrowedByField.textProperty().bindBidirectional(viewModel.getBorrowedBy());
         readDatePicker.valueProperty().bindBidirectional(viewModel.getReadDate());
-        favoriteCheckBox.selectedProperty().bindBidirectional(viewModel.getFavorite());
-        pagesSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 10000, 0));
-        pagesSpinner.getValueFactory().valueProperty().bindBidirectional(viewModel.getPages().asObject());
+        bindPagesField();
+    }
 
-        ratingSlider.setDisable(viewModel.getRating().get() == null);
-        if (viewModel.getRating().get() != null) {
-            ratingSlider.setValue(viewModel.getRating().get());
-            ratingEnabledCheckBox.setSelected(true);
-            ratingValueLabel.setText(String.valueOf(viewModel.getRating().get()));
-        } else {
-            ratingSlider.setValue(1);
-            ratingEnabledCheckBox.setSelected(false);
-            ratingValueLabel.setText("brak");
-        }
-
-        ratingEnabledCheckBox.selectedProperty().addListener((obs, oldVal, newVal) -> {
-            ratingSlider.setDisable(!newVal);
-            if (newVal) {
-                int val = (viewModel.getRating().get() != null) ? viewModel.getRating().get() : 1;
-                ratingSlider.setValue(val);
-                viewModel.getRating().set(val);
-                ratingValueLabel.setText(String.valueOf(val));
-            } else {
-                viewModel.getRating().set(null);
-                ratingValueLabel.setText("brak");
+    private void bindPagesField() {
+        TextFormatter<Integer> integerFormatter = new TextFormatter<>(change -> {
+            String newText = change.getControlNewText();
+            if (newText.matches("\\d*")) {
+                return change;
             }
+            return null;
         });
+        pagesField.setTextFormatter(integerFormatter);
 
-        ratingSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
-            if (ratingEnabledCheckBox.isSelected()) {
-                int val = newVal.intValue();
-                viewModel.getRating().set(val);
-                ratingValueLabel.setText(String.valueOf(val));
-            }
-        });
-
-        viewModel.getRating().addListener((obs, oldVal, newVal) -> {
-            if (newVal == null) {
-                ratingValueLabel.setText("brak");
-            } else {
-                ratingValueLabel.setText(String.valueOf(newVal));
-            }
-        });
+        Bindings.bindBidirectional(
+                pagesField.textProperty(),
+                viewModel.getPages(),
+                new javafx.util.converter.NumberStringConverter()
+        );
     }
 }

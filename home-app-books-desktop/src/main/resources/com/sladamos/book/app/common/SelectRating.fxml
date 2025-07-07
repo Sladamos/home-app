@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.layout.HBox?>
+<?import java.net.URL?>
+<HBox alignment="CENTER" xmlns="http://javafx.com/javafx"
+	  xmlns:fx="http://javafx.com/fxml"
+	  styleClass="select-rating--container"
+	  fx:controller="com.sladamos.book.app.common.SelectRatingController">
+	<HBox alignment="CENTER">
+		<Label fx:id="ratingLabel" text="Rating:" />
+		<Slider fx:id="ratingSlider" blockIncrement="1" majorTickUnit="1" minorTickCount="0" showTickLabels="true" showTickMarks="true" snapToTicks="true" />
+	</HBox>
+	<HBox alignment="CENTER" styleClass="select-rating--favorite-container">
+		<Label fx:id="favoriteLabel" text="Fav:" />
+		<CheckBox fx:id="favoriteCheckBox" />
+	</HBox>
+	<stylesheets>
+		<URL value="@select-rating.css" />
+		<URL value="@../books-common.css" />
+	</stylesheets>
+</HBox>

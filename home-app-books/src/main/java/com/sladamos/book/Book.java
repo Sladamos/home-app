@@ -20,7 +20,7 @@ import java.util.UUID;
 public class Book {
 
     public static final int MAX_RATING = 5;
-    public static final int MIN_RATING = 1;
+    public static final int MIN_RATING = 0;
     public static final int MIN_NUMBER_OF_AUTHORS = 1;
     public static final int MIN_NUMBER_OF_GENRES = 0;
 

@@ -43,9 +43,9 @@ public class MultipleFieldsController {
     public void bindTo(MultipleFieldsViewModel viewModel) {
         this.viewModel = viewModel;
 
-        ObservableList<String> fields = viewModel.getFields();
+        ObservableList<String> fields = viewModel.fields();
         if (fields.isEmpty()) {
-            int minimalNumberOfFields = Math.max(viewModel.getMinimalNumberOfFields(), INITIAL_NUMBER_OF_FIELDS);
+            int minimalNumberOfFields = Math.max(viewModel.minimalNumberOfFields(), INITIAL_NUMBER_OF_FIELDS);
             IntStream.range(0, minimalNumberOfFields).forEach(i -> addEmptyField());
         } else {
             fields.forEach(this::addField);
@@ -84,7 +84,7 @@ public class MultipleFieldsController {
     }
 
     private void updateVisibilityOfDeleteButtons() {
-        int minimalNumberOfFields = viewModel.getMinimalNumberOfFields();
+        int minimalNumberOfFields = viewModel.minimalNumberOfFields();
         fieldsContainer.getChildren().stream()
                 .map(HBox.class::cast)
                 .map(f -> f.getChildren().get(1))
@@ -93,7 +93,7 @@ public class MultipleFieldsController {
 
     private void updateCollectionInViewModel() {
         List<TextField> fields = getFields();
-        viewModel.getFields().setAll(
+        viewModel.fields().setAll(
                 fields.stream()
                         .map(TextField::getText)
                         .toList()

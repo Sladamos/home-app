@@ -40,7 +40,7 @@
 
                         <HBox>
                             <Label fx:id="pagesLabel" text="Pages:" />
-                            <Spinner fx:id="pagesSpinner" editable="true" />
+                            <TextField fx:id="pagesField"/>
                         </HBox>
 
                         <HBox>
@@ -48,15 +48,7 @@
                             <TextArea fx:id="descriptionArea" prefRowCount="3" />
                         </HBox>
 
-                        <Label text="Rating:" />
-                        <HBox alignment="CENTER_LEFT" spacing="8">
-                            <CheckBox fx:id="ratingEnabledCheckBox" />
-                            <Slider fx:id="ratingSlider" blockIncrement="1" disable="true" majorTickUnit="1" max="5" min="1" minorTickCount="0" prefWidth="120" showTickLabels="true" showTickMarks="true" snapToTicks="true" />
-                            <Label fx:id="ratingValueLabel" text="empty" />
-                        </HBox>
-
-                        <Label text="Fav:" />
-                        <CheckBox fx:id="favoriteCheckBox" />
+                        <fx:include source="../common/SelectRating.fxml" />
 
                         <HBox>
                             <Label fx:id="borrowedToLabel" text="Borrowed to:" />

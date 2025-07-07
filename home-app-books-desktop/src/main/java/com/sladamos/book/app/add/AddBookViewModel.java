@@ -18,7 +18,7 @@ public class AddBookViewModel implements SelectCoverViewModel {
     private final StringProperty publisher = new SimpleStringProperty();
     private final StringProperty borrowedBy = new SimpleStringProperty();
     private final IntegerProperty pages = new SimpleIntegerProperty();
-    private final ObjectProperty<Integer> rating = new SimpleObjectProperty<>();
+    private final IntegerProperty rating = new SimpleIntegerProperty();
     private final BooleanProperty favorite = new SimpleBooleanProperty();
     private final ObjectProperty<LocalDate> readDate = new SimpleObjectProperty<>();
     private final ObjectProperty<byte[]> coverImage = new SimpleObjectProperty<>();

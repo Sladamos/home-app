@@ -116,9 +116,9 @@ class BookValidationTest {
     }
 
     @Test
-    void shouldReturnValidationErrorWhenRatingIsLowerThanOne() {
+    void shouldReturnValidationErrorWhenRatingIsNegative() {
         Book book = createValidBook();
-        book.setRating(0);
+        book.setRating(-1);
 
         Set<ConstraintViolation<Book>> violations = validator.validate(book);
 
