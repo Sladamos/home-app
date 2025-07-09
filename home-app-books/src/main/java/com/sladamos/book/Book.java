@@ -1,5 +1,6 @@
 package com.sladamos.book;
 
+import com.sladamos.book.validators.BorrowedByRequired;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
@@ -17,6 +18,7 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@BorrowedByRequired
 public class Book {
 
     public static final int MAX_RATING = 5;

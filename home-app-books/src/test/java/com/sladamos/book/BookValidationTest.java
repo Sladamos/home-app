@@ -135,6 +135,17 @@ class BookValidationTest {
         assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().contains("rating"));
     }
 
+    @Test
+    void shouldReturnValidationErrorWhenBorrowedBookDoesNotHaveBorrower() {
+        Book book = createValidBook();
+        book.setBorrowedBy("");
+        book.setStatus(BookStatus.BORROWED);
+
+        Set<ConstraintViolation<Book>> violations = validator.validate(book);
+
+        assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().contains("borrowedBy"));
+    }
+
     private Book createValidBook() {
         return Book.builder()
                 .id(UUID.randomUUID())
