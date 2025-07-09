@@ -82,3 +82,44 @@
 #readDatePicker .month-year-pane > * {
     -fx-padding: 0 8 0 8;
 }
+
+#statusComboBox {
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-background-color: #6000a2;
+    -fx-border-color: white;
+    -fx-border-width: 1;
+    -fx-text-fill: #efefef;
+    -fx-font-family: "Noto Sans";
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-padding: 8 8 8 0;
+    -fx-cursor: hand;
+}
+
+#statusComboBox .combo-box-popup .list-view .list-cell {
+    -fx-background-color: #3c005e;
+    -fx-text-fill: #fff;
+    -fx-border-color: white;
+    -fx-border-width: 1;
+    -fx-padding: 16 16 16 8;
+    -fx-cursor: hand;
+}
+
+#statusComboBox .combo-box-popup .list-view .list-cell:hover {
+    -fx-background-color: #a259ff;
+    -fx-text-fill: #fff;
+}
+
+#statusComboBox .arrow-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+    -fx-border-width: 0;
+    -fx-cursor: hand;
+}
+
+#statusComboBox .arrow {
+    -fx-background-color: transparent;
+    -fx-pref-width: 0px;
+    -fx-pref-height: 0px;
+}

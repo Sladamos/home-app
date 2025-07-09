@@ -1,5 +1,6 @@
 package com.sladamos.book.app.add;
 
+import com.sladamos.book.BookStatus;
 import com.sladamos.book.app.common.SelectCoverViewModel;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
@@ -22,6 +23,7 @@ public class AddBookViewModel implements SelectCoverViewModel {
     private final BooleanProperty favorite = new SimpleBooleanProperty();
     private final ObjectProperty<LocalDate> readDate = new SimpleObjectProperty<>();
     private final ObjectProperty<byte[]> coverImage = new SimpleObjectProperty<>();
+    private final ObjectProperty<BookStatus> status = new SimpleObjectProperty<>(BookStatus.ON_SHELF);
     private final ObservableList<String> authors = FXCollections.observableArrayList();
     private final ObservableList<String> genres = FXCollections.observableArrayList();
 }

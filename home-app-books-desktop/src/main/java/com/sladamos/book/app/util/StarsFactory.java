@@ -16,7 +16,7 @@ public class StarsFactory {
 
     public List<Label> createStars(RateableViewModel viewModel) {
         List<Label> stars = new ArrayList<>();
-        for (int i = Book.MIN_RATING; i <= Book.MAX_RATING; i++) {
+        for (int i = Book.MIN_RATING; i < Book.MAX_RATING; i++) {
             Label star = new Label();
             setStarText(star, viewModel, i);
             setStarColor(star, viewModel);
@@ -35,7 +35,7 @@ public class StarsFactory {
     private void setStarText(Label star, RateableViewModel viewModel, int starIndex) {
         star.textProperty().bind(Bindings.createStringBinding(() -> {
             int rating = viewModel.getRating().get();
-            return starIndex <= rating ? "★" : "☆";
+            return starIndex < rating ? "★" : "☆";
         }, viewModel.getRating()));
     }
 }
