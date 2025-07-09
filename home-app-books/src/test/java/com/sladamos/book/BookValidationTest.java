@@ -26,6 +26,15 @@ class BookValidationTest {
     }
 
     @Test
+    void shouldNotReturnValidationErrorForValidBook() {
+        Book book = createValidBook();
+
+        Set<ConstraintViolation<Book>> violations = validator.validate(book);
+
+        assertThat(violations).isEmpty();
+    }
+
+    @Test
     void shouldReturnValidationErrorWhenTitleIsBlank() {
         Book book = createValidBook();
         book.setTitle(" ");
@@ -150,7 +159,7 @@ class BookValidationTest {
         return Book.builder()
                 .id(UUID.randomUUID())
                 .title("Valid Title")
-                .isbn("1234567890")
+                .isbn("")
                 .publisher("Valid Publisher")
                 .description("This is a valid description.")
                 .pages(100)
