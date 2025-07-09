@@ -49,15 +49,7 @@
                         </HBox>
 
                         <fx:include source="../common/SelectRating.fxml" />
-
-                        <HBox>
-                            <Label fx:id="borrowedToLabel" text="Borrowed to:" />
-                            <TextField fx:id="borrowedByField" />
-                        </HBox>
-
-                        <Label text="Read date:" />
-                        <DatePicker fx:id="readDatePicker" />
-
+                        <fx:include source="../common/SelectStatus.fxml" />
                         <Button fx:id="addBookButton" alignment="CENTER" onAction="#onAddBookClicked" styleClass="primary--button" text="Dodaj książkę" />
                     </VBox>
                 </ScrollPane>

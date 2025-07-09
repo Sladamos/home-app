@@ -1,0 +1,84 @@
+#readDatePicker {
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-background-color: #6000a2;
+    -fx-padding: 8;
+    -fx-border-color: white;
+    -fx-border-width: 1;
+}
+
+#readDatePicker .arrow-button {
+    -fx-background-color: transparent;
+    -fx-background-radius: 0 8px 8px 0;
+    -fx-padding: 0 8 0 8;
+    -fx-border-width: 0;
+    -fx-cursor: hand;
+}
+
+#readDatePicker .arrow {
+    -fx-background-color: white;
+    -fx-pref-width: 16px;
+    -fx-pref-height: 16px;
+}
+
+#readDatePicker .text-field {
+    -fx-background-color: transparent;
+    -fx-text-fill: #efefef;
+    -fx-font-size: 14px;
+    -fx-font-family: "Noto Sans";
+    -fx-padding: 0 8 0 8;
+}
+
+#readDatePicker .cell {
+    -fx-background-color: #3c005e;
+    -fx-text-fill: #efefef;
+    -fx-font-size: 14px;
+    -fx-font-family: "Noto Sans";
+}
+
+#readDatePicker .today {
+    -fx-background-color: #6000a2;
+    -fx-font-weight: bold;
+    -fx-border-radius: 6px;
+}
+
+#readDatePicker .cell:hover,
+#readDatePicker .cell:focused,
+#readDatePicker .cell:selected {
+    -fx-background-color: #a259ff;
+    -fx-cursor: hand;
+}
+
+#readDatePicker .cell:disabled {
+    -fx-background-color: #8a669e;
+    -fx-text-fill: #ebe5ee;
+}
+
+#readDatePicker .button {
+    -fx-background-color: #3c005e;
+    -fx-text-fill: #efefef;
+    -fx-background-radius: 6px;
+    -fx-cursor: hand;
+}
+
+#readDatePicker .button:hover {
+    -fx-background-color: #a259ff;
+}
+
+#readDatePicker .button:focused,
+#readDatePicker .button:selected {
+    -fx-text-fill: #efefef;
+}
+
+#readDatePicker .month-year-pane {
+    -fx-background-color: #6000a2;
+    -fx-text-fill: #efefef;
+    -fx-font-weight: bold;
+    -fx-font-family: "Noto Sans";
+    -fx-font-size: 15px;
+    -fx-padding: 8;
+}
+
+#readDatePicker .month-year-pane > * {
+    -fx-padding: 0 8 0 8;
+}

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import java.net.URL?>
+<VBox xmlns="http://javafx.com/javafx"
+	  xmlns:fx="http://javafx.com/fxml"
+	  fx:controller="com.sladamos.book.app.common.SelectStatusController"
+	  spacing="20.0">
+	<HBox>
+		<Label fx:id="borrowedToLabel" text="Borrowed to:" />
+		<TextField fx:id="borrowedByField" />
+	</HBox>
+
+	<HBox>
+		<Label fx:id="readDateLabel" text="Read date:" />
+		<DatePicker fx:id="readDatePicker" showWeekNumbers="false" />
+	</HBox>
+
+	<stylesheets>
+		<URL value="@select-status.css" />
+		<URL value="@../books-common.css" />
+	</stylesheets>
+</VBox>

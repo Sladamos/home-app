@@ -36,9 +36,6 @@ public class AddBookController {
     private Label descriptionLabel;
 
     @FXML
-    private Label borrowedToLabel;
-
-    @FXML
     private Label addBookLabel;
 
     @FXML
@@ -63,13 +60,7 @@ public class AddBookController {
     private TextArea descriptionArea;
 
     @FXML
-    private DatePicker readDatePicker;
-
-    @FXML
     private TextField publisherField;
-
-    @FXML
-    private TextField borrowedByField;
 
     @FXML
     private TextField pagesField;
@@ -83,6 +74,8 @@ public class AddBookController {
     private final SelectCoverController selectCoverController;
 
     private final SelectRatingController selectRatingController;
+
+    private final SelectStatusController selectStatusController;
 
     private final ApplicationEventPublisher applicationEventPublisher;
 
@@ -99,12 +92,14 @@ public class AddBookController {
     public AddBookController(MultipleFieldsControllerFactory multipleFieldsControllerFactory,
                              SelectCoverController selectCoverController,
                              SelectRatingController selectRatingController,
+                             SelectStatusController selectStatusController,
                              ApplicationEventPublisher applicationEventPublisher,
                              BindingsCreator bindingsCreator,
                              ComponentsGenerator componentsGenerator,
                              AddBookViewModel viewModel) {
         this.selectCoverController = selectCoverController;
         this.selectRatingController = selectRatingController;
+        this.selectStatusController = selectStatusController;
         this.applicationEventPublisher = applicationEventPublisher;
         this.bindingsCreator = bindingsCreator;
         this.componentsGenerator = componentsGenerator;
@@ -147,6 +142,7 @@ public class AddBookController {
     private void setupBindings() {
         selectCoverController.bindTo(viewModel);
         selectRatingController.bindTo(new SelectRatingViewModel(viewModel.getRating(), viewModel.getFavorite()));
+        selectStatusController.bindTo(new SelectStatusViewModel(viewModel.getBorrowedBy(), viewModel.getReadDate()));
         authorsMultipleFieldsController.bindTo(new MultipleFieldsViewModel(viewModel.getAuthors(), Book.MIN_NUMBER_OF_AUTHORS));
         genresMultipleFieldsController.bindTo(new MultipleFieldsViewModel(viewModel.getGenres(), MIN_NUMBER_OF_GENRES));
         genresWrapper.visibleProperty().bind(Bindings.isEmpty(viewModel.getGenres()).not());
@@ -159,7 +155,6 @@ public class AddBookController {
 
         titleLabel.textProperty().bind(bindingsCreator.createBinding("books.add.title"));
         publisherLabel.textProperty().bind(bindingsCreator.createBinding("books.add.publisher"));
-        borrowedToLabel.textProperty().bind(bindingsCreator.createBinding("books.add.borrowedTo"));
         pagesLabel.textProperty().bind(bindingsCreator.createBinding("books.add.pages"));
         descriptionLabel.textProperty().bind(bindingsCreator.createBinding("books.add.description"));
 
@@ -167,8 +162,6 @@ public class AddBookController {
         isbnField.textProperty().bindBidirectional(viewModel.getIsbn());
         descriptionArea.textProperty().bindBidirectional(viewModel.getDescription());
         publisherField.textProperty().bindBidirectional(viewModel.getPublisher());
-        borrowedByField.textProperty().bindBidirectional(viewModel.getBorrowedBy());
-        readDatePicker.valueProperty().bindBidirectional(viewModel.getReadDate());
         bindPagesField();
     }
 
