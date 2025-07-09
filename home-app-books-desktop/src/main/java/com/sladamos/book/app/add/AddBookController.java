@@ -3,6 +3,8 @@ package com.sladamos.book.app.add;
 import com.sladamos.app.util.BindingsCreator;
 import com.sladamos.app.util.ComponentsGenerator;
 import com.sladamos.book.Book;
+import com.sladamos.book.BookService;
+import com.sladamos.book.BookValidationException;
 import com.sladamos.book.app.common.*;
 import com.sladamos.book.app.items.OnDisplayItemsClicked;
 import javafx.beans.binding.Bindings;
@@ -89,6 +91,8 @@ public class AddBookController {
 
     private final MultipleFieldsController genresMultipleFieldsController;
 
+    private final BookService bookService;
+
     public AddBookController(MultipleFieldsControllerFactory multipleFieldsControllerFactory,
                              SelectCoverController selectCoverController,
                              SelectRatingController selectRatingController,
@@ -96,7 +100,8 @@ public class AddBookController {
                              ApplicationEventPublisher applicationEventPublisher,
                              BindingsCreator bindingsCreator,
                              ComponentsGenerator componentsGenerator,
-                             AddBookViewModel viewModel) {
+                             AddBookViewModel viewModel,
+                             BookService bookService) {
         this.selectCoverController = selectCoverController;
         this.selectRatingController = selectRatingController;
         this.selectStatusController = selectStatusController;
@@ -104,14 +109,15 @@ public class AddBookController {
         this.bindingsCreator = bindingsCreator;
         this.componentsGenerator = componentsGenerator;
         this.viewModel = viewModel;
+        this.bookService = bookService;
         authorsMultipleFieldsController = multipleFieldsControllerFactory.createMultipleFieldsController("books.multipleFields.authors");
         genresMultipleFieldsController = multipleFieldsControllerFactory.createMultipleFieldsController("books.multipleFields.genres");
     }
 
     @FXML
     public void initialize() {
-        componentsGenerator.addComponent(genresMultipleFieldsController, genresWrapper, MULTIPLE_FIELDS_COMPONENT_RESOURCE);
-        componentsGenerator.addComponent(authorsMultipleFieldsController, authorsWrapper, MULTIPLE_FIELDS_COMPONENT_RESOURCE);
+        componentsGenerator.addComponentAtEnd(genresMultipleFieldsController, genresWrapper, MULTIPLE_FIELDS_COMPONENT_RESOURCE);
+        componentsGenerator.addComponentAtEnd(authorsMultipleFieldsController, authorsWrapper, MULTIPLE_FIELDS_COMPONENT_RESOURCE);
 
         setupBindings();
     }
@@ -125,6 +131,14 @@ public class AddBookController {
     @FXML
     private void onAddBookClicked() {
         log.info("Add book button clicked");
+        Book book = viewModel.toBook();
+        try {
+            bookService.createBook(book);
+            viewModel.reset();
+            applicationEventPublisher.publishEvent(new OnBookCreated(book));
+        } catch (BookValidationException e) {
+            log.error(e.getReason()); //TODO: Show validation messages + translation
+        }
     }
 
     @FXML
@@ -149,6 +163,7 @@ public class AddBookController {
         genresWrapper.managedProperty().bind(genresWrapper.visibleProperty());
 
         addBookLabel.textProperty().bind(bindingsCreator.createBinding("books.add.name"));
+        addBookButton.textProperty().bind(bindingsCreator.createBinding("books.add.name"));
         returnToItemsButton.textProperty().bind(bindingsCreator.createBinding("books.add.returnToBooks"));
         addAuthorButton.textProperty().bind(bindingsCreator.createBinding("books.add.addAuthor"));
         addGenreButton.textProperty().bind(bindingsCreator.createBinding("books.add.addGenre"));

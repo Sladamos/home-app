@@ -30,7 +30,7 @@ public class RequestToBookFunction implements BiFunction<UUID, PutBookRequest, B
                 .creationDate(Instant.now())
                 .modificationDate(Instant.now())
                 .readDate(request.getReadDate())
-                .status(Optional.ofNullable(request.getStatus()).map(BookStatus::valueOf).orElse(null))
+                .status(Optional.ofNullable(request.getStatus()).map(BookStatus::valueOf).orElse(BookStatus.ON_SHELF))
                 .build();
     }
 }

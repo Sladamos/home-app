@@ -64,6 +64,6 @@ public class BooksItemsController {
     }
 
     private void addItem(BookItemViewModel itemVM) {
-        componentsGenerator.addComponent(bookItemControllerFactory.createController(itemVM), booksContainer, getClass().getResource("BooksItem.fxml"));
+        componentsGenerator.addComponentAtBeginning(bookItemControllerFactory.createController(itemVM), booksContainer, getClass().getResource("BooksItem.fxml"));
     }
 }

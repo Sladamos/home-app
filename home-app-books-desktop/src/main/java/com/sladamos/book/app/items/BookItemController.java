@@ -76,7 +76,6 @@ public class BookItemController {
         return Bindings.createStringBinding(
                 () -> {
                     var bookStatus = viewModel.getStatus().get();
-                    System.out.println(viewModel.getReadDate());
                     String key = statusMessageKeyProvider.getDisplayStatusMessageKey(bookStatus);
                     String message = bindingsCreator.getMessage(key);
                     if (BookStatus.BORROWED.equals(bookStatus)) {

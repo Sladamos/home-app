@@ -50,7 +50,7 @@
 
                         <fx:include source="../common/SelectRating.fxml" />
                         <fx:include source="../common/SelectStatus.fxml" />
-                        <Button fx:id="addBookButton" alignment="CENTER" onAction="#onAddBookClicked" styleClass="primary--button" text="Dodaj książkę" />
+                        <Button fx:id="addBookButton" alignment="CENTER" onAction="#onAddBookClicked" styleClass="primary--button" text="Add book" />
                     </VBox>
                 </ScrollPane>
             </HBox>

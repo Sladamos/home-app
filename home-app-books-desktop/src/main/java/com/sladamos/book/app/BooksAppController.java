@@ -1,6 +1,7 @@
 package com.sladamos.book.app;
 
 import com.sladamos.book.app.add.OnAddBookClicked;
+import com.sladamos.book.app.add.OnBookCreated;
 import com.sladamos.book.app.items.OnDisplayItemsClicked;
 import com.sladamos.app.util.BindingsCreator;
 import javafx.fxml.FXML;
@@ -46,9 +47,19 @@ public class BooksAppController {
 
     @EventListener
     public void onDisplayItems(OnDisplayItemsClicked event) {
+        switchViewToBooksItems();
+    }
+
+    @EventListener
+    public void onBookCreated(OnBookCreated event) {
+        switchViewToBooksItems();
+    }
+
+    private void switchViewToBooksItems() {
         log.info("Switching to Display Items view");
         setView("items/BooksItems.fxml");
     }
+
 
     private void setView(String fxmlPath) {
         try {

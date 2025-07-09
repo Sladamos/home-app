@@ -67,10 +67,10 @@ public class Book {
     @CollectionTable(name = "book_authors", joinColumns = @JoinColumn(name = "book_id"))
     @Column(name = "author")
     @Size(min = MIN_NUMBER_OF_AUTHORS, message = "At least one author is required")
-    private List<@NotBlank String> authors;
+    private List<@NotBlank(message = "Title cannot be blank") String> authors;
 
     @ElementCollection
     @CollectionTable(name = "book_genres", joinColumns = @JoinColumn(name = "book_id"))
     @Column(name = "genre")
-    private List<@NotBlank String> genres;
+    private List<@NotBlank(message = "Genre cannot be blank") String> genres;
 }
