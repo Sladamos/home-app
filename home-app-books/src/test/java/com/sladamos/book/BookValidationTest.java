@@ -4,6 +4,7 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -19,10 +20,19 @@ class BookValidationTest {
 
     private Validator validator;
 
+    private ValidatorFactory factory;
+
     @BeforeEach
     void setUp() {
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        factory = Validation.buildDefaultValidatorFactory();
         validator = factory.getValidator();
+    }
+
+    @AfterEach
+    void tearDown() {
+        if (factory != null) {
+            factory.close();
+        }
     }
 
     @Test
@@ -43,7 +53,7 @@ class BookValidationTest {
 
         assertThat(violations)
                 .anyMatch(v -> v.getPropertyPath().toString().equals("title")
-                        && v.getMessage().contains("cannot be blank"));
+                        && "book.validation.title".equals(v.getMessage()));
     }
 
     @Test
@@ -55,7 +65,7 @@ class BookValidationTest {
 
         assertThat(violations)
                 .anyMatch(v -> v.getPropertyPath().toString().equals("isbn")
-                        && v.getMessage().contains("10 or 13 digits"));
+                        && "book.validation.isbn".equals(v.getMessage()));
     }
 
     @Test
@@ -67,7 +77,7 @@ class BookValidationTest {
 
         assertThat(violations)
                 .anyMatch(v -> v.getPropertyPath().toString().equals("description")
-                        && v.getMessage().contains("cannot exceed 300 characters"));
+                        && "book.validation.description".equals(v.getMessage()));
     }
 
     @Test
@@ -79,7 +89,7 @@ class BookValidationTest {
 
         assertThat(violations)
                 .anyMatch(v -> v.getPropertyPath().toString().equals("pages")
-                        && v.getMessage().contains("cannot be negative"));
+                        && "book.validation.pages".equals(v.getMessage()));
     }
 
     @Test
@@ -91,7 +101,7 @@ class BookValidationTest {
 
         assertThat(violations)
                 .anyMatch(v -> v.getPropertyPath().toString().equals("authors")
-                        && v.getMessage().contains("At least one author is required"));
+                        && "book.validation.authors.min".equals(v.getMessage()));
     }
 
     @Test
@@ -111,7 +121,9 @@ class BookValidationTest {
 
         Set<ConstraintViolation<Book>> violations = validator.validate(book);
 
-        assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().contains("authors"));
+        assertThat(violations)
+                .anyMatch(v -> v.getPropertyPath().toString().contains("authors")
+                        && "book.validation.authors.notblank".equals(v.getMessage()));
     }
 
     @Test
@@ -121,7 +133,9 @@ class BookValidationTest {
 
         Set<ConstraintViolation<Book>> violations = validator.validate(book);
 
-        assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().contains("genres"));
+        assertThat(violations)
+                .anyMatch(v -> v.getPropertyPath().toString().contains("genres")
+                        && "book.validation.genres.notblank".equals(v.getMessage()));
     }
 
     @Test
@@ -131,7 +145,9 @@ class BookValidationTest {
 
         Set<ConstraintViolation<Book>> violations = validator.validate(book);
 
-        assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().contains("rating"));
+        assertThat(violations)
+                .anyMatch(v -> v.getPropertyPath().toString().contains("rating")
+                        && "book.validation.rating.min".equals(v.getMessage()));
     }
 
     @Test
@@ -141,7 +157,9 @@ class BookValidationTest {
 
         Set<ConstraintViolation<Book>> violations = validator.validate(book);
 
-        assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().contains("rating"));
+        assertThat(violations)
+                .anyMatch(v -> v.getPropertyPath().toString().contains("rating")
+                        && "book.validation.rating.max".equals(v.getMessage()));
     }
 
     @Test
@@ -152,7 +170,21 @@ class BookValidationTest {
 
         Set<ConstraintViolation<Book>> violations = validator.validate(book);
 
-        assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().contains("borrowedBy"));
+        assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().contains("borrowedBy")
+                && "book.validation.borrowedBy".equals(v.getMessage()));
+    }
+
+    @Test
+    void shouldReturnValidationErrorWhenReadDateIsFromFuture() {
+        Book book = createValidBook();
+        LocalDate readDate = LocalDate.now().plusDays(1);
+        book.setReadDate(readDate);
+
+        Set<ConstraintViolation<Book>> violations = validator.validate(book);
+
+        assertThat(violations)
+                .anyMatch(v -> v.getPropertyPath().toString().contains("readDate")
+                        && "book.validation.readDate".equals(v.getMessage()));
     }
 
     private Book createValidBook() {

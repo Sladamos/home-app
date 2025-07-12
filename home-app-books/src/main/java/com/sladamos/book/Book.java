@@ -18,7 +18,7 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@BorrowedByRequired
+@BorrowedByRequired(message = "book.validation.borrowedBy")
 public class Book {
 
     public static final int MAX_RATING = 5;
@@ -29,24 +29,24 @@ public class Book {
     @Id
     private UUID id;
 
-    @NotBlank(message = "Title cannot be blank")
+    @NotBlank(message = "book.validation.title")
     private String title;
 
-    @Pattern(regexp = "(\\d{10}|\\d{13})?", message = "ISBN must have 10 or 13 digits")
+    @Pattern(regexp = "(\\d{10}|\\d{13})?", message = "book.validation.isbn")
     private String isbn;
 
-    @Size(max = 300, message = "Description cannot exceed 300 characters")
+    @Size(max = 300, message = "book.validation.description")
     private String description;
 
     private String publisher;
 
     private String borrowedBy;
 
-    @PositiveOrZero(message = "Number of pages cannot be negative")
+    @PositiveOrZero(message = "book.validation.pages")
     private Integer pages;
 
-    @Min(value = MIN_RATING, message = "Rating must be at least " + MIN_RATING)
-    @Max(value = MAX_RATING, message = "Rating cannot exceed" + MAX_RATING)
+    @Min(value = MIN_RATING, message = "book.validation.rating.min")
+    @Max(value = MAX_RATING, message = "book.validation.rating.max")
     private Integer rating;
 
     @Lob
@@ -58,7 +58,8 @@ public class Book {
 
     private Instant modificationDate;
 
-    private LocalDate readDate; //TODO: not from future validation
+    @PastOrPresent(message = "book.validation.readDate")
+    private LocalDate readDate;
 
     @Enumerated(EnumType.STRING)
     private BookStatus status;
@@ -66,11 +67,11 @@ public class Book {
     @ElementCollection
     @CollectionTable(name = "book_authors", joinColumns = @JoinColumn(name = "book_id"))
     @Column(name = "author")
-    @Size(min = MIN_NUMBER_OF_AUTHORS, message = "At least one author is required")
-    private List<@NotBlank(message = "Title cannot be blank") String> authors;
+    @Size(min = MIN_NUMBER_OF_AUTHORS, message = "book.validation.authors.min")
+    private List<@NotBlank(message = "book.validation.authors.notblank") String> authors;
 
     @ElementCollection
     @CollectionTable(name = "book_genres", joinColumns = @JoinColumn(name = "book_id"))
     @Column(name = "genre")
-    private List<@NotBlank(message = "Genre cannot be blank") String> genres;
+    private List<@NotBlank(message = "book.validation.genres.notblank") String> genres;
 }
