@@ -25,6 +25,7 @@ public class Book {
     public static final int MIN_RATING = 0;
     public static final int MIN_NUMBER_OF_AUTHORS = 1;
     public static final int MIN_NUMBER_OF_GENRES = 0;
+    public static final int MAX_DESCRIPTION_SIZE = 300;
 
     @Id
     private UUID id;
@@ -35,7 +36,7 @@ public class Book {
     @Pattern(regexp = "(\\d{10}|\\d{13})?", message = "book.validation.isbn")
     private String isbn;
 
-    @Size(max = 300, message = "book.validation.description")
+    @Size(max = MAX_DESCRIPTION_SIZE, message = "book.validation.description")
     private String description;
 
     private String publisher;
@@ -68,10 +69,10 @@ public class Book {
     @CollectionTable(name = "book_authors", joinColumns = @JoinColumn(name = "book_id"))
     @Column(name = "author")
     @Size(min = MIN_NUMBER_OF_AUTHORS, message = "book.validation.authors.min")
-    private List<@NotBlank(message = "book.validation.authors.notblank") String> authors;
+    private List<@NotBlank(message = "book.validation.authors.notBlank") String> authors;
 
     @ElementCollection
     @CollectionTable(name = "book_genres", joinColumns = @JoinColumn(name = "book_id"))
     @Column(name = "genre")
-    private List<@NotBlank(message = "book.validation.genres.notblank") String> genres;
+    private List<@NotBlank(message = "book.validation.genres.notBlank") String> genres;
 }

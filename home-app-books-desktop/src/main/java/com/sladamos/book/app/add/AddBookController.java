@@ -5,8 +5,13 @@ import com.sladamos.app.util.ComponentsGenerator;
 import com.sladamos.book.Book;
 import com.sladamos.book.BookService;
 import com.sladamos.book.BookValidationException;
+import com.sladamos.book.app.add.validation.ValidationsOperator;
+import com.sladamos.book.app.add.validation.ViolationDisplayer;
+import com.sladamos.book.app.add.validation.ViolationDisplayerFactory;
 import com.sladamos.book.app.common.*;
 import com.sladamos.book.app.items.OnDisplayItemsClicked;
+import com.sladamos.book.app.util.FocusableFinder;
+import com.sladamos.book.app.util.NodeScroller;
 import jakarta.validation.ConstraintViolation;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
@@ -19,11 +24,11 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
-import static com.sladamos.book.Book.MIN_NUMBER_OF_GENRES;
+import static com.sladamos.book.Book.*;
 
 @Slf4j
 @Component
@@ -31,6 +36,9 @@ import static com.sladamos.book.Book.MIN_NUMBER_OF_GENRES;
 public class AddBookController {
 
     private static final URL MULTIPLE_FIELDS_COMPONENT_RESOURCE = MultipleFieldsController.class.getResource("MultipleFields.fxml");
+
+    @FXML
+    private ScrollPane formScrollPane;
 
     @FXML
     private Label titleValidationLabel;
@@ -123,30 +131,27 @@ public class AddBookController {
 
     private final BookService bookService;
 
+    private final FocusableFinder focusableFinder;
+
+    private final NodeScroller nodeScroller;
+
+    private final ValidationsOperator validationsOperator;
+
+    private final ViolationDisplayerFactory violationDisplayerFactory;
+
     private final MultipleFieldsController authorsMultipleFieldsController = new MultipleFieldsController();
 
     private final MultipleFieldsController genresMultipleFieldsController = new MultipleFieldsController();
 
-    private final Map<String, Label> validationLabels = new HashMap<>();
+    private final Map<String, ViolationDisplayer> violationDisplayers = new LinkedHashMap<>();
 
     @FXML
     public void initialize() {
         componentsGenerator.addComponentAtEnd(genresMultipleFieldsController, genresPanel, MULTIPLE_FIELDS_COMPONENT_RESOURCE);
         componentsGenerator.addComponentAtEnd(authorsMultipleFieldsController, authorsPanel, MULTIPLE_FIELDS_COMPONENT_RESOURCE);
         setupBindings();
-        setupValidationLabelsMap();
-        disableValidationLabels();
-    }
-
-    private void setupValidationLabelsMap() {
-        validationLabels.clear();
-        validationLabels.put("title", titleValidationLabel);
-        validationLabels.put("authors", authorsValidationLabel);
-        validationLabels.put("isbn", isbnValidationLabel);
-        validationLabels.put("genres", genresValidationLabel);
-        validationLabels.put("pages", pagesValidationLabel);
-        validationLabels.put("description", descriptionValidationLabel);
-        validationLabels.put("borrowedBy", selectStatusController.borrowedByValidationLabel);
+        setupViolationDisplayersMap();
+        validationsOperator.disableValidationLabels(violationDisplayers);
     }
 
     @FXML
@@ -158,7 +163,7 @@ public class AddBookController {
     @FXML
     private void onAddBookClicked() {
         log.info("Add book button clicked");
-        disableValidationLabels();
+        validationsOperator.disableValidationLabels(violationDisplayers);
         Book book = viewModel.toBook();
         try {
             bookService.createBook(book);
@@ -180,6 +185,17 @@ public class AddBookController {
     private void onAddGenreClicked() {
         log.info("Add genre button clicked");
         genresMultipleFieldsController.addEmptyField();
+    }
+
+    private void setupViolationDisplayersMap() {
+        violationDisplayers.clear();
+        violationDisplayers.put("title", violationDisplayerFactory.createNoArgsViolationsDisplayer(titleValidationLabel));
+        violationDisplayers.put("authors", violationDisplayerFactory.createNoArgsViolationsDisplayer(authorsValidationLabel));
+        violationDisplayers.put("isbn", violationDisplayerFactory.createNoArgsViolationsDisplayer(isbnValidationLabel));
+        violationDisplayers.put("genres", violationDisplayerFactory.createNoArgsViolationsDisplayer(genresValidationLabel));
+        violationDisplayers.put("pages", violationDisplayerFactory.createNoArgsViolationsDisplayer(pagesValidationLabel));
+        violationDisplayers.put("description", violationDisplayerFactory.createSingleArgViolationsDisplayer(MAX_DESCRIPTION_SIZE, descriptionValidationLabel));
+        violationDisplayers.put("borrowedBy", violationDisplayerFactory.createNoArgsViolationsDisplayer(selectStatusController.borrowedByValidationLabel));
     }
 
     private void setupBindings() {
@@ -228,27 +244,18 @@ public class AddBookController {
         );
     }
 
-
     private void updateValidationLabels(Set<ConstraintViolation<Book>> violations) {
-        violations.forEach(this::displayViolation);
-        //TODO: focus first invalid field
+        var firstLabel = validationsOperator.updateValidationLabels(violationDisplayers, violations);
+        firstLabel.ifPresent(this::focusOnFirstFieldConnectedWithLabel);
     }
 
-    private void disableValidationLabels() {
-        validationLabels.values().forEach(this::disableLabel);
-    }
-
-    private void displayViolation(ConstraintViolation<Book> violation) {
-        var label = validationLabels.get(violation.getPropertyPath().toString());
-        label.setManaged(true);
-        label.setVisible(true);
-        label.setText(violation.getMessage()); //TODO: add binding with proper key
-
-    }
-
-    private void disableLabel(Label label) {
-        label.setText("");
-        label.setVisible(false);
-        label.setManaged(false);
+    private void focusOnFirstFieldConnectedWithLabel(Label label) {
+        var pane = (Pane) label.getParent();
+        var field = focusableFinder.findFirstFocusableNode(pane);
+        field.ifPresent(f -> {
+            log.info("Focusing on field: [field: {}]", f);
+            f.requestFocus();
+            nodeScroller.scrollToNode(formScrollPane, f);
+        });
     }
 }

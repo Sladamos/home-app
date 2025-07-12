@@ -123,7 +123,7 @@ class BookValidationTest {
 
         assertThat(violations)
                 .anyMatch(v -> v.getPropertyPath().toString().contains("authors")
-                        && "book.validation.authors.notblank".equals(v.getMessage()));
+                        && "book.validation.authors.notBlank".equals(v.getMessage()));
     }
 
     @Test
@@ -135,7 +135,7 @@ class BookValidationTest {
 
         assertThat(violations)
                 .anyMatch(v -> v.getPropertyPath().toString().contains("genres")
-                        && "book.validation.genres.notblank".equals(v.getMessage()));
+                        && "book.validation.genres.notBlank".equals(v.getMessage()));
     }
 
     @Test

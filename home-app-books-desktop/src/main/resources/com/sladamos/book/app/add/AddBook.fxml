@@ -17,7 +17,7 @@
             <Label fx:id="addBookLabel" styleClass="form--header" text="Add book" />
             <HBox alignment="CENTER" spacing="20.0" styleClass="form--container">
                 <fx:include source="../common/SelectCover.fxml" />
-                <ScrollPane fitToWidth="true">
+                <ScrollPane fx:id="formScrollPane" fitToWidth="true">
                     <VBox spacing="20" styleClass="form--fields-wrapper">
                         <HBox>
                             <Label fx:id="titleLabel" text="Title:*" />
@@ -67,7 +67,7 @@
                         <HBox>
                             <Label fx:id="descriptionLabel" text="Description:" />
                             <VBox styleClass="form--field-wrapper">
-                                <TextArea fx:id="descriptionArea" prefRowCount="3" />
+                                <TextArea fx:id="descriptionArea" prefRowCount="3" wrapText="true" />
                                 <Label fx:id="descriptionValidationLabel" styleClass="form--validation-label" />
                             </VBox>
                         </HBox>
