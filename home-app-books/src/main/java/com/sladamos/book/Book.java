@@ -58,7 +58,7 @@ public class Book {
 
     private Instant modificationDate;
 
-    private LocalDate readDate;
+    private LocalDate readDate; //TODO: not from future validation
 
     @Enumerated(EnumType.STRING)
     private BookStatus status;

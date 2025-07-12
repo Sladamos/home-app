@@ -1,12 +1,10 @@
 package com.sladamos.book.app.common;
 
-import com.sladamos.app.util.BindingsCreator;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -24,20 +22,12 @@ public class MultipleFieldsController {
     private final static int INITIAL_NUMBER_OF_FIELDS = 1;
 
     @FXML
-    private Label fieldsLabel;
-
-    @FXML
     private VBox fieldsContainer;
-
-    private final BindingsCreator bindingsCreator;
-
-    private final String labelKey;
 
     private MultipleFieldsViewModel viewModel;
 
     @FXML
     public void initialize() {
-        fieldsLabel.setText(bindingsCreator.getMessage(labelKey));
     }
 
     public void bindTo(MultipleFieldsViewModel viewModel) {

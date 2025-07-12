@@ -21,35 +21,61 @@
                     <VBox spacing="20" styleClass="form--fields-wrapper">
                         <HBox>
                             <Label fx:id="titleLabel" text="Title:*" />
-                            <TextField fx:id="titleField" />
+                            <VBox styleClass="form--field-wrapper">
+                                <TextField fx:id="titleField" />
+                                <Label fx:id="titleValidationLabel" styleClass="form--validation-label" />
+                            </VBox>
                         </HBox>
 
-                        <Pane fx:id="authorsWrapper" />
+                        <HBox>
+                            <Label fx:id="authorsLabel" text="Authors:*" />
+                            <VBox styleClass="form--field-wrapper">
+                                <Pane fx:id="authorsPanel" />
+                                <Label fx:id="authorsValidationLabel" styleClass="form--validation-label" />
+                            </VBox>
+                        </HBox>
 
                         <HBox>
                             <Label fx:id="publisherLabel" text="Publisher:" />
                             <TextField fx:id="publisherField" />
                         </HBox>
 
-                        <Pane fx:id="genresWrapper" />
+                        <HBox fx:id="genresWrapper">
+                            <Label fx:id="genresLabel" text="Genres:" />
+                            <VBox styleClass="form--field-wrapper">
+                                <Pane fx:id="genresPanel" />
+                                <Label fx:id="genresValidationLabel" styleClass="form--validation-label" />
+                            </VBox>
+                        </HBox>
 
                         <HBox>
                             <Label text="ISBN:" />
-                            <TextField fx:id="isbnField" />
+                            <VBox styleClass="form--field-wrapper">
+                                <TextField fx:id="isbnField" />
+                                <Label fx:id="isbnValidationLabel" styleClass="form--validation-label" />
+                            </VBox>
                         </HBox>
 
                         <HBox>
                             <Label fx:id="pagesLabel" text="Pages:" />
-                            <TextField fx:id="pagesField"/>
+                            <VBox styleClass="form--field-wrapper">
+                                <TextField fx:id="pagesField"/>
+                                <Label fx:id="pagesValidationLabel" styleClass="form--validation-label" />
+                            </VBox>
                         </HBox>
 
                         <HBox>
                             <Label fx:id="descriptionLabel" text="Description:" />
-                            <TextArea fx:id="descriptionArea" prefRowCount="3" />
+                            <VBox styleClass="form--field-wrapper">
+                                <TextArea fx:id="descriptionArea" prefRowCount="3" />
+                                <Label fx:id="descriptionValidationLabel" styleClass="form--validation-label" />
+                            </VBox>
                         </HBox>
 
                         <fx:include source="../common/SelectRating.fxml" />
+
                         <fx:include source="../common/SelectStatus.fxml" />
+
                         <Button fx:id="addBookButton" alignment="CENTER" onAction="#onAddBookClicked" styleClass="primary--button" text="Add book" />
                     </VBox>
                 </ScrollPane>

@@ -19,7 +19,10 @@
 
     <HBox fx:id="borrowedByBox">
         <Label fx:id="borrowedByLabel" text="Borrowed to:" />
-        <TextField fx:id="borrowedByField" />
+        <VBox styleClass="form--field-wrapper">
+            <TextField fx:id="borrowedByField" />
+            <Label fx:id="borrowedByValidationLabel" styleClass="form--validation-label" wrapText="true" />
+        </VBox>
     </HBox>
 
     <HBox fx:id="readDateBox">

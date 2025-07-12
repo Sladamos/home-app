@@ -25,10 +25,6 @@
     -fx-pref-width: 30px;
 }
 
-.form--fields-wrapper {
-    -fx-padding: 0 15 0 0;
-}
-
 .form--fields-wrapper HBox {
     -fx-spacing: 10px;
     -fx-alignment: center-left;
@@ -54,6 +50,7 @@
 
 .form--fields-wrapper TextField {
     -fx-pref-width: 250px;
+    -fx-max-width: 250px;
 }
 
 #pagesField {
@@ -77,4 +74,16 @@
 
 .isbn--wrapper {
     -fx-pref-width: 150px;
+}
+
+.form--field-wrapper {
+    -fx-spacing: 10px;
+}
+
+.form--fields-wrapper {
+    -fx-padding: 0 15 0 0;
+}
+
+.form--validation-label {
+    -fx-text-fill: red;
 }

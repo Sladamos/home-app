@@ -19,6 +19,9 @@ import java.time.LocalDate;
 public class SelectStatusController {
 
     @FXML
+    public Label borrowedByValidationLabel;
+
+    @FXML
     private Label readDateLabel;
 
     @FXML

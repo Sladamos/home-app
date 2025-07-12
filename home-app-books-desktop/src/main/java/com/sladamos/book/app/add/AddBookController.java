@@ -7,29 +7,60 @@ import com.sladamos.book.BookService;
 import com.sladamos.book.BookValidationException;
 import com.sladamos.book.app.common.*;
 import com.sladamos.book.app.items.OnDisplayItemsClicked;
+import jakarta.validation.ConstraintViolation;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 import static com.sladamos.book.Book.MIN_NUMBER_OF_GENRES;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class AddBookController {
 
     private static final URL MULTIPLE_FIELDS_COMPONENT_RESOURCE = MultipleFieldsController.class.getResource("MultipleFields.fxml");
 
     @FXML
+    private Label titleValidationLabel;
+
+    @FXML
+    private Label authorsValidationLabel;
+
+    @FXML
+    private Label isbnValidationLabel;
+
+    @FXML
+    private Label genresValidationLabel;
+
+    @FXML
+    private Label pagesValidationLabel;
+
+    @FXML
+    private Label descriptionValidationLabel;
+
+    @FXML
     private Label titleLabel;
 
     @FXML
+    private Label authorsLabel;
+
+    @FXML
     private Label publisherLabel;
+
+    @FXML
+    private Label genresLabel;
 
     @FXML
     private Label pagesLabel;
@@ -41,10 +72,13 @@ public class AddBookController {
     private Label addBookLabel;
 
     @FXML
-    private Pane genresWrapper;
+    private HBox genresWrapper;
 
     @FXML
-    private Pane authorsWrapper;
+    private Pane genresPanel;
+
+    @FXML
+    private Pane authorsPanel;
 
     @FXML
     private Button returnToItemsButton;
@@ -87,39 +121,32 @@ public class AddBookController {
 
     private final AddBookViewModel viewModel;
 
-    private final MultipleFieldsController authorsMultipleFieldsController;
-
-    private final MultipleFieldsController genresMultipleFieldsController;
-
     private final BookService bookService;
 
-    public AddBookController(MultipleFieldsControllerFactory multipleFieldsControllerFactory,
-                             SelectCoverController selectCoverController,
-                             SelectRatingController selectRatingController,
-                             SelectStatusController selectStatusController,
-                             ApplicationEventPublisher applicationEventPublisher,
-                             BindingsCreator bindingsCreator,
-                             ComponentsGenerator componentsGenerator,
-                             AddBookViewModel viewModel,
-                             BookService bookService) {
-        this.selectCoverController = selectCoverController;
-        this.selectRatingController = selectRatingController;
-        this.selectStatusController = selectStatusController;
-        this.applicationEventPublisher = applicationEventPublisher;
-        this.bindingsCreator = bindingsCreator;
-        this.componentsGenerator = componentsGenerator;
-        this.viewModel = viewModel;
-        this.bookService = bookService;
-        authorsMultipleFieldsController = multipleFieldsControllerFactory.createMultipleFieldsController("books.multipleFields.authors");
-        genresMultipleFieldsController = multipleFieldsControllerFactory.createMultipleFieldsController("books.multipleFields.genres");
-    }
+    private final MultipleFieldsController authorsMultipleFieldsController = new MultipleFieldsController();
+
+    private final MultipleFieldsController genresMultipleFieldsController = new MultipleFieldsController();
+
+    private final Map<String, Label> validationLabels = new HashMap<>();
 
     @FXML
     public void initialize() {
-        componentsGenerator.addComponentAtEnd(genresMultipleFieldsController, genresWrapper, MULTIPLE_FIELDS_COMPONENT_RESOURCE);
-        componentsGenerator.addComponentAtEnd(authorsMultipleFieldsController, authorsWrapper, MULTIPLE_FIELDS_COMPONENT_RESOURCE);
-
+        componentsGenerator.addComponentAtEnd(genresMultipleFieldsController, genresPanel, MULTIPLE_FIELDS_COMPONENT_RESOURCE);
+        componentsGenerator.addComponentAtEnd(authorsMultipleFieldsController, authorsPanel, MULTIPLE_FIELDS_COMPONENT_RESOURCE);
         setupBindings();
+        setupValidationLabelsMap();
+        disableValidationLabels();
+    }
+
+    private void setupValidationLabelsMap() {
+        validationLabels.clear();
+        validationLabels.put("title", titleValidationLabel);
+        validationLabels.put("authors", authorsValidationLabel);
+        validationLabels.put("isbn", isbnValidationLabel);
+        validationLabels.put("genres", genresValidationLabel);
+        validationLabels.put("pages", pagesValidationLabel);
+        validationLabels.put("description", descriptionValidationLabel);
+        validationLabels.put("borrowedBy", selectStatusController.borrowedByValidationLabel);
     }
 
     @FXML
@@ -131,13 +158,15 @@ public class AddBookController {
     @FXML
     private void onAddBookClicked() {
         log.info("Add book button clicked");
+        disableValidationLabels();
         Book book = viewModel.toBook();
         try {
             bookService.createBook(book);
             viewModel.reset();
             applicationEventPublisher.publishEvent(new OnBookCreated(book));
         } catch (BookValidationException e) {
-            log.error(e.getReason()); //TODO: Show validation messages + translation
+            updateValidationLabels(e.getViolations());
+            log.error("Unable to create book: [reason: {}]", e.getReason());
         }
     }
 
@@ -169,7 +198,9 @@ public class AddBookController {
         addGenreButton.textProperty().bind(bindingsCreator.createBinding("books.add.addGenre"));
 
         titleLabel.textProperty().bind(bindingsCreator.createBinding("books.add.title"));
+        authorsLabel.textProperty().bind(bindingsCreator.createBinding("books.add.authors"));
         publisherLabel.textProperty().bind(bindingsCreator.createBinding("books.add.publisher"));
+        genresLabel.textProperty().bind(bindingsCreator.createBinding("books.add.genres"));
         pagesLabel.textProperty().bind(bindingsCreator.createBinding("books.add.pages"));
         descriptionLabel.textProperty().bind(bindingsCreator.createBinding("books.add.description"));
 
@@ -195,5 +226,29 @@ public class AddBookController {
                 viewModel.getPages(),
                 new javafx.util.converter.NumberStringConverter()
         );
+    }
+
+
+    private void updateValidationLabels(Set<ConstraintViolation<Book>> violations) {
+        violations.forEach(this::displayViolation);
+        //TODO: focus first invalid field
+    }
+
+    private void disableValidationLabels() {
+        validationLabels.values().forEach(this::disableLabel);
+    }
+
+    private void displayViolation(ConstraintViolation<Book> violation) {
+        var label = validationLabels.get(violation.getPropertyPath().toString());
+        label.setManaged(true);
+        label.setVisible(true);
+        label.setText(violation.getMessage()); //TODO: add binding with proper key
+
+    }
+
+    private void disableLabel(Label label) {
+        label.setText("");
+        label.setVisible(false);
+        label.setManaged(false);
     }
 }
