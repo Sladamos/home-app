@@ -123,8 +123,3 @@
     -fx-pref-width: 0px;
     -fx-pref-height: 0px;
 }
-
-#borrowedByValidationLabel {
-    -fx-pref-width: 250px;
-    -fx-max-width: 250px;
-}

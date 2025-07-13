@@ -47,6 +47,15 @@ public class BookItemController {
     @FXML
     private HBox ratingStars;
 
+    @FXML
+    private HBox genresBox;
+
+    @FXML
+    private HBox publisherBox;
+
+    @FXML
+    private HBox pagesBox;
+
     private final BookItemViewModel viewModel;
 
     private final LocaleProvider localeProvider;
@@ -68,8 +77,22 @@ public class BookItemController {
         authorsLabel.textProperty().bind(bindingsCreator.createBindingWithKey("books.items.authors", viewModel.getAuthors()));
         genresLabel.textProperty().bind(bindingsCreator.createBindingWithKey("books.items.genres", viewModel.getGenres()));
         statusLabel.textProperty().bind(createStatusBinding());
+
         ratingStars.getChildren().clear();
         ratingStars.getChildren().addAll(starsFactory.createStars(viewModel));
+
+        setupFieldsVisibility();
+    }
+
+    private void setupFieldsVisibility() {
+        genresBox.visibleProperty().bind(viewModel.getGenres().isNotEmpty());
+        genresBox.managedProperty().bind(genresBox.visibleProperty());
+        publisherBox.visibleProperty().bind(viewModel.getPublisher().isNotEmpty());
+        publisherBox.managedProperty().bind(publisherBox.visibleProperty());
+        pagesBox.visibleProperty().bind(viewModel.getPages().isNotEqualTo(0));
+        pagesBox.managedProperty().bind(pagesBox.visibleProperty());
+        descriptionLabel.visibleProperty().bind(viewModel.getDescription().isNotEmpty());
+        descriptionLabel.managedProperty().bind(descriptionLabel.visibleProperty());
     }
 
     private StringBinding createStatusBinding() {

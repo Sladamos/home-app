@@ -35,23 +35,22 @@ public class BooksAppController {
     @FXML
     public void initialize() {
         titleLabel.textProperty().bind(bindingsCreator.createBinding("books.title"));
-        //setView("items/BooksItems.fxml");
-        setView("add/AddBook.fxml");
+        setView("items/BooksItems.fxml");
     }
 
-    @EventListener
-    public void onAddBook(OnAddBookClicked event) {
+    @EventListener(OnAddBookClicked.class)
+    public void onAddBook() {
         log.info("Switching to Add Book view");
         setView("add/AddBook.fxml");
     }
 
-    @EventListener
-    public void onDisplayItems(OnDisplayItemsClicked event) {
+    @EventListener(OnDisplayItemsClicked.class)
+    public void onDisplayItems() {
         switchViewToBooksItems();
     }
 
-    @EventListener
-    public void onBookCreated(OnBookCreated event) {
+    @EventListener(OnBookCreated.class)
+    public void onBookCreated() {
         switchViewToBooksItems();
     }
 

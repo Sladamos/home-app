@@ -33,7 +33,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public void createBook(Book book) throws BookValidationException {
-        log.info("Creating book: [book: {}]", book);
+        log.info("Creating book: [id: {}. title: {}]", book.getId(), book.getTitle());
         Set<ConstraintViolation<Book>> violations = validator.validate(book);
         if (!violations.isEmpty()) {
             log.error("Validation errors occurred while creating book: [id: {}, title: {}]", book.getId(), book.getTitle());
@@ -44,7 +44,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public void updateBook(Book book) throws BookValidationException {
-        log.info("Updating book: [book: {}]", book);
+        log.info("Updating book: [id: {}, title: {}]", book.getId(), book.getTitle());
         Set<ConstraintViolation<Book>> violations = validator.validate(book);
         if (!violations.isEmpty()) {
             log.error("Validation errors occurred while updating book: [id: {}, title: {}]", book.getId(), book.getTitle());

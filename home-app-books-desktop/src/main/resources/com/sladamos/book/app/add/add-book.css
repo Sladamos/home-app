@@ -57,8 +57,10 @@
     -fx-pref-width: 75px;
 }
 
-.form--fields-wrapper TextArea {
+.form--fields-wrapper TextArea,
+.form--validation-label {
     -fx-max-width: 350px;
+    -fx-wrap-text: true;
 }
 
 .form--fields-wrapper TextArea .content {

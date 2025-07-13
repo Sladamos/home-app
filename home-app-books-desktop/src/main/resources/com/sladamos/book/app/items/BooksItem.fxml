@@ -25,28 +25,27 @@
         <ImageView fx:id="coverImageView" fitHeight="300.0" fitWidth="200.0" preserveRatio="true" />
         <VBox spacing="20.0">
             <VBox>
-            <HBox alignment="CENTER_LEFT" spacing="5">
-                <Circle fill="white" radius="3" />
-                <Label fx:id="authorsLabel" styleClass="book--detail" text="Title" wrapText="true" />
-            </HBox>
-            <HBox alignment="CENTER_LEFT" spacing="5">
-                <Circle fill="white" radius="3" />
-                <Label fx:id="genresLabel" styleClass="book--detail" text="Genre" wrapText="true" />
-            </HBox>
-            <HBox alignment="CENTER_LEFT" spacing="5">
-                <Circle fill="white" radius="3" />
-                <Label fx:id="publisherLabel" styleClass="book--detail" text="Publisher" wrapText="true" />
-            </HBox>
-            <HBox alignment="CENTER_LEFT" spacing="5">
-                <Circle fill="white" radius="3" />
-                <Label fx:id="pagesLabel" styleClass="book--detail" text="Pages" wrapText="true" />
-            </HBox>
-            <HBox alignment="CENTER_LEFT" spacing="5">
-                <Circle fill="white" radius="3" />
-                <Label fx:id="statusLabel" styleClass="book--detail" text="Status" wrapText="true" />
-            </HBox>
-        </VBox>
-
+                <HBox alignment="CENTER_LEFT" spacing="5">
+                    <Circle fill="white" radius="3" />
+                    <Label fx:id="authorsLabel" styleClass="book--detail" text="Title" wrapText="true" />
+                </HBox>
+                <HBox fx:id="genresBox" alignment="CENTER_LEFT" spacing="5">
+                    <Circle fill="white" radius="3" />
+                    <Label fx:id="genresLabel" styleClass="book--detail" text="Genre" wrapText="true" />
+                </HBox>
+                <HBox fx:id="publisherBox" alignment="CENTER_LEFT" spacing="5">
+                    <Circle fill="white" radius="3" />
+                    <Label fx:id="publisherLabel" styleClass="book--detail" text="Publisher" wrapText="true" />
+                </HBox>
+                <HBox fx:id="pagesBox" alignment="CENTER_LEFT" spacing="5">
+                    <Circle fill="white" radius="3" />
+                    <Label fx:id="pagesLabel" styleClass="book--detail" text="Pages" wrapText="true" />
+                </HBox>
+                <HBox alignment="CENTER_LEFT" spacing="5">
+                    <Circle fill="white" radius="3" />
+                    <Label fx:id="statusLabel" styleClass="book--detail" text="Status" wrapText="true" />
+                </HBox>
+            </VBox>
             <Label fx:id="descriptionLabel" styleClass="book--description" textAlignment="JUSTIFY" wrapText="true" />
         </VBox>
         <padding>

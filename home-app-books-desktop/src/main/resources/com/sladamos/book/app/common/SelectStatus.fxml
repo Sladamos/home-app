@@ -21,7 +21,7 @@
         <Label fx:id="borrowedByLabel" text="Borrowed to:" />
         <VBox styleClass="form--field-wrapper">
             <TextField fx:id="borrowedByField" />
-            <Label fx:id="borrowedByValidationLabel" styleClass="form--validation-label" wrapText="true" />
+            <Label fx:id="borrowedByValidationLabel" styleClass="form--validation-label" />
         </VBox>
     </HBox>
 
