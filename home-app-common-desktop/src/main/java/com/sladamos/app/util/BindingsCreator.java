@@ -4,6 +4,7 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ObservableValue;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -47,5 +48,15 @@ public class BindingsCreator {
 
     public String getMessage(String messageKey) {
         return ResourceBundle.getBundle("messages", localeProvider.getLocale()).getString(messageKey);
+    }
+
+    public <T> ObservableValue<String> createBindingWithArg(String messageKey, T messageArg) {
+        return Bindings.createStringBinding(
+                () -> {
+                    String pattern = getMessage(messageKey);
+                    return MessageFormat.format(pattern, messageArg);
+                },
+                localeProvider.getLocaleProperty()
+        );
     }
 }

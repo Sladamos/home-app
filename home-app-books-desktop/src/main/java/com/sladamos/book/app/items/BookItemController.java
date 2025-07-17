@@ -8,15 +8,19 @@ import com.sladamos.book.app.util.StatusMessageKeyProvider;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 
 import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.util.Optional;
 
+@Slf4j
 @RequiredArgsConstructor
 public class BookItemController {
 
@@ -56,6 +60,15 @@ public class BookItemController {
     @FXML
     private HBox pagesBox;
 
+    @FXML
+    private Button inspectButton;
+
+    @FXML
+    private Button editButton;
+
+    @FXML
+    private Button deleteButton;
+
     private final BookItemViewModel viewModel;
 
     private final LocaleProvider localeProvider;
@@ -65,6 +78,8 @@ public class BookItemController {
     private final StatusMessageKeyProvider statusMessageKeyProvider;
 
     private final StarsFactory starsFactory;
+
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     @FXML
     public void initialize() {
@@ -81,7 +96,17 @@ public class BookItemController {
         ratingStars.getChildren().clear();
         ratingStars.getChildren().addAll(starsFactory.createStars(viewModel));
 
+        inspectButton.textProperty().bind(bindingsCreator.createBinding("books.items.inspectButton"));
+        editButton.textProperty().bind(bindingsCreator.createBinding("books.items.editButton"));
+        deleteButton.textProperty().bind(bindingsCreator.createBinding("books.items.deleteButton"));
+
         setupFieldsVisibility();
+    }
+
+    @FXML
+    private void onDeleteBookClicked() {
+        log.info("Delete book button clicked");
+        applicationEventPublisher.publishEvent(new OnBookDeleted(viewModel.getId().get(), viewModel.getTitle().get()));
     }
 
     private void setupFieldsVisibility() {
@@ -91,8 +116,6 @@ public class BookItemController {
         publisherBox.managedProperty().bind(publisherBox.visibleProperty());
         pagesBox.visibleProperty().bind(viewModel.getPages().isNotEqualTo(0));
         pagesBox.managedProperty().bind(pagesBox.visibleProperty());
-        descriptionLabel.visibleProperty().bind(viewModel.getDescription().isNotEmpty());
-        descriptionLabel.managedProperty().bind(descriptionLabel.visibleProperty());
     }
 
     private StringBinding createStatusBinding() {

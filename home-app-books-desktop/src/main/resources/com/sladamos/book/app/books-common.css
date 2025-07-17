@@ -8,6 +8,7 @@
 
 .primary--button {
     -fx-background-radius: 15px;
+    -fx-border-radius: 15px;
     -fx-background-color:
             white,
             #3c005e;
@@ -15,12 +16,12 @@
     -fx-text-fill: white;
     -fx-font-size: 14px;
     -fx-padding: 8px 16px;
-    -fx-border-radius: 8px;
     -fx-cursor: hand;
 }
 
 .secondary--button {
     -fx-background-radius: 15px;
+    -fx-border-radius: 15px;
     -fx-background-color:
             white,
             #6000a2;
@@ -28,7 +29,6 @@
     -fx-text-fill: white;
     -fx-font-size: 14px;
     -fx-padding: 8px 16px;
-    -fx-border-radius: 8px;
     -fx-cursor: hand;
 }
 

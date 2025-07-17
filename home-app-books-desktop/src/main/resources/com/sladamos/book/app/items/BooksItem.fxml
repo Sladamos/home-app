@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
 <?import java.net.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
@@ -7,7 +8,9 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.*?>
 
-<VBox xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sladamos.book.app.items.BookItemController">
+<VBox xmlns="http://javafx.com/javafx/11.0.14-internal"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.sladamos.book.app.items.BookItemController">
     <HBox>
         <Label fx:id="titleLabel" styleClass="book--title" text="Author">
             <HBox.margin>
@@ -21,6 +24,7 @@
             </HBox.margin>
         </HBox>
     </HBox>
+
     <HBox spacing="15.0" styleClass="book--item">
         <ImageView fx:id="coverImageView" fitHeight="300.0" fitWidth="200.0" preserveRatio="true" />
         <VBox spacing="20.0">
@@ -52,6 +56,38 @@
           <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
         </padding>
     </HBox>
+
+    <HBox spacing="10.0">
+        <VBox.margin>
+            <Insets top="15.0" />
+        </VBox.margin>
+        <Button fx:id="inspectButton" mnemonicParsing="false" text="Inspect">
+            <HBox.margin>
+                <Insets left="25.0" />
+            </HBox.margin>
+            <styleClass>
+                <String fx:value="primary--button" />
+                <String fx:value="book--inspect-button" />
+            </styleClass>
+        </Button>
+        <Button fx:id="editButton" mnemonicParsing="false" text="Edit">
+            <styleClass>
+                <String fx:value="primary--button" />
+                <String fx:value="book--edit-button" />
+            </styleClass>
+        </Button>
+        <Region HBox.hgrow="ALWAYS" />
+        <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#onDeleteBookClicked" text="Delete">
+            <HBox.margin>
+                <Insets right="25.0" />
+            </HBox.margin>
+            <styleClass>
+                <String fx:value="primary--button" />
+                <String fx:value="book--delete-button" />
+            </styleClass>
+        </Button>
+    </HBox>
+
     <stylesheets>
         <URL value="@../books-common.css" />
         <URL value="@books-item.css" />

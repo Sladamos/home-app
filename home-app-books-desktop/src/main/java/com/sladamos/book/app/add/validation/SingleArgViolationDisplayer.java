@@ -19,7 +19,7 @@ public record SingleArgViolationDisplayer<T>(BindingsCreator bindingsCreator,
         label.setVisible(true);
         String message = bindingsCreator.getMessage(violation.getMessage());
         String formatedMessage = MessageFormat.format(message, messageArg);
-        label.setText(formatedMessage);
-        log.info("Displaying validation error for [field: {}, message: {}]", violation.getPropertyPath(), message);
+        label.textProperty().bind(bindingsCreator.createBindingWithArg(violation.getMessage(), messageArg));
+        log.info("Displaying validation error for [field: {}, message: {}]", violation.getPropertyPath(), formatedMessage);
     }
 }

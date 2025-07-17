@@ -5,6 +5,7 @@ import com.sladamos.app.util.LocaleProvider;
 import com.sladamos.book.app.util.StarsFactory;
 import com.sladamos.book.app.util.StatusMessageKeyProvider;
 import lombok.AllArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -19,7 +20,9 @@ public class BookItemControllerFactory {
 
     private final StarsFactory starsFactory;
 
+    private final ApplicationEventPublisher applicationEventPublisher;
+
     public BookItemController createController(BookItemViewModel viewModel) {
-        return new BookItemController(viewModel, localeProvider, bindingsCreator, statusMessageKeyProvider, starsFactory);
+        return new BookItemController(viewModel, localeProvider, bindingsCreator, statusMessageKeyProvider, starsFactory, applicationEventPublisher);
     }
 }

@@ -17,4 +17,25 @@
 
 .book--description {
     -fx-font-size: 16px;
+    -fx-pref-width: 600px;
+}
+
+.book--delete-button {
+    -fx-background-color: darkred;
+}
+
+.book--edit-button {
+    -fx-background-color: olive;
+}
+
+.book--inspect-button {
+    -fx-background-color: indigo;
+}
+.book--delete-button,
+.book--edit-button,
+.book--inspect-button {
+    -fx-font-weight: bold;
+    -fx-font-size: 16px;
+    -fx-border-color: white;
+    -fx-border-width: 1;
 }

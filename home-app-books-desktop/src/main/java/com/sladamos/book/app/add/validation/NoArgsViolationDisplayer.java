@@ -13,8 +13,7 @@ public record NoArgsViolationDisplayer(BindingsCreator bindingsCreator, Label la
     public void displayViolation(ConstraintViolation<Book> violation) {
         label.setManaged(true);
         label.setVisible(true);
-        String message = bindingsCreator.getMessage(violation.getMessage());
-        label.setText(message);
-        log.info("Displaying validation error for [field: {}, message: {}]", violation.getPropertyPath(), message);
+        label.textProperty().bind(bindingsCreator.createBinding(violation.getMessage()));
+        log.info("Displaying validation error for [field: {}, message: {}]", violation.getPropertyPath(), bindingsCreator.getMessage(violation.getMessage()));
     }
 }

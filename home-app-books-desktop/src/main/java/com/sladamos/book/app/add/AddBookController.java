@@ -170,8 +170,8 @@ public class AddBookController {
             viewModel.reset();
             applicationEventPublisher.publishEvent(new OnBookCreated(book));
         } catch (BookValidationException e) {
-            updateValidationLabels(e.getViolations());
             log.error("Unable to create book: [reason: {}]", e.getReason());
+            updateValidationLabels(e.getViolations());
         }
     }
 

@@ -1,5 +1,6 @@
 package com.sladamos.book.app.util;
 
+import javafx.application.Platform;
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
@@ -17,5 +18,10 @@ public class NodeScroller {
         double y = contentBounds.getMinY() - scrollBounds.getMinY();
         double height = paneBoundsInLocal.getHeight();
         scrollPane.setVvalue(y / height);
+    }
+
+
+    public void scheduleScrollingToNode(ScrollPane scrollPane, Node node) {
+        Platform.runLater(() -> scrollToNode(scrollPane, node));
     }
 }

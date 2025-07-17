@@ -10,10 +10,12 @@ import lombok.Getter;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Optional;
+import java.util.UUID;
 
 @Getter
 public class BookItemViewModel implements RateableViewModel {
 
+    private final ObjectProperty<UUID> id = new SimpleObjectProperty<>();
     private final StringProperty title = new SimpleStringProperty();
     private final StringProperty isbn = new SimpleStringProperty();
     private final StringProperty description = new SimpleStringProperty();
@@ -31,6 +33,7 @@ public class BookItemViewModel implements RateableViewModel {
     private final ObjectProperty<Instant> creationDate = new SimpleObjectProperty<>();
 
     public BookItemViewModel(Book book, Image coverImage) {
+        id.set(book.getId());
         title.set(book.getTitle());
         isbn.set(book.getIsbn());
         description.set(book.getDescription());

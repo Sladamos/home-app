@@ -1,51 +1,43 @@
 package com.sladamos.book.app.items;
 
 import com.sladamos.book.Book;
-import com.sladamos.book.BookService;
-import com.sladamos.book.app.add.OnBookCreated;
 import com.sladamos.book.app.util.CoverImageProvider;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.event.EventListener;
-import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.function.Function;
+import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class BooksItemsViewModel {
 
-    private final BookService bookService;
-
     private final CoverImageProvider coverImageProvider;
 
     @Getter
     private final ObservableList<BookItemViewModel> books = FXCollections.observableArrayList();
 
-    @Transactional
-    public void loadBooks() {
+    public void loadBooks(List<Book> allBooks) {
         books.clear();
-        bookService.getAllBooks().stream()
-                .map(toViewModel())
+        allBooks.stream()
+                .map(this::toViewModel)
                 .forEach(books::add);
     }
 
-    private Function<Book, BookItemViewModel> toViewModel() {
-        return book -> new BookItemViewModel(book, coverImageProvider.getImageCover(book.getCoverImage()));
+    public void addBook(Book book) {
+        books.add(toViewModel(book));
     }
 
-    @EventListener
-    @Order(1)
-    public void onBookCreated(OnBookCreated event) {
-        Book book = event.book();
-        log.info("Adding new book to items: [id:{}, title:{}]", book.getId(), book.getTitle());
-        books.add(toViewModel().apply(book));
+    public void deleteBook(UUID bookId) {
+        books.removeIf(e -> e.getId().get().equals(bookId));
     }
 
+    private BookItemViewModel toViewModel(Book book) {
+        return new BookItemViewModel(book, coverImageProvider.getImageCover(book.getCoverImage()));
+    }
 }
