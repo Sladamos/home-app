@@ -61,7 +61,7 @@
         <VBox.margin>
             <Insets top="15.0" />
         </VBox.margin>
-        <Button fx:id="inspectButton" mnemonicParsing="false" text="Inspect">
+        <Button fx:id="inspectButton" mnemonicParsing="false" text="Inspect" focusTraversable="false">
             <HBox.margin>
                 <Insets left="25.0" />
             </HBox.margin>
@@ -70,14 +70,14 @@
                 <String fx:value="book--inspect-button" />
             </styleClass>
         </Button>
-        <Button fx:id="editButton" mnemonicParsing="false" onAction="#onEditBookClicked"  text="Edit">
+        <Button fx:id="editButton" mnemonicParsing="false" onAction="#onEditBookClicked"  text="Edit" focusTraversable="false">
             <styleClass>
                 <String fx:value="primary--button" />
                 <String fx:value="book--edit-button" />
             </styleClass>
         </Button>
         <Region HBox.hgrow="ALWAYS" />
-        <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#onDeleteBookClicked" text="Delete">
+        <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#onDeleteBookClicked" text="Delete" focusTraversable="false">
             <HBox.margin>
                 <Insets right="25.0" />
             </HBox.margin>

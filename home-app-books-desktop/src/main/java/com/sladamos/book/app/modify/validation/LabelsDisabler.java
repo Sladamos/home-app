@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 public class LabelsDisabler {
 
     public void disableLabel(Label label) {
-        label.setText("");
+        label.textProperty().unbind();
         label.setVisible(false);
         label.setManaged(false);
     }

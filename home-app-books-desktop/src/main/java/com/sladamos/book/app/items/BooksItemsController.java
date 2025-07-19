@@ -1,7 +1,7 @@
 package com.sladamos.book.app.items;
 
-import com.sladamos.app.util.messages.BindingsCreator;
 import com.sladamos.app.util.components.ComponentsGenerator;
+import com.sladamos.app.util.messages.BindingsCreator;
 import com.sladamos.app.util.messages.TemporaryMessagesFactory;
 import com.sladamos.book.Book;
 import com.sladamos.book.BookNotFoundException;
@@ -9,12 +9,10 @@ import com.sladamos.book.BookService;
 import com.sladamos.book.app.add.OnAddBookClicked;
 import com.sladamos.book.app.add.OnBookCreated;
 import com.sladamos.book.app.edit.OnBookEdited;
-import com.sladamos.app.util.components.NodeScroller;
 import jakarta.annotation.PostConstruct;
 import javafx.collections.ListChangeListener.Change;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,9 +25,6 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class BooksItemsController {
-
-    @FXML
-    private ScrollPane booksScrollPane;
 
     @FXML
     private VBox booksContainer;
@@ -52,8 +47,6 @@ public class BooksItemsController {
     private final ApplicationEventPublisher applicationEventPublisher;
 
     private final TemporaryMessagesFactory temporaryMessagesFactory;
-
-    private final NodeScroller nodeScroller;
 
     @PostConstruct
     public void postConstruct() {
@@ -116,9 +109,8 @@ public class BooksItemsController {
             } else if (change.wasRemoved()) {
                 int lastElementIndex = booksContainer.getChildren().size() - 1;
                 int index = lastElementIndex - change.getFrom();
+                log.info("Removing book item from UI: [index: {}]", index);
                 booksContainer.getChildren().remove(index);
-                int indexToScroll = Math.max(0, index - 1);
-                nodeScroller.scheduleScrollingToNode(booksScrollPane, booksContainer.getChildren().get(indexToScroll));
             }
         }
     }

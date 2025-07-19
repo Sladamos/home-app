@@ -87,7 +87,6 @@ public class BooksAppController {
         setView(BOOK_ITEMS_COMPONENT_RESOURCE);
     }
 
-
     private void setView(URL fxmlPath) {
         try {
             FXMLLoader loader = new FXMLLoader(fxmlPath);
@@ -98,7 +97,6 @@ public class BooksAppController {
             throw new RuntimeException("Failed to load FXML: " + fxmlPath, e);
         }
     }
-
 
     private void setView(URL fxmlPath, Callback<Class<?>, Object> controllerFactory) {
         try {
