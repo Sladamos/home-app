@@ -13,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -57,8 +58,8 @@ class BookIntegrationTest {
                 .favorite(true)
                 .readDate(LocalDate.of(2023, 1, 1))
                 .coverImage("testImage".getBytes())
-                .creationDate(java.time.Instant.parse("2023-01-01T10:00:00Z"))
-                .modificationDate(java.time.Instant.parse("2023-01-02T10:00:00Z"))
+                .creationDate(LocalDateTime.parse("2023-01-01T10:00:00"))
+                .modificationDate(LocalDateTime.parse("2023-01-02T10:00:00"))
                 .build();
         bookRepository.save(existingBook);
     }

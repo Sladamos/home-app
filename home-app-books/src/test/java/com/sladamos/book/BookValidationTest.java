@@ -8,8 +8,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -188,6 +188,7 @@ class BookValidationTest {
     }
 
     private Book createValidBook() {
+        LocalDateTime currentTime = LocalDateTime.now();
         return Book.builder()
                 .id(UUID.randomUUID())
                 .title("Valid Title")
@@ -197,8 +198,8 @@ class BookValidationTest {
                 .pages(100)
                 .coverImage(new byte[]{})
                 .rating(3)
-                .creationDate(Instant.now())
-                .modificationDate(Instant.now())
+                .creationDate(currentTime)
+                .modificationDate(currentTime)
                 .readDate(LocalDate.now())
                 .status(BookStatus.ON_SHELF)
                 .authors(List.of("Author One", "Author Two"))

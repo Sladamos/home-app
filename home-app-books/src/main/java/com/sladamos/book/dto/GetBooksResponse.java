@@ -2,8 +2,8 @@ package com.sladamos.book.dto;
 
 import lombok.*;
 
-import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,8 +26,8 @@ public class GetBooksResponse {
         private Integer pages;
         private Integer rating;
         private boolean favorite;
-        private Instant creationDate;
-        private Instant modificationDate;
+        private LocalDateTime creationDate;
+        private LocalDateTime modificationDate;
         private LocalDate readDate;
         private List<String> authors;
         private List<String> genres;

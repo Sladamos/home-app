@@ -8,8 +8,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -55,9 +55,9 @@ public class Book {
 
     private boolean favorite;
 
-    private Instant creationDate;
+    private LocalDateTime creationDate;
 
-    private Instant modificationDate;
+    private LocalDateTime modificationDate;
 
     @PastOrPresent(message = "book.validation.readDate")
     private LocalDate readDate;

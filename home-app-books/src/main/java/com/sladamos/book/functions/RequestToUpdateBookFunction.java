@@ -5,7 +5,7 @@ import com.sladamos.book.BookStatus;
 import com.sladamos.book.dto.PatchBookRequest;
 import org.springframework.stereotype.Component;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.function.BiFunction;
 
@@ -28,7 +28,7 @@ public class RequestToUpdateBookFunction implements BiFunction<Book, PatchBookRe
                 .rating(Optional.ofNullable(patchBookRequest.getRating()).orElse(entity.getRating()))
                 .favorite(Optional.ofNullable(patchBookRequest.getFavorite()).orElse(entity.isFavorite()))
                 .creationDate(entity.getCreationDate())
-                .modificationDate(Instant.now())
+                .modificationDate(LocalDateTime.now())
                 .readDate(Optional.ofNullable(patchBookRequest.getReadDate()).orElse(entity.getReadDate()))
                 .status(Optional.ofNullable(patchBookRequest.getStatus())
                         .map(BookStatus::valueOf)

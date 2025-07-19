@@ -4,8 +4,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -21,7 +21,7 @@ class BookRepositoryTest {
 
     @Test
     void shouldSaveAndFindBookById() {
-        Instant instantNow = Instant.now();
+        LocalDateTime currentDate = LocalDateTime.now();
         Book book = Book.builder()
                 .id(UUID.randomUUID())
                 .title("Test Book")
@@ -33,8 +33,8 @@ class BookRepositoryTest {
                 .genres(List.of("Genre"))
                 .status(BookStatus.ON_SHELF)
                 .readDate(LocalDate.of(2000, 1, 1))
-                .creationDate(instantNow)
-                .modificationDate(instantNow)
+                .creationDate(currentDate)
+                .modificationDate(currentDate)
                 .build();
 
         bookRepository.save(book);
@@ -48,8 +48,8 @@ class BookRepositoryTest {
                 () -> assertThat(foundBook.get().getCoverImage()).isEqualTo(new byte[]{1, 2, 3}),
                 () -> assertThat(foundBook.get().getStatus()).isEqualTo(BookStatus.ON_SHELF),
                 () -> assertThat(foundBook.get().getReadDate()).isEqualTo(LocalDate.of(2000, 1, 1)),
-                () -> assertThat(foundBook.get().getCreationDate()).isEqualTo(instantNow),
-                () -> assertThat(foundBook.get().getModificationDate()).isEqualTo(instantNow),
+                () -> assertThat(foundBook.get().getCreationDate()).isEqualTo(currentDate),
+                () -> assertThat(foundBook.get().getModificationDate()).isEqualTo(currentDate),
                 () -> assertThat(foundBook.get().getPages()).isEqualTo(100),
                 () -> assertThat(foundBook.get().getAuthors()).containsExactly("Author"),
                 () -> assertThat(foundBook.get().getGenres()).containsExactly("Genre")
