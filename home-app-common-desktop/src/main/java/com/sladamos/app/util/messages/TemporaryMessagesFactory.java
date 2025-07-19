@@ -1,5 +1,7 @@
-package com.sladamos.app.util;
+package com.sladamos.app.util.messages;
 
+import com.sladamos.app.util.FXWinUtil;
+import com.sladamos.app.util.IconFactory;
 import javafx.animation.PauseTransition;
 import javafx.scene.control.Alert;
 import javafx.stage.Stage;

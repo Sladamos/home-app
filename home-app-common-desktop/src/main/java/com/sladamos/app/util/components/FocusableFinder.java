@@ -1,4 +1,4 @@
-package com.sladamos.book.app.util;
+package com.sladamos.app.util.components;
 
 import javafx.scene.Node;
 import javafx.scene.control.TextArea;

@@ -1,4 +1,4 @@
-package com.sladamos.app.util;
+package com.sladamos.app.util.components;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
