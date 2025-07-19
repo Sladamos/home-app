@@ -24,13 +24,26 @@
     -fx-background-color: darkred;
 }
 
+.book--delete-button:hover {
+    -fx-background-color: firebrick;
+}
+
 .book--edit-button {
     -fx-background-color: olive;
+}
+
+.book--edit-button:hover {
+    -fx-background-color: darkgoldenrod;
 }
 
 .book--inspect-button {
     -fx-background-color: indigo;
 }
+
+.book--inspect-button:hover {
+    -fx-background-color: darkslateblue;
+}
+
 .book--delete-button,
 .book--edit-button,
 .book--inspect-button {

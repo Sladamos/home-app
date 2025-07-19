@@ -14,3 +14,9 @@
     -fx-max-height: 24px;
     -fx-cursor: hand;
 }
+
+.delete--field-button:hover {
+    -fx-background-color:
+            white,
+            firebrick;
+}
