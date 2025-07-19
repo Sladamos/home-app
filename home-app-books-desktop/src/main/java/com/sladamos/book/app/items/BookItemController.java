@@ -1,8 +1,10 @@
 package com.sladamos.book.app.items;
 
-import com.sladamos.app.util.BindingsCreator;
+import com.sladamos.app.util.messages.BindingsCreator;
 import com.sladamos.app.util.LocaleProvider;
 import com.sladamos.book.BookStatus;
+import com.sladamos.book.app.edit.OnEditBookClicked;
+import com.sladamos.book.app.util.CoverImageProvider;
 import com.sladamos.book.app.util.StarsFactory;
 import com.sladamos.book.app.util.StatusMessageKeyProvider;
 import javafx.beans.binding.Bindings;
@@ -81,17 +83,22 @@ public class BookItemController {
 
     private final ApplicationEventPublisher applicationEventPublisher;
 
+    private final CoverImageProvider coverImageProvider;
+
     @FXML
     public void initialize() {
         titleLabel.textProperty().bind(viewModel.getTitle());
         descriptionLabel.textProperty().bind(viewModel.getDescription());
-        coverImageView.imageProperty().bind(viewModel.getCoverImage());
 
         publisherLabel.textProperty().bind(bindingsCreator.createBindingWithKey("books.items.publisher", viewModel.getPublisher()));
         pagesLabel.textProperty().bind(bindingsCreator.createBindingWithKey("books.items.pages", viewModel.getPages()));
         authorsLabel.textProperty().bind(bindingsCreator.createBindingWithKey("books.items.authors", viewModel.getAuthors()));
         genresLabel.textProperty().bind(bindingsCreator.createBindingWithKey("books.items.genres", viewModel.getGenres()));
         statusLabel.textProperty().bind(createStatusBinding());
+        coverImageView.imageProperty().bind(Bindings.createObjectBinding(
+                () -> coverImageProvider.getImageCover(viewModel.getCoverImage().get()),
+                viewModel.getCoverImage()
+        ));
 
         ratingStars.getChildren().clear();
         ratingStars.getChildren().addAll(starsFactory.createStars(viewModel));
@@ -107,6 +114,12 @@ public class BookItemController {
     private void onDeleteBookClicked() {
         log.info("Delete book button clicked");
         applicationEventPublisher.publishEvent(new OnBookDeleted(viewModel.getId().get(), viewModel.getTitle().get()));
+    }
+
+    @FXML
+    private void onEditBookClicked() {
+        log.info("Edit book button clicked");
+        applicationEventPublisher.publishEvent(new OnEditBookClicked(viewModel.getBook()));
     }
 
     private void setupFieldsVisibility() {

@@ -1,4 +1,4 @@
-package com.sladamos.book.app.common;
+package com.sladamos.book.app.modify.components;
 
 import com.sladamos.book.BookStatus;
 import javafx.beans.property.ObjectProperty;

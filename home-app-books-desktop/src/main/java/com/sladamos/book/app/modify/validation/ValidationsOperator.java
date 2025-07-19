@@ -1,4 +1,4 @@
-package com.sladamos.book.app.add.validation;
+package com.sladamos.book.app.modify.validation;
 
 import com.sladamos.book.Book;
 import jakarta.validation.ConstraintViolation;

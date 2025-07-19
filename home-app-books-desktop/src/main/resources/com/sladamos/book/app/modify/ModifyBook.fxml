@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sladamos.book.app.add.AddBookController">
+<BorderPane xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sladamos.book.app.modify.ModifyBookController">
     <left>
         <VBox spacing="16">
             <Button fx:id="returnToItemsButton" mnemonicParsing="false" onAction="#onReturnButtonClicked" styleClass="primary--button" text="Return" />
@@ -16,7 +16,7 @@
         <VBox alignment="CENTER" spacing="10.0">
             <Label fx:id="addBookLabel" styleClass="form--header" text="Add book" />
             <HBox alignment="CENTER" spacing="20.0" styleClass="form--container">
-                <fx:include source="../common/SelectCover.fxml" />
+                <fx:include source="./components/SelectCover.fxml" />
                 <ScrollPane fx:id="formScrollPane" fitToWidth="true">
                     <VBox spacing="20" styleClass="form--fields-wrapper">
                         <HBox>
@@ -72,9 +72,9 @@
                             </VBox>
                         </HBox>
 
-                        <fx:include source="../common/SelectRating.fxml" />
+                        <fx:include source="./components/SelectRating.fxml" />
 
-                        <fx:include source="../common/SelectStatus.fxml" />
+                        <fx:include source="./components/SelectStatus.fxml" />
 
                         <Button fx:id="addBookButton" alignment="CENTER" onAction="#onAddBookClicked" styleClass="primary--button" text="Add book" />
                     </VBox>
@@ -83,7 +83,7 @@
         </VBox>
     </right>
     <stylesheets>
-        <URL value="@add-book.css" />
+        <URL value="@modify-book.css" />
         <URL value="@../books-common.css" />
     </stylesheets>
 </BorderPane>

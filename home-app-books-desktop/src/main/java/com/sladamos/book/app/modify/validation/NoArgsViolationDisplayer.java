@@ -1,6 +1,6 @@
-package com.sladamos.book.app.add.validation;
+package com.sladamos.book.app.modify.validation;
 
-import com.sladamos.app.util.BindingsCreator;
+import com.sladamos.app.util.messages.BindingsCreator;
 import com.sladamos.book.Book;
 import jakarta.validation.ConstraintViolation;
 import javafx.scene.control.Label;

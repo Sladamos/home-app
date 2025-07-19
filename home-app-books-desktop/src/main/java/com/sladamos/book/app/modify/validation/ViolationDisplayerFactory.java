@@ -1,6 +1,6 @@
-package com.sladamos.book.app.add.validation;
+package com.sladamos.book.app.modify.validation;
 
-import com.sladamos.app.util.BindingsCreator;
+import com.sladamos.app.util.messages.BindingsCreator;
 import javafx.scene.control.Label;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

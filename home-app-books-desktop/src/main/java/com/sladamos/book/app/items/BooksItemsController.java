@@ -1,14 +1,15 @@
 package com.sladamos.book.app.items;
 
-import com.sladamos.app.util.BindingsCreator;
-import com.sladamos.app.util.ComponentsGenerator;
-import com.sladamos.app.util.TemporaryMessagesFactory;
+import com.sladamos.app.util.messages.BindingsCreator;
+import com.sladamos.app.util.components.ComponentsGenerator;
+import com.sladamos.app.util.messages.TemporaryMessagesFactory;
 import com.sladamos.book.Book;
 import com.sladamos.book.BookNotFoundException;
 import com.sladamos.book.BookService;
 import com.sladamos.book.app.add.OnAddBookClicked;
 import com.sladamos.book.app.add.OnBookCreated;
-import com.sladamos.book.app.util.NodeScroller;
+import com.sladamos.book.app.edit.OnBookEdited;
+import com.sladamos.app.util.components.NodeScroller;
 import jakarta.annotation.PostConstruct;
 import javafx.collections.ListChangeListener.Change;
 import javafx.fxml.FXML;
@@ -79,6 +80,14 @@ public class BooksItemsController {
         viewModel.addBook(book);
     }
 
+    @EventListener(OnBookEdited.class)
+    @Order(1)
+    public void onBookEdited(OnBookEdited event) {
+        Book book = event.book();
+        log.info("Updating book in items: [id: {}, title: {}]", book.getId(), book.getTitle());
+        viewModel.updateBook(book);
+    }
+
     @EventListener(OnBookDeleted.class)
     public void onBookDeleted(OnBookDeleted event) {
         log.info("Deleting book from items: [id: {}, title: {}]", event.bookId(), event.bookTitle());
@@ -108,9 +117,8 @@ public class BooksItemsController {
                 int lastElementIndex = booksContainer.getChildren().size() - 1;
                 int index = lastElementIndex - change.getFrom();
                 booksContainer.getChildren().remove(index);
-                if (index > 0) {
-                    nodeScroller.scheduleScrollingToNode(booksScrollPane, booksContainer.getChildren().get(index - 1));
-                }
+                int indexToScroll = Math.max(0, index - 1);
+                nodeScroller.scheduleScrollingToNode(booksScrollPane, booksContainer.getChildren().get(indexToScroll));
             }
         }
     }

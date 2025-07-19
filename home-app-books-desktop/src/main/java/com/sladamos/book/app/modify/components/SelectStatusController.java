@@ -1,6 +1,6 @@
-package com.sladamos.book.app.common;
+package com.sladamos.book.app.modify.components;
 
-import com.sladamos.app.util.BindingsCreator;
+import com.sladamos.app.util.messages.BindingsCreator;
 import com.sladamos.book.BookStatus;
 import com.sladamos.book.app.util.StatusMessageKeyProvider;
 import javafx.beans.binding.Bindings;

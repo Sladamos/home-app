@@ -1,17 +1,19 @@
-package com.sladamos.book.app.add;
+package com.sladamos.book.app.modify;
 
-import com.sladamos.app.util.BindingsCreator;
-import com.sladamos.app.util.ComponentsGenerator;
+import com.sladamos.app.util.messages.BindingsCreator;
+import com.sladamos.app.util.components.ComponentsGenerator;
 import com.sladamos.book.Book;
 import com.sladamos.book.BookService;
 import com.sladamos.book.BookValidationException;
-import com.sladamos.book.app.add.validation.ValidationsOperator;
-import com.sladamos.book.app.add.validation.ViolationDisplayer;
-import com.sladamos.book.app.add.validation.ViolationDisplayerFactory;
-import com.sladamos.book.app.common.*;
+import com.sladamos.book.app.add.OnBookCreated;
+import com.sladamos.book.app.modify.components.*;
+import com.sladamos.book.app.modify.validation.ValidationsOperator;
+import com.sladamos.book.app.modify.validation.ViolationDisplayer;
+import com.sladamos.book.app.modify.validation.ViolationDisplayerFactory;
+import com.sladamos.book.app.edit.OnBookEdited;
 import com.sladamos.book.app.items.OnDisplayItemsClicked;
-import com.sladamos.book.app.util.FocusableFinder;
-import com.sladamos.book.app.util.NodeScroller;
+import com.sladamos.app.util.components.FocusableFinder;
+import com.sladamos.app.util.components.NodeScroller;
 import jakarta.validation.ConstraintViolation;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
@@ -33,7 +35,7 @@ import static com.sladamos.book.Book.*;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class AddBookController {
+public class ModifyBookController {
 
     private static final URL MULTIPLE_FIELDS_COMPONENT_RESOURCE = MultipleFieldsController.class.getResource("MultipleFields.fxml");
 
@@ -127,7 +129,7 @@ public class AddBookController {
 
     private final ComponentsGenerator componentsGenerator;
 
-    private final AddBookViewModel viewModel;
+    private final ModifyBookViewModel viewModel;
 
     private final BookService bookService;
 
@@ -138,6 +140,8 @@ public class AddBookController {
     private final ValidationsOperator validationsOperator;
 
     private final ViolationDisplayerFactory violationDisplayerFactory;
+
+    private final ModifyBookViewModelConverter viewModelConverter;
 
     private final MultipleFieldsController authorsMultipleFieldsController = new MultipleFieldsController();
 
@@ -164,14 +168,11 @@ public class AddBookController {
     private void onAddBookClicked() {
         log.info("Add book button clicked");
         validationsOperator.disableValidationLabels(violationDisplayers);
-        Book book = viewModel.toBook();
-        try {
-            bookService.createBook(book);
-            viewModel.reset();
-            applicationEventPublisher.publishEvent(new OnBookCreated(book));
-        } catch (BookValidationException e) {
-            log.error("Unable to create book: [reason: {}]", e.getReason());
-            updateValidationLabels(e.getViolations());
+        Book book = viewModelConverter.convert(viewModel);
+        if (viewModel.isEditMode()) {
+            updateBook(book);
+        } else {
+            saveBook(book);
         }
     }
 
@@ -207,8 +208,14 @@ public class AddBookController {
         genresWrapper.visibleProperty().bind(Bindings.isEmpty(viewModel.getGenres()).not());
         genresWrapper.managedProperty().bind(genresWrapper.visibleProperty());
 
-        addBookLabel.textProperty().bind(bindingsCreator.createBinding("books.add.name"));
-        addBookButton.textProperty().bind(bindingsCreator.createBinding("books.add.name"));
+        if (viewModel.isEditMode()) {
+            addBookLabel.setText(bindingsCreator.getMessage("books.edit.name"));
+            addBookButton.setText(bindingsCreator.getMessage("books.edit.name"));
+        } else {
+            addBookLabel.setText(bindingsCreator.getMessage("books.add.name"));
+            addBookButton.setText(bindingsCreator.getMessage("books.add.name"));
+        }
+
         returnToItemsButton.textProperty().bind(bindingsCreator.createBinding("books.add.returnToBooks"));
         addAuthorButton.textProperty().bind(bindingsCreator.createBinding("books.add.addAuthor"));
         addGenreButton.textProperty().bind(bindingsCreator.createBinding("books.add.addGenre"));
@@ -242,6 +249,27 @@ public class AddBookController {
                 viewModel.getPages(),
                 new javafx.util.converter.NumberStringConverter()
         );
+    }
+
+    private void saveBook(Book book) {
+        try {
+            bookService.createBook(book);
+            viewModel.reset();
+            applicationEventPublisher.publishEvent(new OnBookCreated(book));
+        } catch (BookValidationException e) {
+            log.error("Unable to create book: [reason: {}]", e.getReason());
+            updateValidationLabels(e.getViolations());
+        }
+    }
+
+    private void updateBook(Book book) {
+        try {
+            bookService.updateBook(book);
+            applicationEventPublisher.publishEvent(new OnBookEdited(book));
+        } catch (BookValidationException e) {
+            log.error("Unable to edit book: [reason: {}]", e.getReason());
+            updateValidationLabels(e.getViolations());
+        }
     }
 
     private void updateValidationLabels(Set<ConstraintViolation<Book>> violations) {

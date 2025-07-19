@@ -4,12 +4,12 @@
 <?import java.net.URL?>
 <VBox xmlns="http://javafx.com/javafx"
 	  xmlns:fx="http://javafx.com/fxml"
-	  fx:controller="com.sladamos.book.app.common.MultipleFieldsController"
+	  fx:controller="com.sladamos.book.app.modify.components.MultipleFieldsController"
 	  fx:id="fieldsContainer"
 	  spacing="10">
 	<stylesheets>
 		<URL value="@multiple-fields.css" />
-		<URL value="@../books-common.css" />
+		<URL value="@../../books-common.css" />
 	</stylesheets>
 </VBox>
 

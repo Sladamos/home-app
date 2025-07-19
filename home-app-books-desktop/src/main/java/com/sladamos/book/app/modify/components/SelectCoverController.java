@@ -1,10 +1,12 @@
-package com.sladamos.book.app.common;
+package com.sladamos.book.app.modify.components;
 
-import com.sladamos.app.util.BindingsCreator;
+import com.sladamos.app.util.messages.BindingsCreator;
+import com.sladamos.app.util.messages.TemporaryMessagesFactory;
 import com.sladamos.book.app.util.CoverImageProvider;
-import com.sladamos.app.util.TemporaryMessagesFactory;
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import lombok.RequiredArgsConstructor;
@@ -47,8 +49,10 @@ public class SelectCoverController {
     public void bindTo(SelectCoverViewModel viewModel) {
         this.viewModel = viewModel;
 
-        updateCoverPreview(viewModel.getCoverImage().get());
-        this.viewModel.getCoverImage().addListener((obs, oldVal, newVal) -> updateCoverPreview(newVal));
+        coverPreview.imageProperty().bind(Bindings.createObjectBinding(
+                () -> getImage(viewModel),
+                viewModel.getCoverImage()
+        ));
     }
 
     @FXML
@@ -80,11 +84,10 @@ public class SelectCoverController {
         viewModel.getCoverImage().set(null);
     }
 
-    private void updateCoverPreview(byte[] imageBytes) {
-        if (coverImageProvider != null) {
-            coverPreview.setImage(coverImageProvider.getImageCover(imageBytes));
-        }
+    private Image getImage(SelectCoverViewModel viewModel) {
+        byte[] imageBytes = viewModel.getCoverImage().get();
         removeCoverButton.setVisible(imageBytes != null && imageBytes.length > 0);
         selectCoverButton.requestFocus();
+        return coverImageProvider.getImageCover(imageBytes);
     }
 }

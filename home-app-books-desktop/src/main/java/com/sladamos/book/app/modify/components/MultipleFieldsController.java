@@ -1,4 +1,4 @@
-package com.sladamos.book.app.common;
+package com.sladamos.book.app.modify.components;
 
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;

@@ -8,7 +8,7 @@
 <HBox alignment="CENTER" xmlns="http://javafx.com/javafx"
 	  xmlns:fx="http://javafx.com/fxml"
 	  styleClass="select-rating--container"
-	  fx:controller="com.sladamos.book.app.common.SelectRatingController">
+	  fx:controller="com.sladamos.book.app.modify.components.SelectRatingController">
 	<HBox alignment="CENTER">
 		<Label fx:id="ratingLabel" text="Rating:" />
 		<Slider fx:id="ratingSlider" blockIncrement="1" majorTickUnit="1" minorTickCount="0" showTickLabels="true" showTickMarks="true" snapToTicks="true" />
@@ -19,6 +19,6 @@
 	</HBox>
 	<stylesheets>
 		<URL value="@select-rating.css" />
-		<URL value="@../books-common.css" />
+		<URL value="@../../books-common.css" />
 	</stylesheets>
 </HBox>
