@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.stream.Collectors;
 
 @NoArgsConstructor
 @Component
@@ -28,8 +29,8 @@ public class AddBookViewModelConverter implements ModifyBookViewModelConverter {
                 .readDate(modifyBookViewModel.getReadDate().get())
                 .coverImage(modifyBookViewModel.getCoverImage().get())
                 .status(modifyBookViewModel.getStatus().get())
-                .authors(modifyBookViewModel.getAuthors().stream().filter(StringUtils::isNotBlank).toList())
-                .genres(modifyBookViewModel.getGenres().stream().filter(StringUtils::isNotBlank).toList())
+                .authors(modifyBookViewModel.getAuthors().stream().filter(StringUtils::isNotBlank).collect(Collectors.toSet()))
+                .genres(modifyBookViewModel.getGenres().stream().filter(StringUtils::isNotBlank).collect(Collectors.toSet()))
                 .creationDate(currentDate)
                 .modificationDate(currentDate)
                 .build();

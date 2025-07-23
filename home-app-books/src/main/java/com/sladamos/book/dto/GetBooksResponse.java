@@ -5,6 +5,7 @@ import lombok.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -29,8 +30,8 @@ public class GetBooksResponse {
         private LocalDateTime creationDate;
         private LocalDateTime modificationDate;
         private LocalDate readDate;
-        private List<String> authors;
-        private List<String> genres;
+        private Set<String> authors;
+        private Set<String> genres;
         private byte[] coverImage;
     }
 

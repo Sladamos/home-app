@@ -60,6 +60,10 @@
               <noManPages>true</noManPages>
               <stripDebug>true</stripDebug>
               <noHeaderFiles>true</noHeaderFiles>
+              <options>
+                <option>--add-modules</option>
+                <option>java.instrument</option>
+              </options>
             </configuration>
           </execution>
         </executions>

@@ -6,6 +6,7 @@ import com.sladamos.book.app.modify.ModifyBookViewModelConverter;
 import io.micrometer.common.util.StringUtils;
 
 import java.time.LocalDateTime;
+import java.util.stream.Collectors;
 
 public class EditBookViewModelConverter implements ModifyBookViewModelConverter {
 
@@ -24,8 +25,8 @@ public class EditBookViewModelConverter implements ModifyBookViewModelConverter 
                 .readDate(modifyBookViewModel.getReadDate().get())
                 .coverImage(modifyBookViewModel.getCoverImage().get())
                 .status(modifyBookViewModel.getStatus().get())
-                .authors(modifyBookViewModel.getAuthors().stream().filter(StringUtils::isNotBlank).toList())
-                .genres(modifyBookViewModel.getGenres().stream().filter(StringUtils::isNotBlank).toList())
+                .authors(modifyBookViewModel.getAuthors().stream().filter(StringUtils::isNotBlank).collect(Collectors.toSet()))
+                .genres(modifyBookViewModel.getGenres().stream().filter(StringUtils::isNotBlank).collect(Collectors.toSet()))
                 .creationDate(modifyBookViewModel.getCreationDate().get())
                 .modificationDate(LocalDateTime.now())
                 .build();

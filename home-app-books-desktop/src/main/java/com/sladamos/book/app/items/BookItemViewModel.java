@@ -8,8 +8,8 @@ import lombok.Getter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -65,8 +65,8 @@ public class BookItemViewModel implements RateableViewModel {
                 .readDate(readDate.get())
                 .coverImage(coverImage.get())
                 .status(status.get())
-                .authors(authors.get().isEmpty() ? List.of() : List.of(authors.get().split(", ")))
-                .genres(genres.get().isEmpty() ? List.of() : List.of(genres.get().split(", ")))
+                .authors(authors.get().isEmpty() ? Set.of() : Set.of(authors.get().split(", ")))
+                .genres(genres.get().isEmpty() ? Set.of() : Set.of(genres.get().split(", ")))
                 .modificationDate(modificationDate.get())
                 .creationDate(creationDate.get())
                 .build();

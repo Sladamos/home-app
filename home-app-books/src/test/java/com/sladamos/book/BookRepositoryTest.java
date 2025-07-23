@@ -6,8 +6,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -29,8 +29,8 @@ class BookRepositoryTest {
                 .description("Test description")
                 .pages(100)
                 .coverImage(new byte[]{1, 2, 3})
-                .authors(List.of("Author"))
-                .genres(List.of("Genre"))
+                .authors(Set.of("Author"))
+                .genres(Set.of("Genre"))
                 .status(BookStatus.ON_SHELF)
                 .readDate(LocalDate.of(2000, 1, 1))
                 .creationDate(currentDate)
@@ -66,8 +66,8 @@ class BookRepositoryTest {
                 .description("Desc")
                 .pages(100)
                 .coverImage(new byte[]{})
-                .authors(List.of("Author"))
-                .genres(List.of("Genre"))
+                .authors(Set.of("Author"))
+                .genres(Set.of("Genre"))
                 .build();
 
         bookRepository.save(book);
@@ -94,8 +94,8 @@ class BookRepositoryTest {
                 .description("Desc")
                 .pages(100)
                 .coverImage(new byte[]{})
-                .authors(List.of("Author"))
-                .genres(List.of("Genre"))
+                .authors(Set.of("Author"))
+                .genres(Set.of("Genre"))
                 .build();
 
         bookRepository.save(book);

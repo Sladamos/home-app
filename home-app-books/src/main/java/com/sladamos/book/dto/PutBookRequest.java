@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.util.Set;
 
 @Data
 @Builder
@@ -24,6 +24,6 @@ public class PutBookRequest {
     private byte[] coverImage;
     private boolean favorite;
     private LocalDate readDate;
-    private List<String> authors;
-    private List<String> genres;
+    private Set<String> authors;
+    private Set<String> genres;
 }

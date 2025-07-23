@@ -2,6 +2,7 @@
   <configuration default="false" name="BooksServer" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
     <module name="home-app-books" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="com.sladamos.Main" />
+    <option name="VM_PARAMETERS" value="--add-opens home.app.books/com.sladamos.book=ALL-UNNAMED" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="com.sladamos.*" />

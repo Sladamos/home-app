@@ -8,13 +8,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -50,8 +49,8 @@ class BookIntegrationTest {
                 .publisher("Test Publisher")
                 .description("desc")
                 .pages(100)
-                .authors(List.of("Author1"))
-                .genres(List.of("Genre1"))
+                .authors(Set.of("Author1"))
+                .genres(Set.of("Genre1"))
                 .borrowedBy("Jan Kowalski")
                 .status(BookStatus.ON_SHELF)
                 .rating(5)
@@ -108,7 +107,6 @@ class BookIntegrationTest {
     }
 
     @Test
-    @Transactional
     void shouldProperlyCreateNewBook() throws Exception {
         UUID id = UUID.randomUUID();
         PutBookRequest request = PutBookRequest.builder()
@@ -117,8 +115,8 @@ class BookIntegrationTest {
                 .publisher("New Publisher")
                 .description("New description")
                 .pages(200)
-                .authors(List.of("New Author"))
-                .genres(List.of("New Genre"))
+                .authors(Set.of("New Author"))
+                .genres(Set.of("New Genre"))
                 .borrowedBy("Adam Nowak")
                 .status("BORROWED")
                 .rating(4)
@@ -150,7 +148,6 @@ class BookIntegrationTest {
     }
 
     @Test
-    @Transactional
     void shouldProperlyReplaceExistingBook() throws Exception {
         PutBookRequest request = PutBookRequest.builder()
                 .title("New Book")
@@ -158,8 +155,8 @@ class BookIntegrationTest {
                 .publisher("New Publisher")
                 .description("New description")
                 .pages(200)
-                .authors(List.of("New Author"))
-                .genres(List.of("New Genre"))
+                .authors(Set.of("New Author"))
+                .genres(Set.of("New Genre"))
                 .borrowedBy("Adam Nowak")
                 .status("BORROWED")
                 .rating(4)
@@ -198,8 +195,8 @@ class BookIntegrationTest {
                 .publisher("New Publisher")
                 .description("New description")
                 .pages(200)
-                .authors(List.of("New Author"))
-                .genres(List.of("New Genre"))
+                .authors(Set.of("New Author"))
+                .genres(Set.of("New Genre"))
                 .build();
         mockMvc.perform(put("/api/books/" + existingId)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -216,8 +213,8 @@ class BookIntegrationTest {
                 .publisher("New Publisher")
                 .description("New description")
                 .pages(200)
-                .authors(List.of("New Author"))
-                .genres(List.of("New Genre"))
+                .authors(Set.of("New Author"))
+                .genres(Set.of("New Genre"))
                 .build();
         mockMvc.perform(put("/api/books/" + newId)
                         .contentType(MediaType.APPLICATION_JSON)
