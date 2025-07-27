@@ -1,0 +1,6 @@
+#searchField {
+    -fx-background-color:
+            white,
+            #3c005e;
+    -fx-prompt-text-fill: #dcdcdc;
+}

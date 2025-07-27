@@ -6,6 +6,19 @@
     );
 }
 
+TextField {
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-padding: 8;
+    -fx-border-color: transparent;
+    -fx-border-width: 1;
+    -fx-pref-width: 250px;
+    -fx-max-width: 250px;
+    -fx-text-fill: #efefef;
+    -fx-font-size: 14px;
+    -fx-font-family: "Noto Sans";
+}
+
 .primary--button {
     -fx-background-radius: 15px;
     -fx-border-radius: 15px;

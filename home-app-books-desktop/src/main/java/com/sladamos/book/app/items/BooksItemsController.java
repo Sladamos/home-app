@@ -12,7 +12,9 @@ import com.sladamos.book.app.edit.OnBookEdited;
 import jakarta.annotation.PostConstruct;
 import javafx.collections.ListChangeListener.Change;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +22,10 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 @Slf4j
 @Component
@@ -31,6 +37,11 @@ public class BooksItemsController {
 
     @FXML
     private Button addBookButton;
+
+    @FXML
+    private TextField searchField;
+
+    private final Map<UUID, Node> bookNodes = new HashMap<>();
 
     private final BookService bookService;
 
@@ -50,13 +61,15 @@ public class BooksItemsController {
 
     @PostConstruct
     public void postConstruct() {
-        viewModel.getBooks().addListener(this::handleChanges);
+        viewModel.getFilteredBooks().addListener(this::handleChanges);
     }
 
     @FXML
     public void initialize() {
         loadBooks();
         addBookButton.textProperty().bind(bindingsCreator.createBinding("books.items.addBook"));
+        searchField.promptTextProperty().bind(bindingsCreator.createBinding("books.items.searchField"));
+        searchField.textProperty().bindBidirectional(viewModel.getSearchQuery());
     }
 
     @FXML
@@ -71,6 +84,7 @@ public class BooksItemsController {
         Book book = event.book();
         log.info("Adding new book to items: [id: {}, title: {}]", book.getId(), book.getTitle());
         viewModel.addBook(book);
+        viewModel.getSearchQuery().setValue("");
     }
 
     @EventListener(OnBookEdited.class)
@@ -98,24 +112,28 @@ public class BooksItemsController {
             booksLoader.loadBooks();
         } else {
             log.info("Books already loaded, adding them to items");
-            viewModel.getBooks().forEach(this::addItem);
+            viewModel.getFilteredBooks().forEach(this::addItem);
         }
     }
 
     private void handleChanges(Change<? extends BookItemViewModel> change) {
         while (change.next()) {
+            if (change.wasRemoved()) {
+                change.getRemoved().forEach(this::removeItem);
+            }
             if (change.wasAdded()) {
                 change.getAddedSubList().forEach(this::addItem);
-            } else if (change.wasRemoved()) {
-                int lastElementIndex = booksContainer.getChildren().size() - 1;
-                int index = lastElementIndex - change.getFrom();
-                log.info("Removing book item from UI: [index: {}]", index);
-                booksContainer.getChildren().remove(index);
             }
         }
     }
 
+    private void removeItem(BookItemViewModel bookItemViewModel) {
+        var component = bookNodes.remove(bookItemViewModel.getBook().getId());
+        booksContainer.getChildren().remove(component);
+    }
+
     private void addItem(BookItemViewModel itemVM) {
-        componentsGenerator.addComponentAtBeginning(bookItemControllerFactory.createController(itemVM), booksContainer, getClass().getResource("BooksItem.fxml"));
+        var component = componentsGenerator.addComponentAtBeginning(bookItemControllerFactory.createController(itemVM), booksContainer, getClass().getResource("BooksItem.fxml"));
+        bookNodes.put(itemVM.getId().get(), component);
     }
 }

@@ -6,6 +6,12 @@
 <?import javafx.scene.layout.*?>
 
 <BorderPane xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sladamos.book.app.items.BooksItemsController">
+    <left>
+        <VBox spacing="20" BorderPane.alignment="CENTER">
+            <Button fx:id="addBookButton" mnemonicParsing="false" onAction="#onAddBookClicked" styleClass="primary--button" text="Add book" />
+            <TextField fx:id="searchField" promptText="Search by title" />
+        </VBox>
+    </left>
     <right>
         <VBox alignment="CENTER" BorderPane.alignment="CENTER">
             <ScrollPane fitToWidth="true" maxWidth="800.0">
@@ -16,17 +22,8 @@
             </ScrollPane>
         </VBox>
     </right>
-   <left>
-       <VBox BorderPane.alignment="CENTER">
-           <Button fx:id="addBookButton"
-                   mnemonicParsing="false"
-                   onAction="#onAddBookClicked"
-                   styleClass="primary--button"
-                   text="Add book" />
-       </VBox>
-   </left>
     <stylesheets>
-        <URL value="@books-items.css" />
         <URL value="@../books-common.css" />
+        <URL value="@books-items.css" />
     </stylesheets>
 </BorderPane>

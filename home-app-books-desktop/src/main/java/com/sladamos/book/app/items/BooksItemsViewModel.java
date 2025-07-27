@@ -1,8 +1,13 @@
 package com.sladamos.book.app.items;
 
 import com.sladamos.book.Book;
+import jakarta.annotation.PostConstruct;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +23,21 @@ import java.util.UUID;
 public class BooksItemsViewModel {
 
     private final ObservableList<BookItemViewModel> books = FXCollections.observableArrayList();
+
+    private final FilteredList<BookItemViewModel> filteredBooks = new FilteredList<>(books, b -> true);
+
+    private final StringProperty searchQuery = new SimpleStringProperty("");
+
+    @PostConstruct
+    public void init() {
+        filteredBooks.predicateProperty().bind(
+                Bindings.createObjectBinding(
+                        () -> b -> searchQuery.get().isBlank()
+                                || b.getTitle().get().toLowerCase().startsWith(searchQuery.get().toLowerCase()),
+                        searchQuery
+                )
+        );
+    }
 
     public void loadBooks(List<Book> allBooks) {
         books.clear();
