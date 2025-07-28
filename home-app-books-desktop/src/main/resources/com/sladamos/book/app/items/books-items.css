@@ -4,3 +4,7 @@
             #3c005e;
     -fx-prompt-text-fill: #dcdcdc;
 }
+
+#booksContainer {
+    -fx-pref-width: 800px;
+}

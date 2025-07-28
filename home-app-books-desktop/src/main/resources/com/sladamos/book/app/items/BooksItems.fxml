@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.net.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.*?>
-
+<?import javafx.scene.text.Font?>
+<?import java.net.URL?>
 <BorderPane xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sladamos.book.app.items.BooksItemsController">
     <left>
         <VBox spacing="20" BorderPane.alignment="CENTER">
@@ -15,7 +18,15 @@
     <right>
         <VBox alignment="CENTER" BorderPane.alignment="CENTER">
             <ScrollPane fitToWidth="true" maxWidth="800.0">
-                <VBox fx:id="booksContainer" spacing="40" />
+                <VBox fx:id="booksContainer" spacing="40">
+                    <VBox fx:id="noBooksFound" alignment="CENTER">
+                        <Label fx:id="noBooksFoundLabel" text="No books found">
+                            <font>
+                                <Font name="Segoe UI Black Italic" size="36.0" />
+                            </font>
+                        </Label>
+                    </VBox>
+                </VBox>
                 <padding>
                     <Insets bottom="16.0" right="16.0" />
                 </padding>

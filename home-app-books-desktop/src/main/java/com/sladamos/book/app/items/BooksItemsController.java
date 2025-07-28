@@ -10,10 +10,12 @@ import com.sladamos.book.app.add.OnAddBookClicked;
 import com.sladamos.book.app.add.OnBookCreated;
 import com.sladamos.book.app.edit.OnBookEdited;
 import jakarta.annotation.PostConstruct;
+import javafx.beans.binding.Bindings;
 import javafx.collections.ListChangeListener.Change;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +36,12 @@ public class BooksItemsController {
 
     @FXML
     private VBox booksContainer;
+
+    @FXML
+    private VBox noBooksFound;
+
+    @FXML
+    private Label noBooksFoundLabel;
 
     @FXML
     private Button addBookButton;
@@ -69,7 +77,12 @@ public class BooksItemsController {
         loadBooks();
         addBookButton.textProperty().bind(bindingsCreator.createBinding("books.items.addBook"));
         searchField.promptTextProperty().bind(bindingsCreator.createBinding("books.items.searchField"));
+        noBooksFoundLabel.textProperty().bind(bindingsCreator.createBinding("books.items.noBooksFound"));
         searchField.textProperty().bindBidirectional(viewModel.getSearchQuery());
+        noBooksFound.visibleProperty().bind(
+                Bindings.size(viewModel.getFilteredBooks()).isEqualTo(0)
+        );
+        noBooksFound.managedProperty().bind(noBooksFound.visibleProperty());
     }
 
     @FXML
