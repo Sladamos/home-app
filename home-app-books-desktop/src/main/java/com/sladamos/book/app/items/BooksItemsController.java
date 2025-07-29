@@ -69,7 +69,7 @@ public class BooksItemsController {
 
     @PostConstruct
     public void postConstruct() {
-        viewModel.getFilteredBooks().addListener(this::handleChanges);
+        viewModel.getSortedBooks().addListener(this::handleChanges);
     }
 
     @FXML
@@ -80,7 +80,7 @@ public class BooksItemsController {
         noBooksFoundLabel.textProperty().bind(bindingsCreator.createBinding("books.items.noBooksFound"));
         searchField.textProperty().bindBidirectional(viewModel.getSearchQuery());
         noBooksFound.visibleProperty().bind(
-                Bindings.size(viewModel.getFilteredBooks()).isEqualTo(0)
+                Bindings.size(viewModel.getSortedBooks()).isEqualTo(0)
         );
         noBooksFound.managedProperty().bind(noBooksFound.visibleProperty());
     }
@@ -121,11 +121,11 @@ public class BooksItemsController {
     }
 
     private void loadBooks() {
-        if (viewModel.getBooks().isEmpty()) {
+        if (viewModel.areBooksNotLoaded()) {
             booksLoader.loadBooks();
         } else {
             log.info("Books already loaded, adding them to items");
-            viewModel.getFilteredBooks().forEach(this::addItem);
+            viewModel.getSortedBooks().forEach(this::addItem);
         }
     }
 
