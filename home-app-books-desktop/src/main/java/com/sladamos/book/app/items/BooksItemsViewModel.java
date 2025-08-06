@@ -46,33 +46,29 @@ public class BooksItemsViewModel {
                 )
         );
 
-        sortedBooks.comparatorProperty().bind(
-                Bindings.createObjectBinding(
-                        () -> sortOption.get().getComparator(),
-                        sortOption
-                )
-        );
+        sortedBooks.setComparator(sortOption.get().getComparator());
+        sortOption.addListener((obs, oldVal, newVal) -> resort());
     }
 
     public void loadBooks(List<Book> allBooks) {
         books.clear();
-        allBooks.stream()
+        var booksVms = allBooks.stream()
                 .map(this::toViewModel)
-                .forEach(books::add);
+                .toList();
+        books.addAll(booksVms);
     }
 
     public void addBook(Book book) {
         books.add(toViewModel(book));
+        resort();
     }
 
     public void updateBook(Book book) {
         books.stream()
                 .filter(vm -> vm.getId().get().equals(book.getId()))
                 .findFirst()
-                .ifPresentOrElse(
-                        vm -> vm.updateFrom(book),
-                        () -> books.add(toViewModel(book))
-                );
+                .ifPresent(vm -> vm.updateFrom(book));
+        resort();
     }
 
     public void deleteBook(UUID bookId) {
@@ -85,5 +81,10 @@ public class BooksItemsViewModel {
 
     private BookItemViewModel toViewModel(Book book) {
         return new BookItemViewModel(book);
+    }
+
+    private void resort() {
+        sortedBooks.setComparator(null);
+        sortedBooks.setComparator(sortOption.get().getComparator());
     }
 }
