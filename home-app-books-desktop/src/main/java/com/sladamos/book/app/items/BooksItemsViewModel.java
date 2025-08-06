@@ -34,6 +34,7 @@ public class BooksItemsViewModel {
     @Getter
     private final StringProperty searchQuery = new SimpleStringProperty("");
 
+    @Getter
     private final ObjectProperty<BooksItemsSortOption> sortOption = new SimpleObjectProperty<>(BooksItemsSortOption.TITLE_ASC);
 
     @PostConstruct
@@ -60,7 +61,7 @@ public class BooksItemsViewModel {
 
     public void addBook(Book book) {
         books.add(toViewModel(book));
-        resort();
+        forceResort();
     }
 
     public void updateBook(Book book) {
@@ -68,7 +69,7 @@ public class BooksItemsViewModel {
                 .filter(vm -> vm.getId().get().equals(book.getId()))
                 .findFirst()
                 .ifPresent(vm -> vm.updateFrom(book));
-        resort();
+        forceResort();
     }
 
     public void deleteBook(UUID bookId) {
@@ -83,8 +84,14 @@ public class BooksItemsViewModel {
         return new BookItemViewModel(book);
     }
 
-    private void resort() {
+    private void forceResort() {
+        log.info("Forcing resort of books");
         sortedBooks.setComparator(null);
+        resort();
+    }
+
+    private void resort() {
+        log.info("Resorting books: [sortOption: {}]", sortOption.get());
         sortedBooks.setComparator(sortOption.get().getComparator());
     }
 }

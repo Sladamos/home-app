@@ -2,6 +2,7 @@ package com.sladamos.book.app.modify.components;
 
 import com.sladamos.app.util.messages.BindingsCreator;
 import com.sladamos.book.BookStatus;
+import com.sladamos.book.app.util.ListCellFactory;
 import com.sladamos.book.app.util.StatusMessageKeyProvider;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
@@ -47,6 +48,8 @@ public class SelectStatusController {
 
     private final BindingsCreator bindingsCreator;
 
+    private final ListCellFactory listCellFactory;
+
     private final StatusMessageKeyProvider statusMessageKeyProvider;
 
     @FXML
@@ -55,15 +58,15 @@ public class SelectStatusController {
         borrowedByLabel.textProperty().bind(bindingsCreator.createBinding("books.selectStatus.borrowedBy"));
         selectStatusLabel.textProperty().bind(bindingsCreator.createBinding("books.selectStatus.label"));
 
-        readDatePicker.setDayCellFactory(createCellFactory());
+        readDatePicker.setDayCellFactory(createDateCellFactory());
 
         createStatusComboBox();
     }
 
     private void createStatusComboBox() {
         statusComboBox.setItems(FXCollections.observableArrayList(BookStatus.values()));
-        statusComboBox.setCellFactory(cb -> createListCell());
-        statusComboBox.setButtonCell(createListCell());
+        statusComboBox.setCellFactory(cb -> listCellFactory.createListCell(statusMessageKeyProvider::getAddStatusMessageKey));
+        statusComboBox.setButtonCell(listCellFactory.createListCell(statusMessageKeyProvider::getAddStatusMessageKey));
 
         borrowedByBox.visibleProperty().bind(Bindings.createBooleanBinding(
                 () -> statusComboBox.getValue() == BookStatus.BORROWED,
@@ -76,29 +79,13 @@ public class SelectStatusController {
         readDateBox.managedProperty().bind(readDateBox.visibleProperty());
     }
 
-    private ListCell<BookStatus> createListCell() {
-        return new ListCell<>() {
-            @Override
-            protected void updateItem(BookStatus item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText("");
-                } else {
-                    var key = statusMessageKeyProvider.getAddStatusMessageKey(item);
-                    var message = bindingsCreator.getMessage(key);
-                    setText(message);
-                }
-            }
-        };
-    }
-
     public void bindTo(SelectStatusViewModel viewModel) {
         borrowedByField.textProperty().bindBidirectional(viewModel.borrowedBy());
         readDatePicker.valueProperty().bindBidirectional(viewModel.readDate());
         statusComboBox.valueProperty().bindBidirectional(viewModel.status());
     }
 
-    private Callback<DatePicker, DateCell> createCellFactory() {
+    private Callback<DatePicker, DateCell> createDateCellFactory() {
         return new Callback<>() {
             @Override
             public DateCell call(final DatePicker datePicker) {

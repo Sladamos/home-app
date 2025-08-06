@@ -9,12 +9,15 @@ import com.sladamos.book.BookService;
 import com.sladamos.book.app.add.OnAddBookClicked;
 import com.sladamos.book.app.add.OnBookCreated;
 import com.sladamos.book.app.edit.OnBookEdited;
+import com.sladamos.book.app.util.ListCellFactory;
 import jakarta.annotation.PostConstruct;
 import javafx.beans.binding.Bindings;
+import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener.Change;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
@@ -49,6 +52,9 @@ public class BooksItemsController {
     @FXML
     private TextField searchField;
 
+    @FXML
+    private ComboBox<BooksItemsSortOption> sortComboBox;
+
     private final Map<UUID, Node> bookNodes = new HashMap<>();
 
     private final BookService bookService;
@@ -67,6 +73,8 @@ public class BooksItemsController {
 
     private final TemporaryMessagesFactory temporaryMessagesFactory;
 
+    private final ListCellFactory listCellFactory;
+
     @PostConstruct
     public void postConstruct() {
         viewModel.getSortedBooks().addListener(this::handleChanges);
@@ -79,10 +87,13 @@ public class BooksItemsController {
         searchField.promptTextProperty().bind(bindingsCreator.createBinding("books.items.searchField"));
         noBooksFoundLabel.textProperty().bind(bindingsCreator.createBinding("books.items.noBooksFound"));
         searchField.textProperty().bindBidirectional(viewModel.getSearchQuery());
-        noBooksFound.visibleProperty().bind(
-                Bindings.size(viewModel.getSortedBooks()).isEqualTo(0)
-        );
+        noBooksFound.visibleProperty().bind(Bindings.isEmpty(viewModel.getSortedBooks()));
         noBooksFound.managedProperty().bind(noBooksFound.visibleProperty());
+
+        sortComboBox.setItems(FXCollections.observableArrayList(BooksItemsSortOption.values()));
+        sortComboBox.setCellFactory(cb -> listCellFactory.createListCell(BooksItemsSortOption::getTranslationKey));
+        sortComboBox.setButtonCell(listCellFactory.createListCell(BooksItemsSortOption::getTranslationKey));
+        sortComboBox.valueProperty().bindBidirectional(viewModel.getSortOption());
     }
 
     @FXML
@@ -131,6 +142,11 @@ public class BooksItemsController {
 
     private void handleChanges(Change<? extends BookItemViewModel> change) {
         while (change.next()) {
+            if (change.wasPermutated()) {
+                bookNodes.values().forEach(e -> booksContainer.getChildren().remove(e));
+                bookNodes.clear();
+                viewModel.getSortedBooks().forEach(this::addItem);
+            }
             if (change.wasRemoved()) {
                 change.getRemoved().forEach(this::removeItem);
             }

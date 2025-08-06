@@ -3,8 +3,55 @@
             white,
             #3c005e;
     -fx-prompt-text-fill: #dcdcdc;
+    -fx-text-fill: #efefef;
+    -fx-font-family: "Noto Sans";
+    -fx-font-size: 14px;
 }
 
 #booksContainer {
     -fx-pref-width: 800px;
+}
+
+#sortComboBox {
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-background-color: #3c005e;
+    -fx-border-color: white;
+    -fx-border-width: 1;
+    -fx-padding: 8 8 8 0;
+    -fx-cursor: hand;
+}
+
+#sortComboBox * {
+    -fx-text-fill: #efefef;
+    -fx-font-family: "Noto Sans";
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+
+#sortComboBox .combo-box-popup .list-view .list-cell {
+    -fx-background-color: #3c005e;
+    -fx-text-fill: #fff;
+    -fx-border-color: white;
+    -fx-border-width: 1;
+    -fx-padding: 8 8 8 4;
+    -fx-cursor: hand;
+}
+
+#sortComboBox .combo-box-popup .list-view .list-cell:hover {
+    -fx-background-color: #a259ff;
+    -fx-text-fill: #fff;
+}
+
+#sortComboBox .arrow-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+    -fx-border-width: 0;
+    -fx-cursor: hand;
+}
+
+#sortComboBox .arrow {
+    -fx-background-color: transparent;
+    -fx-pref-width: 0px;
+    -fx-pref-height: 0px;
 }
