@@ -134,7 +134,7 @@ public class BookItemController {
     private StringBinding createStatusBinding() {
         return Bindings.createStringBinding(
                 () -> {
-                    var bookStatus = viewModel.getStatus().get();
+                    BookStatus bookStatus = viewModel.getStatus().get();
                     String key = statusMessageKeyProvider.getDisplayStatusMessageKey(bookStatus);
                     String message = bindingsCreator.getMessage(key);
                     if (BookStatus.BORROWED.equals(bookStatus)) {

@@ -53,7 +53,7 @@ public class BooksItemsViewModel {
 
     public void loadBooks(List<Book> allBooks) {
         books.clear();
-        var booksVms = allBooks.stream()
+        List<BookItemViewModel> booksVms = allBooks.stream()
                 .map(this::toViewModel)
                 .toList();
         books.addAll(booksVms);

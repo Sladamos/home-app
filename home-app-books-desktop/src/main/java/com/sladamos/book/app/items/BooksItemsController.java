@@ -157,12 +157,12 @@ public class BooksItemsController {
     }
 
     private void removeItem(BookItemViewModel bookItemViewModel) {
-        var component = bookNodes.remove(bookItemViewModel.getBook().getId());
+        Node component = bookNodes.remove(bookItemViewModel.getBook().getId());
         booksContainer.getChildren().remove(component);
     }
 
     private void addItem(BookItemViewModel itemVM) {
-        var component = componentsGenerator.addComponentAtBeginning(bookItemControllerFactory.createController(itemVM), booksContainer, getClass().getResource("BooksItem.fxml"));
+        Node component = componentsGenerator.addComponentAtBeginning(bookItemControllerFactory.createController(itemVM), booksContainer, getClass().getResource("BooksItem.fxml"));
         bookNodes.put(itemVM.getId().get(), component);
     }
 }

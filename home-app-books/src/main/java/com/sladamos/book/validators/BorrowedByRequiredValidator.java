@@ -2,9 +2,9 @@ package com.sladamos.book.validators;
 
 import com.sladamos.book.Book;
 import com.sladamos.book.BookStatus;
-import io.micrometer.common.util.StringUtils;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
+import org.springframework.util.ObjectUtils;
 
 public class BorrowedByRequiredValidator implements ConstraintValidator<BorrowedByRequired, Book> {
 
@@ -12,13 +12,11 @@ public class BorrowedByRequiredValidator implements ConstraintValidator<Borrowed
     public boolean isValid(Book book, ConstraintValidatorContext context) {
         if (book == null) return true;
 
-        if (book.getStatus() == BookStatus.BORROWED && StringUtils.isEmpty(book.getBorrowedBy())) {
-
+        if (book.getStatus() == BookStatus.BORROWED && ObjectUtils.isEmpty(book.getBorrowedBy())) {
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate(context.getDefaultConstraintMessageTemplate())
                     .addPropertyNode("borrowedBy")
                     .addConstraintViolation();
-
             return false;
         }
 

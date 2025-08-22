@@ -17,6 +17,7 @@ import com.sladamos.app.util.components.NodeScroller;
 import jakarta.validation.ConstraintViolation;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -28,6 +29,7 @@ import org.springframework.stereotype.Component;
 import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import static com.sladamos.book.Book.*;
@@ -273,13 +275,13 @@ public class ModifyBookController {
     }
 
     private void updateValidationLabels(Set<ConstraintViolation<Book>> violations) {
-        var firstLabel = validationsOperator.updateValidationLabels(violationDisplayers, violations);
+        Optional<Label> firstLabel = validationsOperator.updateValidationLabels(violationDisplayers, violations);
         firstLabel.ifPresent(this::focusOnFirstFieldConnectedWithLabel);
     }
 
     private void focusOnFirstFieldConnectedWithLabel(Label label) {
-        var pane = (Pane) label.getParent();
-        var field = focusableFinder.findFirstFocusableNode(pane);
+        Pane pane = (Pane) label.getParent();
+        Optional<Node> field = focusableFinder.findFirstFocusableNode(pane);
         field.ifPresent(f -> {
             log.info("Focusing on field: [field: {}]", f);
             f.requestFocus();

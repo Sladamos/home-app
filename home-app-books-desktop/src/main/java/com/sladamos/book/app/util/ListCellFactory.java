@@ -21,8 +21,8 @@ public class ListCellFactory {
                 if (empty || item == null) {
                     setText("");
                 } else {
-                    var key = keySupplier.apply(item);
-                    var message = bindingsCreator.getMessage(key);
+                    String key = keySupplier.apply(item);
+                    String message = bindingsCreator.getMessage(key);
                     setText(message);
                 }
             }

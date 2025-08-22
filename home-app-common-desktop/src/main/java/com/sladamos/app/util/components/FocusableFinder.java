@@ -6,13 +6,14 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
 public class FocusableFinder {
 
     public Optional<Node> findFirstFocusableNode(Pane pane) {
-        var visibleChildren = pane.getChildren().stream().filter(Node::isVisible).toList();
+        List<Node> visibleChildren = pane.getChildren().stream().filter(Node::isVisible).toList();
 
         for (Node child : visibleChildren) {
             if (child instanceof TextField || child instanceof TextArea) {
