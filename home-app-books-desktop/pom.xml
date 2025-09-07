@@ -17,6 +17,11 @@
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <scope>runtime</scope>
+    </dependency>
 
     <dependency>
       <groupId>org.openjfx</groupId>
@@ -45,6 +50,7 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
       </plugin>
+
       <plugin>
         <groupId>org.openjfx</groupId>
         <artifactId>javafx-maven-plugin</artifactId>
@@ -61,7 +67,8 @@
               <stripDebug>true</stripDebug>
               <noHeaderFiles>true</noHeaderFiles>
               <options>
-                <option>-Dlogback.configurationFile=src/main/resources/logback-dev.xml</option>
+                <option>-Dlogback.configurationFile=src/main/resources/logback-prod.xml</option>
+                <!-- <option>-Dspring.profiles.active=local</option> -->
               </options>
             </configuration>
           </execution>
