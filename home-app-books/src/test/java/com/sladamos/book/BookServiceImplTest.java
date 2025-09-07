@@ -14,7 +14,6 @@ import java.util.Set;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
@@ -38,7 +37,6 @@ class BookServiceImplTest {
         List<Book> result = bookService.getAllBooks();
 
         assertThat(result).isEqualTo(books);
-        verify(bookRepository).findAll();
     }
 
     @Test
@@ -49,20 +47,15 @@ class BookServiceImplTest {
 
         Book result = bookService.getBookById(id);
         assertThat(result).isEqualTo(book);
-        verify(bookRepository).findById(id);
     }
 
     @Test
     void shouldThrowBookNotFoundExceptionWhenBookNotFound() {
         UUID id = UUID.randomUUID();
         when(bookRepository.findById(id)).thenReturn(Optional.empty());
-        try {
-            bookService.getBookById(id);
-            fail("Book found");
-        } catch (BookNotFoundException e) {
-            assertThat(e).hasMessage("Book not found with id: " + id);
-            verify(bookRepository).findById(id);
-        }
+        assertThatThrownBy(() -> bookService.getBookById(id))
+                .isInstanceOf(BookNotFoundException.class)
+                .hasMessage("Book not found with id: " + id);
     }
 
     @Test
@@ -118,12 +111,8 @@ class BookServiceImplTest {
         UUID id = UUID.randomUUID();
         when(bookRepository.findById(id)).thenReturn(Optional.empty());
 
-        try {
-            bookService.deleteBook(id);
-            fail("Book found");
-        } catch (BookNotFoundException e) {
-            assertThat(e).hasMessage("Book not found with id: " + id);
-            verify(bookRepository).findById(id);
-        }
+        assertThatThrownBy(() -> bookService.deleteBook(id))
+                .isInstanceOf(BookNotFoundException.class)
+                .hasMessage("Book not found with id: " + id);
     }
 }

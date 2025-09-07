@@ -11,8 +11,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -50,8 +52,6 @@ class BookControllerTest {
         GetBooksResponse result = controller.getBooks();
 
         assertThat(result).isSameAs(response);
-        verify(service).getAllBooks();
-        verify(booksToResponse).apply(books);
     }
 
     @Test
@@ -63,7 +63,6 @@ class BookControllerTest {
 
         controller.putBook(id, req);
 
-        verify(requestToBook).apply(id, req);
         verify(service).createBook(book);
     }
 
@@ -79,8 +78,6 @@ class BookControllerTest {
 
         controller.patchBook(id, req);
 
-        verify(service).getBookById(id);
-        verify(requestToUpdateBook).apply(book, req);
         verify(service).updateBook(updated);
     }
 
@@ -102,8 +99,24 @@ class BookControllerTest {
         when(service.getBookById(id)).thenThrow(new BookNotFoundException("not found"));
 
         assertThatThrownBy(() -> controller.patchBook(id, req))
-                .isInstanceOf(org.springframework.web.server.ResponseStatusException.class)
+                .isInstanceOf(ResponseStatusException.class)
                 .hasMessageContaining("404");
+    }
+
+    @Test
+    void shouldThrowResponseStatusExceptionWhenPatchNotValidBook() throws BookNotFoundException, BookValidationException {
+        UUID id = UUID.randomUUID();
+        PatchBookRequest req = PatchBookRequest.builder().title("T2").build();
+        Book book = Book.builder().id(id).title("T1").build();
+        Book updated = Book.builder().id(id).title("T2").build();
+
+        when(service.getBookById(id)).thenReturn(book);
+        when(requestToUpdateBook.apply(book, req)).thenReturn(updated);
+        doThrow(new BookValidationException(Set.of())).when(service).updateBook(updated);
+
+        assertThatThrownBy(() -> controller.patchBook(id, req))
+                .isInstanceOf(ResponseStatusException.class)
+                .hasMessageContaining("400");
     }
 
     @Test
@@ -112,7 +125,7 @@ class BookControllerTest {
         doThrow(new BookNotFoundException("not found")).when(service).deleteBook(id);
 
         assertThatThrownBy(() -> controller.deleteBook(id))
-                .isInstanceOf(org.springframework.web.server.ResponseStatusException.class)
+                .isInstanceOf(ResponseStatusException.class)
                 .hasMessageContaining("404");
     }
 }
