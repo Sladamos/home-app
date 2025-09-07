@@ -72,6 +72,11 @@ public class BooksItemsViewModel {
         forceResort();
     }
 
+    public void duplicateBook(Book book) {
+        books.add(toViewModel(book));
+        forceResort();
+    }
+
     public void deleteBook(UUID bookId) {
         books.removeIf(e -> e.getId().get().equals(bookId));
     }

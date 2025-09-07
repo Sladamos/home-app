@@ -69,6 +69,9 @@ public class BookItemController {
     private Button editButton;
 
     @FXML
+    private Button duplicateButton;
+
+    @FXML
     private Button deleteButton;
 
     private final BookItemViewModel viewModel;
@@ -105,6 +108,7 @@ public class BookItemController {
 
         inspectButton.textProperty().bind(bindingsCreator.createBinding("books.items.inspectButton"));
         editButton.textProperty().bind(bindingsCreator.createBinding("books.items.editButton"));
+        duplicateButton.textProperty().bind(bindingsCreator.createBinding("books.items.duplicateButton"));
         deleteButton.textProperty().bind(bindingsCreator.createBinding("books.items.deleteButton"));
 
         setupFieldsVisibility();
@@ -113,7 +117,14 @@ public class BookItemController {
     @FXML
     private void onDeleteBookClicked() {
         log.info("Delete book button clicked");
+        //TODO ask for confirmation
         applicationEventPublisher.publishEvent(new OnBookDeleted(viewModel.getId().get(), viewModel.getTitle().get()));
+    }
+
+    @FXML
+    private void onDuplicateBookClicked() {
+        log.info("Duplicate book button clicked");
+        applicationEventPublisher.publishEvent(new OnBookDuplicated(viewModel.getBook()));
     }
 
     @FXML
