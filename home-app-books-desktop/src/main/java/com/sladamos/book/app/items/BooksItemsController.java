@@ -1,6 +1,7 @@
 package com.sladamos.book.app.items;
 
 import com.sladamos.app.util.components.ComponentsGenerator;
+import com.sladamos.app.util.components.NodeScroller;
 import com.sladamos.app.util.messages.BindingsCreator;
 import com.sladamos.app.util.messages.TemporaryMessagesFactory;
 import com.sladamos.book.Book;
@@ -39,6 +40,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class BooksItemsController {
 
+    private final NodeScroller nodeScroller;
     @FXML
     private VBox booksContainer;
 
@@ -132,7 +134,7 @@ public class BooksItemsController {
             viewModel.duplicateBook(bookToDuplicate);
         } catch (BookValidationException e) {
             log.error("Unable to duplicate book: [reason: {}]", e.getReason());
-            //TODO: show some error
+            temporaryMessagesFactory.showError(bindingsCreator.getMessage("books.items.duplicateBookError"));
         }
     }
 

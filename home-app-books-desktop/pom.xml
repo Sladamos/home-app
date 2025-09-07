@@ -68,7 +68,7 @@
               <noHeaderFiles>true</noHeaderFiles>
               <options>
                 <option>-Dlogback.configurationFile=src/main/resources/logback-prod.xml</option>
-                <!-- <option>-Dspring.profiles.active=local</option> -->
+                <option>-Dspring.profiles.active=cloud</option>
               </options>
             </configuration>
           </execution>

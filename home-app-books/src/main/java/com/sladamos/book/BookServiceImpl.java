@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -16,8 +17,10 @@ import java.util.UUID;
 public class BookServiceImpl implements BookService {
 
     private final BookRepository bookRepository;
+
     private final Validator validator;
 
+    private final ImageCoverResizer imageCoverResizer;
 
     @Override
     public List<Book> getAllBooks() {
@@ -39,7 +42,20 @@ public class BookServiceImpl implements BookService {
             log.error("Validation errors occurred while creating book: [id: {}, title: {}]", book.getId(), book.getTitle());
             throw new BookValidationException(violations);
         }
+        resizeBookCover(book);
         bookRepository.save(book);
+    }
+
+    private void resizeBookCover(Book book) {
+        if (book.getCoverImage() != null) {
+            log.info("Resizing cover image for book: [id: {}, title: {}]", book.getId(), book.getTitle());
+            try {
+                byte[] resizedImage = imageCoverResizer.resizeImage(book.getCoverImage());
+                book.setCoverImage(resizedImage);
+            } catch (IOException e) {
+                log.error("Error occurred while resizing cover image for book: [id: {}, title: {}]", book.getId(), book.getTitle(), e);
+            }
+        }
     }
 
     @Override
@@ -50,6 +66,7 @@ public class BookServiceImpl implements BookService {
             log.error("Validation errors occurred while updating book: [id: {}, title: {}]", book.getId(), book.getTitle());
             throw new BookValidationException(violations);
         }
+        resizeBookCover(book);
         bookRepository.save(book);
     }
 

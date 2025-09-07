@@ -61,9 +61,9 @@ public class BooksApp extends Application {
                 Properties props = PropertiesLoaderUtils.loadProperties(resource);
                 context.getEnvironment().getPropertySources()
                         .addLast(new PropertiesPropertySource("config-" + profile, props));
-                log.info("Loaded profile : {}", profile);
+                log.info("Loaded profile: [profile: {}]", profile);
             } else {
-                log.error("No properties found for profile: {}", profile);
+                log.error("No properties found for: [profile: {}]", profile);
             }
         } catch (Exception e) {
             throw new RuntimeException("Failed to load properties for profile: " + profile, e);
