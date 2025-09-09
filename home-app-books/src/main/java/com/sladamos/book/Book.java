@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -77,10 +79,12 @@ public class Book {
     @CollectionTable(name = "book_authors", joinColumns = @JoinColumn(name = "book_id"))
     @Column(name = "author")
     @Size(min = MIN_NUMBER_OF_AUTHORS, message = "book.validation.authors.min")
+    @Fetch(FetchMode.SUBSELECT)
     private List<@NotBlank(message = "book.validation.authors.notBlank") String> authors;
 
     @ElementCollection
     @CollectionTable(name = "book_genres", joinColumns = @JoinColumn(name = "book_id"))
     @Column(name = "genre")
+    @Fetch(FetchMode.SUBSELECT)
     private List<@NotBlank(message = "book.validation.genres.notBlank") String> genres;
 }
