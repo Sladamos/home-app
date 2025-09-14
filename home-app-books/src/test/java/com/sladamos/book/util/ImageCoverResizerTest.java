@@ -46,7 +46,6 @@ class ImageCoverResizerTest {
             when(imageScaleCalculator.calculateScale(originalWidth, originalHeight)).thenReturn(scale);
 
             byte[] resizedBytes = imageCoverResizer.resizeImage(originalBytes);
-
             BufferedImage resized = ImageIO.read(new ByteArrayInputStream(resizedBytes));
 
             assertAll(
