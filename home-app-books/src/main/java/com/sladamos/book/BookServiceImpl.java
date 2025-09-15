@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -47,18 +46,6 @@ public class BookServiceImpl implements BookService {
         bookRepository.save(book);
     }
 
-    private void resizeBookCover(Book book) {
-        if (book.getCoverImage() != null) {
-            log.info("Resizing cover image for book: [id: {}, title: {}]", book.getId(), book.getTitle());
-            try {
-                byte[] resizedImage = imageCoverResizer.resizeImage(book.getCoverImage());
-                book.setCoverImage(resizedImage);
-            } catch (IOException e) {
-                log.error("Error occurred while resizing cover image for book: [id: {}, title: {}]", book.getId(), book.getTitle(), e);
-            }
-        }
-    }
-
     @Override
     public void updateBook(Book book) throws BookValidationException {
         log.info("Updating book: [id: {}, title: {}]", book.getId(), book.getTitle());
@@ -77,5 +64,17 @@ public class BookServiceImpl implements BookService {
         Book book = bookRepository.findById(id).orElseThrow(() -> new BookNotFoundException("Book not found with id: " + id));
         log.info("Book found, proceeding to delete: [id: {}, title: {}]", book.getId(), book.getTitle());
         bookRepository.delete(book);
+    }
+
+    private void resizeBookCover(Book book) {
+        if (book.getCoverImage() != null) {
+            log.info("Resizing cover image for book: [id: {}, title: {}]", book.getId(), book.getTitle());
+            try {
+                byte[] resizedImage = imageCoverResizer.resizeImage(book.getCoverImage());
+                book.setCoverImage(resizedImage);
+            } catch (Exception e) {
+                log.error("Error occurred while resizing cover image for book: [id: {}, title: {}]", book.getId(), book.getTitle(), e);
+            }
+        }
     }
 }
