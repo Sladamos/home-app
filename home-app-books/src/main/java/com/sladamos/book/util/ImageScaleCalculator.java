@@ -11,6 +11,6 @@ public class ImageScaleCalculator {
     public double calculateScale(int originalWidth, int originalHeight) {
         double widthRatio = (double) MAX_COVER_WIDTH / originalWidth;
         double heightRatio = (double) MAX_COVER_HEIGHT / originalHeight;
-        return Math.max(widthRatio, heightRatio);
+        return Math.min(widthRatio, heightRatio);
     }
 }

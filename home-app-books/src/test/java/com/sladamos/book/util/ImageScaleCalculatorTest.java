@@ -25,10 +25,10 @@ class ImageScaleCalculatorTest {
     public static Stream<Arguments> shouldCalculateScaleProperlyArgs() {
         return Stream.of(
                 Arguments.of(MAX_COVER_WIDTH, MAX_COVER_HEIGHT, 1.0),
-                Arguments.of(MAX_COVER_WIDTH, 2 * MAX_COVER_HEIGHT, 1.0),
-                Arguments.of(2 * MAX_COVER_WIDTH, MAX_COVER_HEIGHT, 1.0),
-                Arguments.of(MAX_COVER_WIDTH / 4, MAX_COVER_HEIGHT / 2, 4),
-                Arguments.of(MAX_COVER_WIDTH * 2, MAX_COVER_HEIGHT * 3, 0.5)
+                Arguments.of(MAX_COVER_WIDTH, 2 * MAX_COVER_HEIGHT, 0.5),
+                Arguments.of(2 * MAX_COVER_WIDTH, MAX_COVER_HEIGHT, 0.5),
+                Arguments.of(MAX_COVER_WIDTH / 4, MAX_COVER_HEIGHT / 2, 2.0),
+                Arguments.of(MAX_COVER_WIDTH * 2, MAX_COVER_HEIGHT * 4, 0.25)
         );
     }
 
