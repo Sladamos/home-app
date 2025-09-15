@@ -1,8 +1,8 @@
 .dialog-pane {
     -fx-background-color: linear-gradient(
             from 0% 0% to 100% 100%,
-            #7000b2cc,
-            #4a008acc
+            #7000b2,
+            #4a008a
     );
     -fx-border-width: 2px;
     -fx-padding: 16px;
@@ -10,7 +10,8 @@
 
 .dialog-pane .content.label {
     -fx-text-fill: #efefef;
-    -fx-font-size: 14px;
+    -fx-font-size: 16px;
+    -fx-font-family: "Noto Sans";
 }
 
 .dialog-pane .header-panel {
@@ -41,8 +42,4 @@
     -fx-background-color:
             white,
             #6000a2;
-}
-
-.button:focused {
-    -fx-effect: dropshadow( gaussian , rgba(255,255,255,0.7) , 6, 0, 0, 0 );
 }

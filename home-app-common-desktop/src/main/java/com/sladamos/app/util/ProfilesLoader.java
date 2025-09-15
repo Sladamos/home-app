@@ -33,7 +33,7 @@ public class ProfilesLoader {
         };
     }
 
-    private static void addResourceIfExists(ConfigurableEnvironment contextEnvironment, String profile, ClassPathResource resource) throws IOException {
+    private void addResourceIfExists(ConfigurableEnvironment contextEnvironment, String profile, ClassPathResource resource) throws IOException {
         if (resource.exists()) {
             Properties props = PropertiesLoaderUtils.loadProperties(resource);
             PropertiesPropertySource propertySource = new PropertiesPropertySource("config-" + profile, props);
