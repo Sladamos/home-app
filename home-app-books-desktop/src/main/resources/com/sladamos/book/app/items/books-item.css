@@ -36,6 +36,14 @@
     -fx-background-color: darkgoldenrod;
 }
 
+.book--duplicate-button {
+    -fx-background-color: darkgreen;
+}
+
+.book--duplicate-button:hover {
+    -fx-background-color: forestgreen;
+}
+
 .book--inspect-button {
     -fx-background-color: indigo;
 }
@@ -45,6 +53,7 @@
 }
 
 .book--delete-button,
+.book--duplicate-button,
 .book--edit-button,
 .book--inspect-button {
     -fx-font-weight: bold;

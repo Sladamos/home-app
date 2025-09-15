@@ -17,6 +17,11 @@
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <scope>runtime</scope>
+    </dependency>
 
     <dependency>
       <groupId>org.openjfx</groupId>
@@ -71,6 +76,7 @@
               <noHeaderFiles>true</noHeaderFiles>
               <options>
                 <option>-Dlogback.configurationFile=src/main/resources/logback-prod.xml</option>
+<!--                <option>-Dspring.profiles.active=cloud</option>-->
               </options>
             </configuration>
           </execution>

@@ -1,11 +1,9 @@
 package com.sladamos.book.app.util;
 
 import com.sladamos.book.BookStatus;
-import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
-@NoArgsConstructor
 public class StatusMessageKeyProvider {
 
     public String getDisplayStatusMessageKey(BookStatus status) {

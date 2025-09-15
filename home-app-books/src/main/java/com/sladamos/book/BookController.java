@@ -21,8 +21,11 @@ import java.util.UUID;
 public class BookController {
 
     private final BookService service;
+
     private final BooksToResponseFunction booksToResponse;
+
     private final RequestToBookFunction requestToBook;
+
     private final RequestToUpdateBookFunction requestToUpdateBook;
 
     @GetMapping

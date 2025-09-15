@@ -6,6 +6,7 @@ import com.sladamos.app.util.messages.TemporaryMessagesFactory;
 import com.sladamos.book.Book;
 import com.sladamos.book.BookNotFoundException;
 import com.sladamos.book.BookService;
+import com.sladamos.book.BookValidationException;
 import com.sladamos.book.app.add.OnAddBookClicked;
 import com.sladamos.book.app.add.OnBookCreated;
 import com.sladamos.book.app.edit.OnBookEdited;
@@ -28,6 +29,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -117,6 +119,34 @@ public class BooksItemsController {
         Book book = event.book();
         log.info("Updating book in items: [id: {}, title: {}]", book.getId(), book.getTitle());
         viewModel.updateBook(book);
+    }
+
+    @EventListener(OnBookDuplicated.class)
+    public void onBookDuplicated(OnBookDuplicated event) {
+        Book book = event.book();
+        log.info("Duplicating book in items: [id: {}, title: {}]", book.getId(), book.getTitle());
+        Book bookToDuplicate = prepareBookToDuplicate(book);
+        log.info("Trying to duplicate book with new title: [id: {}, title: {}]", bookToDuplicate.getId(), bookToDuplicate.getTitle());
+        try {
+            bookService.createBook(bookToDuplicate);
+            viewModel.addBook(bookToDuplicate);
+        } catch (BookValidationException e) {
+            log.error("Unable to duplicate book: [reason: {}]", e.getReason());
+            temporaryMessagesFactory.showError(bindingsCreator.getMessage("books.items.duplicateBookError"));
+        }
+    }
+
+    private Book prepareBookToDuplicate(Book book) {
+        long booksCount = viewModel.getSortedBooks().stream().filter(e -> e.getIsbn().get().equals(book.getIsbn())).count();
+        String baseTitle = book.getTitle().replaceAll(" \\(\\d+\\)$", "");
+        String newTitle = String.format("%s (%d)", baseTitle, booksCount);
+        LocalDateTime now = LocalDateTime.now();
+        return book.toBuilder()
+                .id(UUID.randomUUID())
+                .title(newTitle)
+                .creationDate(now)
+                .modificationDate(now)
+                .build();
     }
 
     @EventListener(OnBookDeleted.class)

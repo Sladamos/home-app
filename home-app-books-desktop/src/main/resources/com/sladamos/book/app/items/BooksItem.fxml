@@ -76,6 +76,12 @@
                 <String fx:value="book--edit-button" />
             </styleClass>
         </Button>
+        <Button fx:id="duplicateButton" mnemonicParsing="false" onAction="#onDuplicateBookClicked"  text="Duplicate" focusTraversable="false">
+            <styleClass>
+                <String fx:value="primary--button" />
+                <String fx:value="book--duplicate-button" />
+            </styleClass>
+        </Button>
         <Region HBox.hgrow="ALWAYS" />
         <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#onDeleteBookClicked" text="Delete" focusTraversable="false">
             <HBox.margin>

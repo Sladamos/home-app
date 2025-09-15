@@ -1,7 +1,8 @@
 package com.sladamos.book.app.items;
 
-import com.sladamos.app.util.messages.BindingsCreator;
 import com.sladamos.app.util.LocaleProvider;
+import com.sladamos.app.util.messages.BindingsCreator;
+import com.sladamos.app.util.messages.TemporaryMessagesFactory;
 import com.sladamos.book.BookStatus;
 import com.sladamos.book.app.edit.OnEditBookClicked;
 import com.sladamos.book.app.util.CoverImageProvider;
@@ -9,9 +10,10 @@ import com.sladamos.book.app.util.StarsFactory;
 import com.sladamos.book.app.util.StatusMessageKeyProvider;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +23,8 @@ import org.springframework.context.ApplicationEventPublisher;
 import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.util.Optional;
+
+import static javafx.scene.control.ButtonBar.ButtonData;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -69,6 +73,9 @@ public class BookItemController {
     private Button editButton;
 
     @FXML
+    private Button duplicateButton;
+
+    @FXML
     private Button deleteButton;
 
     private final BookItemViewModel viewModel;
@@ -84,6 +91,8 @@ public class BookItemController {
     private final ApplicationEventPublisher applicationEventPublisher;
 
     private final CoverImageProvider coverImageProvider;
+
+    private final TemporaryMessagesFactory temporaryMessagesFactory;
 
     @FXML
     public void initialize() {
@@ -105,6 +114,7 @@ public class BookItemController {
 
         inspectButton.textProperty().bind(bindingsCreator.createBinding("books.items.inspectButton"));
         editButton.textProperty().bind(bindingsCreator.createBinding("books.items.editButton"));
+        duplicateButton.textProperty().bind(bindingsCreator.createBinding("books.items.duplicateButton"));
         deleteButton.textProperty().bind(bindingsCreator.createBinding("books.items.deleteButton"));
 
         setupFieldsVisibility();
@@ -113,7 +123,14 @@ public class BookItemController {
     @FXML
     private void onDeleteBookClicked() {
         log.info("Delete book button clicked");
-        applicationEventPublisher.publishEvent(new OnBookDeleted(viewModel.getId().get(), viewModel.getTitle().get()));
+        Alert alert = createDeleteConfirmationAlert();
+        alert.setOnHidden(onDeleteConfirmationEnded(alert));
+    }
+
+    @FXML
+    private void onDuplicateBookClicked() {
+        log.info("Duplicate book button clicked");
+        applicationEventPublisher.publishEvent(new OnBookDuplicated(viewModel.getBook()));
     }
 
     @FXML
@@ -151,5 +168,23 @@ public class BookItemController {
                 viewModel.getBorrowedBy(),
                 viewModel.getReadDate()
         );
+    }
+
+    private EventHandler<DialogEvent> onDeleteConfirmationEnded(Alert alert) {
+        return event -> {
+            ButtonType result = alert.getResult();
+            log.info("Delete book button result: [result: {}]", result);
+            if (result.getButtonData() == ButtonData.OK_DONE) {
+                log.info("User confirmed deletion of book: [id: {}]", viewModel.getId().get());
+                applicationEventPublisher.publishEvent(new OnBookDeleted(viewModel.getId().get(), viewModel.getTitle().get()));
+            }
+        };
+    }
+
+    private Alert createDeleteConfirmationAlert() {
+        String message = bindingsCreator.getMessage("books.items.deletionConfirmed");
+        String formattedMessage = MessageFormat.format(message, viewModel.getTitle().get());
+        Image cover = coverImageProvider.getImageCover(viewModel.getCoverImage().get());
+        return temporaryMessagesFactory.showConfirmation(formattedMessage, cover);
     }
 }

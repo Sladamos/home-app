@@ -35,7 +35,7 @@ public class BooksItemsViewModel {
     private final StringProperty searchQuery = new SimpleStringProperty("");
 
     @Getter
-    private final ObjectProperty<BooksItemsSortOption> sortOption = new SimpleObjectProperty<>(BooksItemsSortOption.TITLE_ASC);
+    private final ObjectProperty<BooksItemsSortOption> sortOption = new SimpleObjectProperty<>(BooksItemsSortOption.CREATE_DATE_DESC);
 
     @PostConstruct
     public void init() {

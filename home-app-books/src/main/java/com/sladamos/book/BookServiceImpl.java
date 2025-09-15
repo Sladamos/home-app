@@ -1,5 +1,6 @@
 package com.sladamos.book;
 
+import com.sladamos.book.util.ImageCoverResizer;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
@@ -16,8 +17,10 @@ import java.util.UUID;
 public class BookServiceImpl implements BookService {
 
     private final BookRepository bookRepository;
+
     private final Validator validator;
 
+    private final ImageCoverResizer imageCoverResizer;
 
     @Override
     public List<Book> getAllBooks() {
@@ -39,6 +42,7 @@ public class BookServiceImpl implements BookService {
             log.error("Validation errors occurred while creating book: [id: {}, title: {}]", book.getId(), book.getTitle());
             throw new BookValidationException(violations);
         }
+        resizeBookCover(book);
         bookRepository.save(book);
     }
 
@@ -50,6 +54,7 @@ public class BookServiceImpl implements BookService {
             log.error("Validation errors occurred while updating book: [id: {}, title: {}]", book.getId(), book.getTitle());
             throw new BookValidationException(violations);
         }
+        resizeBookCover(book);
         bookRepository.save(book);
     }
 
@@ -59,5 +64,17 @@ public class BookServiceImpl implements BookService {
         Book book = bookRepository.findById(id).orElseThrow(() -> new BookNotFoundException("Book not found with id: " + id));
         log.info("Book found, proceeding to delete: [id: {}, title: {}]", book.getId(), book.getTitle());
         bookRepository.delete(book);
+    }
+
+    private void resizeBookCover(Book book) {
+        if (book.getCoverImage() != null) {
+            log.info("Resizing cover image for book: [id: {}, title: {}]", book.getId(), book.getTitle());
+            try {
+                byte[] resizedImage = imageCoverResizer.resizeImage(book.getCoverImage());
+                book.setCoverImage(resizedImage);
+            } catch (Exception e) {
+                log.error("Error occurred while resizing cover image for book: [id: {}, title: {}]", book.getId(), book.getTitle(), e);
+            }
+        }
     }
 }

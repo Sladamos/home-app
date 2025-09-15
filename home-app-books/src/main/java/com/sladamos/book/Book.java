@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -14,7 +16,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Builder
+@Builder(toBuilder = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -22,10 +24,18 @@ import java.util.UUID;
 public class Book {
 
     public static final int MAX_RATING = 5;
+
     public static final int MIN_RATING = 0;
+
     public static final int MIN_NUMBER_OF_AUTHORS = 1;
+
     public static final int MIN_NUMBER_OF_GENRES = 0;
+
     public static final int MAX_DESCRIPTION_SIZE = 300;
+
+    public static final int MAX_COVER_WIDTH = 200;
+
+    public static final int MAX_COVER_HEIGHT = 300;
 
     @Id
     private UUID id;
@@ -69,10 +79,12 @@ public class Book {
     @CollectionTable(name = "book_authors", joinColumns = @JoinColumn(name = "book_id"))
     @Column(name = "author")
     @Size(min = MIN_NUMBER_OF_AUTHORS, message = "book.validation.authors.min")
+    @Fetch(FetchMode.SUBSELECT)
     private List<@NotBlank(message = "book.validation.authors.notBlank") String> authors;
 
     @ElementCollection
     @CollectionTable(name = "book_genres", joinColumns = @JoinColumn(name = "book_id"))
     @Column(name = "genre")
+    @Fetch(FetchMode.SUBSELECT)
     private List<@NotBlank(message = "book.validation.genres.notBlank") String> genres;
 }
