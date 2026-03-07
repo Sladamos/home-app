@@ -2,8 +2,8 @@ package com.sladamos.book.image;
 
 import org.springframework.stereotype.Component;
 
-import static com.sladamos.book.Book.MAX_COVER_HEIGHT;
-import static com.sladamos.book.Book.MAX_COVER_WIDTH;
+import static com.sladamos.book.model.Book.MAX_COVER_HEIGHT;
+import static com.sladamos.book.model.Book.MAX_COVER_WIDTH;
 
 @Component
 public class ImageScaleCalculator {

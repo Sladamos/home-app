@@ -1,14 +1,13 @@
-package com.sladamos.book;
+package com.sladamos.book.model;
 
 import com.sladamos.book.validators.BorrowedByRequired;
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -75,16 +74,22 @@ public class Book {
     @Enumerated(EnumType.STRING)
     private BookStatus status;
 
-    @ElementCollection
-    @CollectionTable(name = "book_authors", joinColumns = @JoinColumn(name = "book_id"))
-    @Column(name = "author")
+    @Valid
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "book_author",
+            joinColumns = @JoinColumn(name = "book_id"),
+            inverseJoinColumns = @JoinColumn(name = "author_id")
+    )
     @Size(min = MIN_NUMBER_OF_AUTHORS, message = "book.validation.authors.min")
-    @Fetch(FetchMode.SUBSELECT)
-    private List<@NotBlank(message = "book.validation.authors.notBlank") String> authors;
+    private List<Author> authors;
 
-    @ElementCollection
-    @CollectionTable(name = "book_genres", joinColumns = @JoinColumn(name = "book_id"))
-    @Column(name = "genre")
-    @Fetch(FetchMode.SUBSELECT)
-    private List<@NotBlank(message = "book.validation.genres.notBlank") String> genres;
+    @Valid
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "book_genre",
+            joinColumns = @JoinColumn(name = "book_id"),
+            inverseJoinColumns = @JoinColumn(name = "genre_id")
+    )
+    private List<Genre> genres;
 }

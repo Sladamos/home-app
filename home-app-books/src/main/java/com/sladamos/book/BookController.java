@@ -6,6 +6,7 @@ import com.sladamos.book.dto.PutBookRequest;
 import com.sladamos.book.functions.BooksToResponseFunction;
 import com.sladamos.book.functions.RequestToBookFunction;
 import com.sladamos.book.functions.RequestToUpdateBookFunction;
+import com.sladamos.book.model.Book;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

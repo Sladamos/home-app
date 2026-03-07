@@ -1,4 +1,4 @@
-package com.sladamos.book;
+package com.sladamos.book.model;
 
 public enum BookStatus {
     ON_SHELF,

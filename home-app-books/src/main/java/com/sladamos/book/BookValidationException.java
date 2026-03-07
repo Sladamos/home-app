@@ -1,5 +1,6 @@
 package com.sladamos.book;
 
+import com.sladamos.book.model.Book;
 import jakarta.validation.ConstraintViolation;
 import lombok.Getter;
 

@@ -1,5 +1,9 @@
 package com.sladamos.book;
 
+import com.sladamos.book.model.Author;
+import com.sladamos.book.model.Book;
+import com.sladamos.book.model.BookStatus;
+import com.sladamos.book.model.Genre;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
@@ -14,7 +18,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class BookValidationTest {
 
@@ -117,25 +121,25 @@ class BookValidationTest {
     @Test
     void shouldReturnValidationErrorWhenAuthorIsBlank() {
         Book book = createValidBook();
-        book.setAuthors(List.of(" "));
+        book.setAuthors(List.of(new Author(" ")));
 
         Set<ConstraintViolation<Book>> violations = validator.validate(book);
 
         assertThat(violations)
                 .anyMatch(v -> v.getPropertyPath().toString().contains("authors")
-                        && "book.validation.authors.notBlank".equals(v.getMessage()));
+                        && "author.validation.name".equals(v.getMessage()));
     }
 
     @Test
     void shouldReturnValidationErrorWhenGenreIsBlank() {
         Book book = createValidBook();
-        book.setGenres(List.of(" "));
+        book.setGenres(List.of(new Genre(" ")));
 
         Set<ConstraintViolation<Book>> violations = validator.validate(book);
 
         assertThat(violations)
                 .anyMatch(v -> v.getPropertyPath().toString().contains("genres")
-                        && "book.validation.genres.notBlank".equals(v.getMessage()));
+                        && "genre.validation.name".equals(v.getMessage()));
     }
 
     @Test
@@ -202,8 +206,8 @@ class BookValidationTest {
                 .modificationDate(currentTime)
                 .readDate(LocalDate.now())
                 .status(BookStatus.ON_SHELF)
-                .authors(List.of("Author One", "Author Two"))
-                .genres(List.of("Genre One", "Genre Two"))
+                .authors(List.of(new Author("Author One"), new Author("Author Two")))
+                .genres(List.of(new Genre("Genre One"), new Genre("Genre Two")))
                 .build();
     }
 }

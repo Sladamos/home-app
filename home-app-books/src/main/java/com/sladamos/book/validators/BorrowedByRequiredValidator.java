@@ -1,7 +1,7 @@
 package com.sladamos.book.validators;
 
-import com.sladamos.book.Book;
-import com.sladamos.book.BookStatus;
+import com.sladamos.book.model.Book;
+import com.sladamos.book.model.BookStatus;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.util.ObjectUtils;

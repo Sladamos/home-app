@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
 
-import static com.sladamos.book.Book.MAX_COVER_HEIGHT;
+import static com.sladamos.book.model.Book.MAX_COVER_HEIGHT;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.Mockito.when;

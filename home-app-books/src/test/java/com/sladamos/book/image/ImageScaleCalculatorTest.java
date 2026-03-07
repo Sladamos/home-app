@@ -6,8 +6,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.stream.Stream;
 
-import static com.sladamos.book.Book.MAX_COVER_HEIGHT;
-import static com.sladamos.book.Book.MAX_COVER_WIDTH;
+import static com.sladamos.book.model.Book.MAX_COVER_HEIGHT;
+import static com.sladamos.book.model.Book.MAX_COVER_WIDTH;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ImageScaleCalculatorTest {

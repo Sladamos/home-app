@@ -1,5 +1,7 @@
 package com.sladamos.book;
 
+import com.sladamos.book.model.Book;
+
 import java.util.List;
 import java.util.UUID;
 

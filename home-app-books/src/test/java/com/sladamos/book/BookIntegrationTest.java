@@ -3,14 +3,21 @@ package com.sladamos.book;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sladamos.book.dto.PatchBookRequest;
 import com.sladamos.book.dto.PutBookRequest;
+import com.sladamos.book.model.Author;
+import com.sladamos.book.model.Book;
+import com.sladamos.book.model.BookStatus;
+import com.sladamos.book.model.Genre;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.http.MediaType;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -37,11 +44,13 @@ class BookIntegrationTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
     private UUID existingId;
 
     @BeforeEach
     void setUp() {
-        bookRepository.deleteAll();
         existingId = UUID.randomUUID();
         Book existingBook = Book.builder()
                 .id(existingId)
@@ -50,8 +59,8 @@ class BookIntegrationTest {
                 .publisher("Test Publisher")
                 .description("desc")
                 .pages(100)
-                .authors(List.of("Author1"))
-                .genres(List.of("Genre1"))
+                .authors(List.of(new Author("Author1")))
+                .genres(List.of(new Genre("Genre1")))
                 .borrowedBy("Jan Kowalski")
                 .status(BookStatus.ON_SHELF)
                 .rating(5)
@@ -62,6 +71,15 @@ class BookIntegrationTest {
                 .modificationDate(LocalDateTime.parse("2023-01-02T10:00:00"))
                 .build();
         bookRepository.save(existingBook);
+    }
+
+    @AfterEach
+    void tearDown() {
+        JdbcTestUtils.deleteFromTables(
+                jdbcTemplate,
+                "book_author", "book_genre",
+                "book", "author", "genre"
+        );
     }
 
     @Test
@@ -138,8 +156,8 @@ class BookIntegrationTest {
                 () -> assertThat(created.getPublisher()).isEqualTo("New Publisher"),
                 () -> assertThat(created.getDescription()).isEqualTo("New description"),
                 () -> assertThat(created.getPages()).isEqualTo(200),
-                () -> assertThat(created.getAuthors()).containsExactly("New Author"),
-                () -> assertThat(created.getGenres()).containsExactly("New Genre"),
+                () -> assertThat(created.getAuthors()).extracting(Author::getName).containsExactly("New Author"),
+                () -> assertThat(created.getGenres()).extracting(Genre::getName).containsExactly("New Genre"),
                 () -> assertThat(created.getBorrowedBy()).isEqualTo("Adam Nowak"),
                 () -> assertThat(created.getStatus()).isEqualTo(BookStatus.BORROWED),
                 () -> assertThat(created.getRating()).isEqualTo(4),
@@ -179,8 +197,8 @@ class BookIntegrationTest {
                 () -> assertThat(updated.getPublisher()).isEqualTo("New Publisher"),
                 () -> assertThat(updated.getDescription()).isEqualTo("New description"),
                 () -> assertThat(updated.getPages()).isEqualTo(200),
-                () -> assertThat(updated.getAuthors()).containsExactly("New Author"),
-                () -> assertThat(updated.getGenres()).containsExactly("New Genre"),
+                () -> assertThat(updated.getAuthors()).extracting(Author::getName).containsExactly("New Author"),
+                () -> assertThat(updated.getGenres()).extracting(Genre::getName).containsExactly("New Genre"),
                 () -> assertThat(updated.getBorrowedBy()).isEqualTo("Adam Nowak"),
                 () -> assertThat(updated.getStatus()).isEqualTo(BookStatus.BORROWED),
                 () -> assertThat(updated.getRating()).isEqualTo(4),

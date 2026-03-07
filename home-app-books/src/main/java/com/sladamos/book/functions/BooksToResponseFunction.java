@@ -1,7 +1,9 @@
 package com.sladamos.book.functions;
 
-import com.sladamos.book.Book;
 import com.sladamos.book.dto.GetBooksResponse;
+import com.sladamos.book.model.Author;
+import com.sladamos.book.model.Book;
+import com.sladamos.book.model.Genre;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -20,11 +22,11 @@ public class BooksToResponseFunction implements Function<List<Book>, GetBooksRes
                                         .title(book.getTitle())
                                         .isbn(book.getIsbn())
                                         .publisher(book.getPublisher())
-                                        .authors(book.getAuthors())
+                                        .authors(Optional.ofNullable(book.getAuthors()).orElse(List.of()).stream().map(Author::getName).toList())
                                         .pages(book.getPages())
                                         .coverImage(book.getCoverImage())
                                         .description(book.getDescription())
-                                        .genres(book.getGenres())
+                                        .genres(Optional.ofNullable(book.getGenres()).orElse(List.of()).stream().map(Genre::getName).toList())
                                         .borrowedBy(book.getBorrowedBy())
                                         .rating(book.getRating())
                                         .favorite(book.isFavorite())

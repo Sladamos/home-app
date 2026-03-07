@@ -1,14 +1,18 @@
 package com.sladamos.book.functions;
 
-import com.sladamos.book.Book;
-import com.sladamos.book.BookStatus;
+import com.sladamos.book.model.Author;
+import com.sladamos.book.model.Book;
+import com.sladamos.book.model.BookStatus;
+import com.sladamos.book.model.Genre;
 import com.sladamos.book.dto.PutBookRequest;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.BiFunction;
+import java.util.stream.Collectors;
 
 @Component
 public class RequestToBookFunction implements BiFunction<UUID, PutBookRequest, Book> {
@@ -23,8 +27,8 @@ public class RequestToBookFunction implements BiFunction<UUID, PutBookRequest, B
                 .description(request.getDescription())
                 .pages(request.getPages())
                 .coverImage(request.getCoverImage())
-                .authors(request.getAuthors())
-                .genres(request.getGenres())
+                .authors(toAuthors(request.getAuthors()))
+                .genres(toGenres(request.getGenres()))
                 .borrowedBy(request.getBorrowedBy())
                 .rating(request.getRating())
                 .favorite(request.isFavorite())
@@ -33,5 +37,21 @@ public class RequestToBookFunction implements BiFunction<UUID, PutBookRequest, B
                 .readDate(request.getReadDate())
                 .status(Optional.ofNullable(request.getStatus()).map(BookStatus::valueOf).orElse(BookStatus.ON_SHELF))
                 .build();
+    }
+
+    private List<Author> toAuthors(List<String> names) {
+        if (names == null) return List.of();
+        return names.stream()
+                .filter(n -> n != null && !n.isBlank())
+                .map(Author::new)
+                .collect(Collectors.toList());
+    }
+
+    private List<Genre> toGenres(List<String> names) {
+        if (names == null) return List.of();
+        return names.stream()
+                .filter(n -> n != null && !n.isBlank())
+                .map(Genre::new)
+                .collect(Collectors.toList());
     }
 }
