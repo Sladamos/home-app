@@ -1,6 +1,7 @@
 package com.sladamos.book;
 
 import com.sladamos.book.model.Book;
+import com.sladamos.book.repository.BookRepository;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import org.junit.jupiter.api.Test;

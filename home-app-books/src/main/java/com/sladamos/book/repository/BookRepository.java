@@ -1,4 +1,4 @@
-package com.sladamos.book;
+package com.sladamos.book.repository;
 
 import com.sladamos.book.model.Book;
 import org.springframework.data.jpa.repository.JpaRepository;

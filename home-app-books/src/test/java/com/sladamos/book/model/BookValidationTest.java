@@ -1,9 +1,5 @@
-package com.sladamos.book;
+package com.sladamos.book.model;
 
-import com.sladamos.book.model.Author;
-import com.sladamos.book.model.Book;
-import com.sladamos.book.model.BookStatus;
-import com.sladamos.book.model.Genre;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;

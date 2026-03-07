@@ -7,6 +7,7 @@ import com.sladamos.book.model.Author;
 import com.sladamos.book.model.Book;
 import com.sladamos.book.model.BookStatus;
 import com.sladamos.book.model.Genre;
+import com.sladamos.book.repository.BookRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
