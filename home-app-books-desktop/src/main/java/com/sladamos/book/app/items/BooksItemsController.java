@@ -3,7 +3,7 @@ package com.sladamos.book.app.items;
 import com.sladamos.app.util.components.ComponentsGenerator;
 import com.sladamos.app.util.messages.BindingsCreator;
 import com.sladamos.app.util.messages.TemporaryMessagesFactory;
-import com.sladamos.book.Book;
+import com.sladamos.book.model.Book;
 import com.sladamos.book.BookNotFoundException;
 import com.sladamos.book.BookService;
 import com.sladamos.book.BookValidationException;

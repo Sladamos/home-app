@@ -1,6 +1,6 @@
 package com.sladamos.book.app.util;
 
-import com.sladamos.book.Book;
+import com.sladamos.book.model.Book;
 import com.sladamos.book.app.RateableViewModel;
 import javafx.beans.binding.Bindings;
 import javafx.scene.control.Label;

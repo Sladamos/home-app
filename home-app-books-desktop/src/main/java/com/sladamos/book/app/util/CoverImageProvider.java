@@ -34,7 +34,6 @@ public class CoverImageProvider {
                 log.error("Error converting image bytes for JavaFX preview", e);
             }
         }
-        // Fallback w przypadku braku okładki lub błędu podczas parsowania
         return new Image(Objects.requireNonNull(getClass().getResourceAsStream("/default-cover.jpg")));
     }
 }

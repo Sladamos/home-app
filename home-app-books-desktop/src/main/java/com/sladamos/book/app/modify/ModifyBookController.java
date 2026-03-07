@@ -2,7 +2,7 @@ package com.sladamos.book.app.modify;
 
 import com.sladamos.app.util.messages.BindingsCreator;
 import com.sladamos.app.util.components.ComponentsGenerator;
-import com.sladamos.book.Book;
+import com.sladamos.book.model.Book;
 import com.sladamos.book.BookService;
 import com.sladamos.book.BookValidationException;
 import com.sladamos.book.app.add.OnBookCreated;
@@ -32,7 +32,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import static com.sladamos.book.Book.*;
+import static com.sladamos.book.model.Book.*;
 
 @Slf4j
 @Component

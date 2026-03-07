@@ -1,16 +1,19 @@
 package com.sladamos.book.app.items;
 
-import com.sladamos.book.Book;
-import com.sladamos.book.BookStatus;
 import com.sladamos.book.app.RateableViewModel;
+import com.sladamos.book.model.Author;
+import com.sladamos.book.model.Book;
+import com.sladamos.book.model.BookStatus;
+import com.sladamos.book.model.Genre;
 import javafx.beans.property.*;
 import lombok.Getter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Getter
 public class BookItemViewModel implements RateableViewModel {
@@ -43,8 +46,8 @@ public class BookItemViewModel implements RateableViewModel {
         rating.set(Optional.ofNullable(book.getRating()).orElse(0));
         favorite.set(book.isFavorite());
         status.set(book.getStatus());
-        authors.set(String.join(", ", book.getAuthors()));
-        genres.set(String.join(", ", book.getGenres()));
+        authors.set(book.getAuthors().stream().map(Author::getName).collect(Collectors.joining(", ")));
+        genres.set(book.getGenres().stream().map(Genre::getName).collect(Collectors.joining(", ")));
         coverImage.set(book.getCoverImage());
         readDate.set(book.getReadDate());
         modificationDate.set(book.getModificationDate());
@@ -65,8 +68,8 @@ public class BookItemViewModel implements RateableViewModel {
                 .readDate(readDate.get())
                 .coverImage(coverImage.get())
                 .status(status.get())
-                .authors(authors.get().isEmpty() ? List.of() : List.of(authors.get().split(", ")))
-                .genres(genres.get().isEmpty() ? List.of() : List.of(genres.get().split(", ")))
+                .authors(Stream.of(authors.get().split(", ")).map(Author::new).collect(Collectors.toSet()))
+                .genres(Stream.of(genres.get().split(", ")).map(Genre::new).collect(Collectors.toSet()))
                 .modificationDate(modificationDate.get())
                 .creationDate(creationDate.get())
                 .build();
@@ -83,8 +86,8 @@ public class BookItemViewModel implements RateableViewModel {
         rating.set(Optional.ofNullable(book.getRating()).orElse(0));
         favorite.set(book.isFavorite());
         status.set(book.getStatus());
-        authors.set(String.join(", ", book.getAuthors()));
-        genres.set(String.join(", ", book.getGenres()));
+        authors.set(book.getAuthors().stream().map(Author::getName).collect(Collectors.joining(", ")));
+        genres.set(book.getGenres().stream().map(Genre::getName).collect(Collectors.joining(", ")));
         coverImage.set(book.getCoverImage());
         readDate.set(book.getReadDate());
         modificationDate.set(book.getModificationDate());

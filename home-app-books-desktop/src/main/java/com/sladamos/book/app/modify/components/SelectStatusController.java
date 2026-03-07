@@ -1,7 +1,7 @@
 package com.sladamos.book.app.modify.components;
 
 import com.sladamos.app.util.messages.BindingsCreator;
-import com.sladamos.book.BookStatus;
+import com.sladamos.book.model.BookStatus;
 import com.sladamos.book.app.util.ListCellFactory;
 import com.sladamos.book.app.util.StatusMessageKeyProvider;
 import javafx.beans.binding.Bindings;

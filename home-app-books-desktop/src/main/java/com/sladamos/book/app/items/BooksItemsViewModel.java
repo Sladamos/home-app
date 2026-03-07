@@ -1,6 +1,6 @@
 package com.sladamos.book.app.items;
 
-import com.sladamos.book.Book;
+import com.sladamos.book.model.Book;
 import jakarta.annotation.PostConstruct;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;

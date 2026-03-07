@@ -1,6 +1,6 @@
 package com.sladamos.book.app.util;
 
-import com.sladamos.book.BookStatus;
+import com.sladamos.book.model.BookStatus;
 import org.springframework.stereotype.Component;
 
 @Component

@@ -1,6 +1,6 @@
 package com.sladamos.book.app.modify.validation;
 
-import com.sladamos.book.Book;
+import com.sladamos.book.model.Book;
 import jakarta.validation.ConstraintViolation;
 import javafx.scene.control.Label;
 

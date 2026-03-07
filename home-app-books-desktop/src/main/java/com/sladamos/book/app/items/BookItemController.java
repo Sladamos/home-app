@@ -3,7 +3,7 @@ package com.sladamos.book.app.items;
 import com.sladamos.app.util.LocaleProvider;
 import com.sladamos.app.util.messages.BindingsCreator;
 import com.sladamos.app.util.messages.TemporaryMessagesFactory;
-import com.sladamos.book.BookStatus;
+import com.sladamos.book.model.BookStatus;
 import com.sladamos.book.app.edit.OnEditBookClicked;
 import com.sladamos.book.app.util.CoverImageProvider;
 import com.sladamos.book.app.util.StarsFactory;

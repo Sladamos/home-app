@@ -2,7 +2,7 @@ package com.sladamos.book.app.edit;
 
 import com.sladamos.app.util.messages.BindingsCreator;
 import com.sladamos.app.util.components.ComponentsGenerator;
-import com.sladamos.book.Book;
+import com.sladamos.book.model.Book;
 import com.sladamos.book.BookService;
 import com.sladamos.book.app.modify.ModifyBookViewModelConverter;
 import com.sladamos.book.app.modify.ModifyBookController;

@@ -1,7 +1,9 @@
 package com.sladamos.book.app.modify;
 
-import com.sladamos.book.Book;
-import com.sladamos.book.BookStatus;
+import com.sladamos.book.model.Book;
+import com.sladamos.book.model.BookStatus;
+import com.sladamos.book.model.Author;
+import com.sladamos.book.model.Genre;
 import com.sladamos.book.app.modify.components.SelectCoverViewModel;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
@@ -51,8 +53,8 @@ public class ModifyBookViewModel implements SelectCoverViewModel {
         this.creationDate.set(book.getCreationDate());
         this.coverImage.set(book.getCoverImage());
         this.status.set(book.getStatus());
-        this.authors.addAll(book.getAuthors());
-        this.genres.addAll(book.getGenres());
+        this.authors.addAll(book.getAuthors().stream().map(Author::getName).toList());
+        this.genres.addAll(book.getGenres().stream().map(Genre::getName).toList());
     }
 
     public void reset() {

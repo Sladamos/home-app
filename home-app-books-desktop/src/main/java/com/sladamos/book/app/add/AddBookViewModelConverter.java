@@ -1,6 +1,8 @@
 package com.sladamos.book.app.add;
 
-import com.sladamos.book.Book;
+import com.sladamos.book.model.Book;
+import com.sladamos.book.model.Author;
+import com.sladamos.book.model.Genre;
 import com.sladamos.book.app.modify.ModifyBookViewModel;
 import com.sladamos.book.app.modify.ModifyBookViewModelConverter;
 import io.micrometer.common.util.StringUtils;
@@ -8,6 +10,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.stream.Collectors;
 
 @NoArgsConstructor
 @Component
@@ -28,8 +31,14 @@ public class AddBookViewModelConverter implements ModifyBookViewModelConverter {
                 .readDate(modifyBookViewModel.getReadDate().get())
                 .coverImage(modifyBookViewModel.getCoverImage().get())
                 .status(modifyBookViewModel.getStatus().get())
-                .authors(modifyBookViewModel.getAuthors().stream().filter(StringUtils::isNotBlank).toList())
-                .genres(modifyBookViewModel.getGenres().stream().filter(StringUtils::isNotBlank).toList())
+                .authors(modifyBookViewModel.getAuthors().stream()
+                        .filter(StringUtils::isNotBlank)
+                        .map(Author::new)
+                        .collect(Collectors.toSet()))
+                .genres(modifyBookViewModel.getGenres().stream()
+                        .filter(StringUtils::isNotBlank)
+                        .map(Genre::new)
+                        .collect(Collectors.toSet()))
                 .creationDate(currentDate)
                 .modificationDate(currentDate)
                 .build();
