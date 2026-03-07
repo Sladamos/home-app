@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
@@ -40,19 +41,19 @@ public class RequestToUpdateBookFunction implements BiFunction<Book, PatchBookRe
                 .build();
     }
 
-    private List<Author> toAuthors(List<String> names) {
-        if (names == null) return List.of();
+    private Set<Author> toAuthors(List<String> names) {
+        if (names == null) return Set.of();
         return names.stream()
                 .filter(n -> n != null && !n.isBlank())
                 .map(Author::new)
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 
-    private List<Genre> toGenres(List<String> names) {
-        if (names == null) return List.of();
+    private Set<Genre> toGenres(List<String> names) {
+        if (names == null) return Set.of();
         return names.stream()
                 .filter(n -> n != null && !n.isBlank())
                 .map(Genre::new)
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 }

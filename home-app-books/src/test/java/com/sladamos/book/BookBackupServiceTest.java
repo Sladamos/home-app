@@ -18,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.io.File;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -91,8 +92,8 @@ class BookBackupServiceTest {
         Genre genre1 = new Genre("Horror");
         Genre genre2 = new Genre("Horror");
 
-        Book book1 = Book.builder().authors(List.of(author1)).genres(List.of(genre1)).build();
-        Book book2 = Book.builder().authors(List.of(author2)).genres(List.of(genre2)).build();
+        Book book1 = Book.builder().authors(Set.of(author1)).genres(Set.of(genre1)).build();
+        Book book2 = Book.builder().authors(Set.of(author2)).genres(Set.of(genre2)).build();
         List<Book> mockedBooksFromJson = List.of(book1, book2);
 
         CollectionType collectionType = mock(CollectionType.class);
@@ -116,7 +117,7 @@ class BookBackupServiceTest {
         verify(genreRepository, times(1)).findByName("Horror");
         verify(genreRepository, times(1)).save(any(Genre.class));
 
-        assertThat(book1.getAuthors().get(0)).isSameAs(book2.getAuthors().get(0));
-        assertThat(book1.getGenres().get(0)).isSameAs(book2.getGenres().get(0));
+        assertThat(book1.getAuthors()).containsExactlyElementsOf(book2.getAuthors());
+        assertThat(book1.getGenres()).containsExactlyElementsOf(book2.getGenres());
     }
 }

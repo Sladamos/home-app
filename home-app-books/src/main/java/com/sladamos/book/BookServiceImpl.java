@@ -96,18 +96,18 @@ public class BookServiceImpl implements BookService {
     }
 
     private void attachExistingAuthorsAndGenres(Book book) {
-        List<Author> authors = Optional.ofNullable(book.getAuthors()).orElse(new ArrayList<>());
-        List<Author> managedAuthors = authors.stream()
+        Set<Author> authors = Optional.ofNullable(book.getAuthors()).orElse(new HashSet<>());
+        Set<Author> managedAuthors = authors.stream()
                 .map(author -> authorRepository.findByName(author.getName().trim())
                         .orElse(author))
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
         book.setAuthors(managedAuthors);
 
-        List<Genre> genres = Optional.ofNullable(book.getGenres()).orElse(new ArrayList<>());
-        List<Genre> managedGenres = genres.stream()
+        Set<Genre> genres = Optional.ofNullable(book.getGenres()).orElse(new HashSet<>());
+        Set<Genre> managedGenres = genres.stream()
                 .map(genre -> genreRepository.findByName(genre.getName().trim())
                         .orElse(genre))
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
         book.setGenres(managedGenres);
     }
 }

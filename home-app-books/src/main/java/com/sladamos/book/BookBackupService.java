@@ -14,11 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -72,8 +68,8 @@ public class BookBackupService {
         return (filePath != null && !filePath.isEmpty()) ? filePath : defaultPath;
     }
 
-    private List<Author> processAuthors(List<Author> rawAuthors, Map<String, Author> cache) {
-        return Optional.ofNullable(rawAuthors).orElse(Collections.emptyList()).stream()
+    private Set<Author> processAuthors(Set<Author> rawAuthors, Map<String, Author> cache) {
+        return Optional.ofNullable(rawAuthors).orElse(Collections.emptySet()).stream()
                 .map(rawAuthor -> cache.computeIfAbsent(
                         rawAuthor.getName().trim(),
                         name -> authorRepository.findByName(name).orElseGet(() -> {
@@ -81,11 +77,11 @@ public class BookBackupService {
                             return authorRepository.save(rawAuthor);
                         })
                 ))
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 
-    private List<Genre> processGenres(List<Genre> rawGenres, Map<String, Genre> cache) {
-        return Optional.ofNullable(rawGenres).orElse(Collections.emptyList()).stream()
+    private Set<Genre> processGenres(Set<Genre> rawGenres, Map<String, Genre> cache) {
+        return Optional.ofNullable(rawGenres).orElse(Collections.emptySet()).stream()
                 .map(rawGenre -> cache.computeIfAbsent(
                         rawGenre.getName().trim(),
                         name -> genreRepository.findByName(name).orElseGet(() -> {
@@ -93,6 +89,6 @@ public class BookBackupService {
                             return genreRepository.save(rawGenre);
                         })
                 ))
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 }

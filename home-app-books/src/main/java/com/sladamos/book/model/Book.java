@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -82,7 +82,7 @@ public class Book {
             inverseJoinColumns = @JoinColumn(name = "author_id")
     )
     @Size(min = MIN_NUMBER_OF_AUTHORS, message = "book.validation.authors.min")
-    private List<Author> authors;
+    private Set<Author> authors;
 
     @Valid
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
@@ -91,5 +91,5 @@ public class Book {
             joinColumns = @JoinColumn(name = "book_id"),
             inverseJoinColumns = @JoinColumn(name = "genre_id")
     )
-    private List<Genre> genres;
+    private Set<Genre> genres;
 }

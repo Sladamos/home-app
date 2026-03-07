@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -95,7 +94,7 @@ class BookValidationTest {
     @Test
     void shouldReturnValidationErrorWhenAuthorsListIsEmpty() {
         Book book = createValidBook();
-        book.setAuthors(List.of());
+        book.setAuthors(Set.of());
 
         Set<ConstraintViolation<Book>> violations = validator.validate(book);
 
@@ -107,7 +106,7 @@ class BookValidationTest {
     @Test
     void shouldNotReturnValidationErrorWhenGenresListIsEmpty() {
         Book book = createValidBook();
-        book.setGenres(List.of());
+        book.setGenres(Set.of());
 
         Set<ConstraintViolation<Book>> violations = validator.validate(book);
 
@@ -117,7 +116,7 @@ class BookValidationTest {
     @Test
     void shouldReturnValidationErrorWhenAuthorIsBlank() {
         Book book = createValidBook();
-        book.setAuthors(List.of(new Author(" ")));
+        book.setAuthors(Set.of(new Author(" ")));
 
         Set<ConstraintViolation<Book>> violations = validator.validate(book);
 
@@ -129,7 +128,7 @@ class BookValidationTest {
     @Test
     void shouldReturnValidationErrorWhenGenreIsBlank() {
         Book book = createValidBook();
-        book.setGenres(List.of(new Genre(" ")));
+        book.setGenres(Set.of(new Genre(" ")));
 
         Set<ConstraintViolation<Book>> violations = validator.validate(book);
 
@@ -202,8 +201,8 @@ class BookValidationTest {
                 .modificationDate(currentTime)
                 .readDate(LocalDate.now())
                 .status(BookStatus.ON_SHELF)
-                .authors(List.of(new Author("Author One"), new Author("Author Two")))
-                .genres(List.of(new Genre("Genre One"), new Genre("Genre Two")))
+                .authors(Set.of(new Author("Author One"), new Author("Author Two")))
+                .genres(Set.of(new Genre("Genre One"), new Genre("Genre Two")))
                 .build();
     }
 }

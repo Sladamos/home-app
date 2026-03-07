@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -60,8 +61,8 @@ class BookIntegrationTest {
                 .publisher("Test Publisher")
                 .description("desc")
                 .pages(100)
-                .authors(List.of(new Author("Author1")))
-                .genres(List.of(new Genre("Genre1")))
+                .authors(Set.of(new Author("Author1")))
+                .genres(Set.of(new Genre("Genre1")))
                 .borrowedBy("Jan Kowalski")
                 .status(BookStatus.ON_SHELF)
                 .rating(5)

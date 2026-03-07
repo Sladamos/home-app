@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
 
 @Component
@@ -22,11 +23,11 @@ public class BooksToResponseFunction implements Function<List<Book>, GetBooksRes
                                         .title(book.getTitle())
                                         .isbn(book.getIsbn())
                                         .publisher(book.getPublisher())
-                                        .authors(Optional.ofNullable(book.getAuthors()).orElse(List.of()).stream().map(Author::getName).toList())
+                                        .authors(Optional.ofNullable(book.getAuthors()).orElse(Set.of()).stream().map(Author::getName).toList())
                                         .pages(book.getPages())
                                         .coverImage(book.getCoverImage())
                                         .description(book.getDescription())
-                                        .genres(Optional.ofNullable(book.getGenres()).orElse(List.of()).stream().map(Genre::getName).toList())
+                                        .genres(Optional.ofNullable(book.getGenres()).orElse(Set.of()).stream().map(Genre::getName).toList())
                                         .borrowedBy(book.getBorrowedBy())
                                         .rating(book.getRating())
                                         .favorite(book.isFavorite())

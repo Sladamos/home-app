@@ -2,8 +2,8 @@ package com.sladamos.book;
 
 import com.sladamos.book.model.Author;
 import com.sladamos.book.model.Book;
-import com.sladamos.book.model.Genre;
 import com.sladamos.book.model.BookStatus;
+import com.sladamos.book.model.Genre;
 import com.sladamos.book.repository.BookRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +13,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -34,8 +35,8 @@ class BookRepositoryTest {
                 .description("Test description")
                 .pages(100)
                 .coverImage(new byte[]{1, 2, 3})
-                .authors(List.of(new Author("Author")))
-                .genres(List.of(new Genre("Genre")))
+                .authors(Set.of(new Author("Author")))
+                .genres(Set.of(new Genre("Genre")))
                 .status(BookStatus.ON_SHELF)
                 .readDate(LocalDate.of(2000, 1, 1))
                 .creationDate(currentDate)
@@ -71,8 +72,8 @@ class BookRepositoryTest {
                 .description("Desc")
                 .pages(100)
                 .coverImage(new byte[]{})
-                .authors(List.of(new Author("Author")))
-                .genres(List.of(new Genre("Genre")))
+                .authors(Set.of(new Author("Author")))
+                .genres(Set.of(new Genre("Genre")))
                 .build();
 
         bookRepository.save(book);
@@ -99,8 +100,8 @@ class BookRepositoryTest {
                 .description("Desc")
                 .pages(100)
                 .coverImage(new byte[]{})
-                .authors(List.of(new Author("Author")))
-                .genres(List.of(new Genre("Genre")))
+                .authors(Set.of(new Author("Author")))
+                .genres(Set.of(new Genre("Genre")))
                 .build();
 
         bookRepository.save(book);
@@ -118,8 +119,8 @@ class BookRepositoryTest {
         Book book = Book.builder()
                 .id(id)
                 .title("Title")
-                .authors(List.of(new Author("A1")))
-                .genres(List.of(new Genre("G1")))
+                .authors(Set.of(new Author("A1")))
+                .genres(Set.of(new Genre("G1")))
                 .build();
 
         bookRepository.save(book);
@@ -134,7 +135,7 @@ class BookRepositoryTest {
         Book book = Book.builder()
                 .id(UUID.randomUUID())
                 .title("Title 2")
-                .authors(List.of(new Author("A2")))
+                .authors(Set.of(new Author("A2")))
                 .build();
         bookRepository.save(book);
 
@@ -149,8 +150,8 @@ class BookRepositoryTest {
         Book book = Book.builder()
                 .id(UUID.randomUUID())
                 .title("Title 3")
-                .authors(List.of(new Author("A3")))
-                .genres(List.of(new Genre("G3")))
+                .authors(Set.of(new Author("A3")))
+                .genres(Set.of(new Genre("G3")))
                 .build();
         bookRepository.save(book);
 
