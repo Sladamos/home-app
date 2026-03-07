@@ -136,6 +136,18 @@ public class BooksItemsController {
         }
     }
 
+    @EventListener(OnBookDeleted.class)
+    public void onBookDeleted(OnBookDeleted event) {
+        log.info("Deleting book from items: [id: {}, title: {}]", event.bookId(), event.bookTitle());
+        try {
+            bookService.deleteBook(event.bookId());
+            viewModel.deleteBook(event.bookId());
+        } catch (BookNotFoundException e) {
+            log.error("Unable to delete not existing book: [id: {}, title: {}]", event.bookId(), event.bookTitle());
+            temporaryMessagesFactory.showError(bindingsCreator.getMessage("books.items.deleteBookError"));
+        }
+    }
+
     private Book prepareBookToDuplicate(Book book) {
         long booksCount = viewModel.getSortedBooks().stream().filter(e -> e.getIsbn().get().equals(book.getIsbn())).count();
         String baseTitle = book.getTitle().replaceAll(" \\(\\d+\\)$", "");
@@ -147,18 +159,6 @@ public class BooksItemsController {
                 .creationDate(now)
                 .modificationDate(now)
                 .build();
-    }
-
-    @EventListener(OnBookDeleted.class)
-    public void onBookDeleted(OnBookDeleted event) {
-        log.info("Deleting book from items: [id: {}, title: {}]", event.bookId(), event.bookTitle());
-        try {
-            bookService.deleteBook(event.bookId());
-            viewModel.deleteBook(event.bookId());
-        } catch (BookNotFoundException e) {
-            log.error("Unable to delete not existing book: [id: {}, title: {}]", event.bookId(), event.bookTitle());
-            temporaryMessagesFactory.showError(bindingsCreator.getMessage("books.items.deleteBookError"));
-        }
     }
 
     private void loadBooks() {
