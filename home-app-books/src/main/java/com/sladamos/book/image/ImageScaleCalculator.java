@@ -1,4 +1,4 @@
-package com.sladamos.book.util;
+package com.sladamos.book.image;
 
 import org.springframework.stereotype.Component;
 

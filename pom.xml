@@ -35,6 +35,7 @@
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<imageio.version>3.13.1</imageio.version>
 	</properties>
 
 	<dependencyManagement>
@@ -94,6 +95,11 @@
 				<groupId>net.java.dev.jna</groupId>
 				<artifactId>jna-platform</artifactId>
 				<version>${jna.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.twelvemonkeys.imageio</groupId>
+				<artifactId>imageio-webp</artifactId>
+				<version>${imageio.version}</version>
 			</dependency>
 
 			<dependency>

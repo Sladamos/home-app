@@ -1,4 +1,4 @@
-package com.sladamos.book.util;
+package com.sladamos.book.image;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

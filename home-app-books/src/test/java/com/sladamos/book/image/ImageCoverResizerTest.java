@@ -1,4 +1,4 @@
-package com.sladamos.book.util;
+package com.sladamos.book.image;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

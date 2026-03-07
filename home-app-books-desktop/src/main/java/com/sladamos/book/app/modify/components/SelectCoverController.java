@@ -53,6 +53,12 @@ public class SelectCoverController {
                 () -> getImage(viewModel),
                 viewModel.getCoverImage()
         ));
+
+        viewModel.getCoverImage().addListener((observable, oldValue, newValue) -> {
+            boolean hasImage = newValue != null && newValue.length > 0;
+            removeCoverButton.setVisible(hasImage);
+            selectCoverButton.requestFocus();
+        });
     }
 
     @FXML
@@ -61,7 +67,7 @@ public class SelectCoverController {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle(bindingsCreator.getMessage("books.selectCover.fileChooser.title"));
         fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter(bindingsCreator.getMessage("books.selectCover.fileChooser.images"), "*.png", "*.jpg", "*.jpeg", "*.gif")
+                new FileChooser.ExtensionFilter(bindingsCreator.getMessage("books.selectCover.fileChooser.images"), "*.png", "*.jpg", "*.jpeg", "*.gif", "*.webp")
         );
         File file = fileChooser.showOpenDialog(selectCoverButton.getScene().getWindow());
         if (file != null) {
@@ -86,8 +92,6 @@ public class SelectCoverController {
 
     private Image getImage(SelectCoverViewModel viewModel) {
         byte[] imageBytes = viewModel.getCoverImage().get();
-        removeCoverButton.setVisible(imageBytes != null && imageBytes.length > 0);
-        selectCoverButton.requestFocus();
         return coverImageProvider.getImageCover(imageBytes);
     }
 }

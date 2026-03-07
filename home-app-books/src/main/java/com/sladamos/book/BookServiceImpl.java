@@ -1,6 +1,6 @@
 package com.sladamos.book;
 
-import com.sladamos.book.util.ImageCoverResizer;
+import com.sladamos.book.image.ImageCoverResizer;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
