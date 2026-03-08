@@ -5,11 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.Objects;
 
 @Slf4j
@@ -17,23 +13,21 @@ import java.util.Objects;
 @NoArgsConstructor
 public class CoverImageProvider {
 
+    private static final String DEFAULT_COVER_PATH = "/default-cover.jpg";
+
     public Image getImageCover(byte[] imageCover) {
-        if (imageCover != null && imageCover.length > 0) {
-            try {
-                ByteArrayInputStream bais = new ByteArrayInputStream(imageCover);
-                BufferedImage bufferedImage = ImageIO.read(bais);
-                if (bufferedImage != null) {
-                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    ImageIO.write(bufferedImage, "png", baos);
-                    byte[] pngBytes = baos.toByteArray();
-                    return new Image(new ByteArrayInputStream(pngBytes));
-                } else {
-                    log.error("Could not decode image bytes. Unsupported format or corrupted data.");
-                }
-            } catch (IOException e) {
-                log.error("Error converting image bytes for JavaFX preview", e);
-            }
+        if (imageCover == null || imageCover.length == 0) {
+            return getDefaultCover();
         }
-        return new Image(Objects.requireNonNull(getClass().getResourceAsStream("/default-cover.jpg")));
+        try {
+            return new Image(new ByteArrayInputStream(imageCover));
+        } catch (Exception e) {
+            log.error("Failed to load cover image from bytes", e);
+            return getDefaultCover();
+        }
+    }
+
+    private Image getDefaultCover() {
+        return new Image(Objects.requireNonNull(getClass().getResourceAsStream(DEFAULT_COVER_PATH)));
     }
 }

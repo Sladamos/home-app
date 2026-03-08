@@ -1,6 +1,6 @@
 package com.sladamos.book.app.items;
 
-import com.sladamos.book.app.RateableViewModel;
+import com.sladamos.book.app.util.RateableViewModel;
 import com.sladamos.book.model.Author;
 import com.sladamos.book.model.Book;
 import com.sladamos.book.model.BookStatus;

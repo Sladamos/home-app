@@ -4,9 +4,8 @@
 
 .book--item {
     -fx-background-radius: 15px;
-    -fx-background-color:
-            white,
-            #3c005e;
+    -fx-background-color: white,
+    #3c005e;
     -fx-background-insets: 1, 2;
 }
 
@@ -60,4 +59,13 @@
     -fx-font-size: 16px;
     -fx-border-color: white;
     -fx-border-width: 1;
+}
+
+.rating-star {
+    -fx-font-size: 24px;
+    -fx-text-fill: #FFD700;
+}
+
+.rating-star:favorite {
+    -fx-text-fill: #00DCF4;
 }

@@ -1,8 +1,8 @@
 package com.sladamos.book.app.util;
 
 import com.sladamos.book.model.Book;
-import com.sladamos.book.app.RateableViewModel;
 import javafx.beans.binding.Bindings;
+import javafx.css.PseudoClass;
 import javafx.scene.control.Label;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -14,10 +14,14 @@ import java.util.List;
 @NoArgsConstructor
 public class StarsFactory {
 
+    private static final PseudoClass FAVORITE_PSEUDO_CLASS = PseudoClass.getPseudoClass("favorite");
+    private static final String RATING_STAR_CLASS = "rating-star";
+
     public List<Label> createStars(RateableViewModel viewModel) {
         List<Label> stars = new ArrayList<>();
         for (int i = Book.MIN_RATING; i < Book.MAX_RATING; i++) {
             Label star = new Label();
+            star.getStyleClass().add(RATING_STAR_CLASS);
             setStarText(star, viewModel, i);
             setStarColor(star, viewModel);
             stars.add(star);
@@ -26,10 +30,10 @@ public class StarsFactory {
     }
 
     private void setStarColor(Label star, RateableViewModel viewModel) {
-        star.styleProperty().bind(Bindings.createStringBinding(() -> {
-            String color = viewModel.getFavorite().get() ? "#00DCF4" : "#FFD700";
-            return String.format("-fx-font-size: 24; -fx-text-fill: %s;", color);
-        }, viewModel.getFavorite()));
+        star.pseudoClassStateChanged(FAVORITE_PSEUDO_CLASS, viewModel.getFavorite().get());
+        viewModel.getFavorite().addListener((obs, oldVal, newVal) ->
+                star.pseudoClassStateChanged(FAVORITE_PSEUDO_CLASS, newVal)
+        );
     }
 
     private void setStarText(Label star, RateableViewModel viewModel, int starIndex) {

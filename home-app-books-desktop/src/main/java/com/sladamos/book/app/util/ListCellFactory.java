@@ -18,12 +18,12 @@ public class ListCellFactory {
             @Override
             protected void updateItem(T item, boolean empty) {
                 super.updateItem(item, empty);
+                textProperty().unbind();
+
                 if (empty || item == null) {
                     setText("");
                 } else {
-                    String key = keySupplier.apply(item);
-                    String message = bindingsCreator.getMessage(key);
-                    setText(message);
+                    textProperty().bind(bindingsCreator.createBinding(keySupplier.apply(item)));
                 }
             }
         };
