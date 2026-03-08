@@ -11,24 +11,22 @@ import java.net.URL;
 public class ComponentsGenerator {
 
     public Node addComponentAtBeginning(Object controller, Pane wrapper, URL resource) {
-        try {
-            FXMLLoader loader = new FXMLLoader(resource);
-            loader.setControllerFactory(param -> controller);
-            Node itemRoot = loader.load();
-            wrapper.getChildren().addFirst(itemRoot);
-            return itemRoot;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        Node itemRoot = loadAndAttach(controller, wrapper, resource);
+        wrapper.getChildren().addFirst(itemRoot);
+        return itemRoot;
     }
 
     public Node addComponentAtEnd(Object controller, Pane wrapper, URL resource) {
+        Node itemRoot = loadAndAttach(controller, wrapper, resource);
+        wrapper.getChildren().add(itemRoot);
+        return itemRoot;
+    }
+
+    private Node loadAndAttach(Object controller, Pane wrapper, URL resource) {
         try {
             FXMLLoader loader = new FXMLLoader(resource);
             loader.setControllerFactory(param -> controller);
-            Node itemRoot = loader.load();
-            wrapper.getChildren().add(itemRoot);
-            return itemRoot;
+            return loader.load();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

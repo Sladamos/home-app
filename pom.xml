@@ -36,6 +36,7 @@
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<imageio.version>3.13.1</imageio.version>
+		<testfx.version>4.0.18</testfx.version>
 	</properties>
 
 	<dependencyManagement>
@@ -130,6 +131,12 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-starter-test</artifactId>
 				<version>${spring.boot.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.testfx</groupId>
+				<artifactId>testfx-junit5</artifactId>
+				<version>${testfx.version}</version>
 				<scope>test</scope>
 			</dependency>
 		</dependencies>

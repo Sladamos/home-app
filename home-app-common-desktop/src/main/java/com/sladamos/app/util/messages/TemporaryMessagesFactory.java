@@ -63,7 +63,8 @@ public class TemporaryMessagesFactory {
     private ImageView prepareImageToContent(Image image) {
         ImageView graphic = new ImageView(image);
         graphic.setPreserveRatio(true);
-        graphic.setFitHeight(image.getHeight() / GRAPHIC_SCALE);
+        double height = image.getHeight();
+        graphic.setFitHeight(height / GRAPHIC_SCALE);
         graphic.setFitWidth(image.getWidth() / GRAPHIC_SCALE);
         return graphic;
     }
