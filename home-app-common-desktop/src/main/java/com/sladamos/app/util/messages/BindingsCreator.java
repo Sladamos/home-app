@@ -7,23 +7,24 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.MessageSource;
+import org.springframework.context.NoSuchMessageException;
 import org.springframework.stereotype.Component;
 
 import java.text.MessageFormat;
-import java.util.ResourceBundle;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class BindingsCreator {
 
+    private final MessageSource messageSource;
     private final LocaleProvider localeProvider;
 
     public StringBinding createBindingWithKey(String messageKey, IntegerProperty property) {
         return Bindings.createStringBinding(
-                () -> {
-                    String pattern = getMessage(messageKey);
-                    return MessageFormat.format(pattern, property.get());
-                },
+                () -> formatMessage(messageKey, property.get()),
                 localeProvider.getLocaleProperty(),
                 property
         );
@@ -31,10 +32,7 @@ public class BindingsCreator {
 
     public StringBinding createBindingWithKey(String messageKey, StringProperty property) {
         return Bindings.createStringBinding(
-                () -> {
-                    String pattern = getMessage(messageKey);
-                    return MessageFormat.format(pattern, property.get());
-                },
+                () -> formatMessage(messageKey, property.get()),
                 localeProvider.getLocaleProperty(),
                 property
         );
@@ -47,17 +45,23 @@ public class BindingsCreator {
         );
     }
 
-    public String getMessage(String messageKey) {
-        return ResourceBundle.getBundle("messages", localeProvider.getLocale()).getString(messageKey);
-    }
-
     public <T> ObservableValue<String> createBindingWithArg(String messageKey, T messageArg) {
         return Bindings.createStringBinding(
-                () -> {
-                    String pattern = getMessage(messageKey);
-                    return MessageFormat.format(pattern, messageArg);
-                },
+                () -> formatMessage(messageKey, messageArg),
                 localeProvider.getLocaleProperty()
         );
+    }
+
+    public String getMessage(String messageKey, Object... args) {
+        try {
+            return messageSource.getMessage(messageKey, args, localeProvider.getLocale());
+        } catch (NoSuchMessageException e) {
+            log.warn("Missing translation for key: [key: {}]", messageKey);
+            return "[" + messageKey + "]";
+        }
+    }
+
+    private String formatMessage(String messageKey, Object arg) {
+        return MessageFormat.format(getMessage(messageKey), arg);
     }
 }
