@@ -14,9 +14,29 @@
     -fx-font-weight: bold;
 }
 
+.book--title-compact {
+    -fx-font-size: 22px;
+}
+
 .book--description {
     -fx-font-size: 16px;
-    -fx-pref-width: 600px;
+}
+
+.book--item-compact {
+    -fx-background-radius: 14px;
+}
+
+.book--meta-compact {
+    -fx-font-size: 16px;
+}
+
+.book--status-compact {
+    -fx-opacity: 0.95;
+}
+
+.book--action-button-compact {
+    -fx-font-size: 13px;
+    -fx-padding: 6px 12px;
 }
 
 .book--delete-button {

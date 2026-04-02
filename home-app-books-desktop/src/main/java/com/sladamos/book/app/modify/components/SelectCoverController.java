@@ -2,7 +2,7 @@ package com.sladamos.book.app.modify.components;
 
 import com.sladamos.app.util.messages.BindingsCreator;
 import com.sladamos.app.util.messages.TemporaryMessagesFactory;
-import com.sladamos.book.app.util.CoverImageProvider;
+import com.sladamos.book.app.common.CoverImageProvider;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;

@@ -8,9 +8,10 @@ import com.sladamos.book.app.items.event.OnBookDeleted;
 import com.sladamos.book.app.items.event.OnBookDuplicated;
 import com.sladamos.book.model.BookStatus;
 import com.sladamos.book.app.edit.OnEditBookClicked;
-import com.sladamos.book.app.util.CoverImageProvider;
-import com.sladamos.book.app.util.StarsFactory;
-import com.sladamos.book.app.util.StatusMessageKeyProvider;
+import com.sladamos.app.util.ui.LabelTextClamp;
+import com.sladamos.book.app.common.CoverImageProvider;
+import com.sladamos.book.app.items.StarsFactory;
+import com.sladamos.book.app.common.StatusMessageKeyProvider;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.event.EventHandler;
@@ -42,37 +43,16 @@ public class BookItemController {
     private Label titleLabel;
 
     @FXML
-    private Label descriptionLabel;
-
-    @FXML
-    private Label publisherLabel;
-
-    @FXML
-    private Label pagesLabel;
-
-    @FXML
     private Label statusLabel;
 
     @FXML
     private Label authorsLabel;
 
     @FXML
-    private Label genresLabel;
-
-    @FXML
     private ImageView coverImageView;
 
     @FXML
     private HBox ratingStars;
-
-    @FXML
-    private HBox genresBox;
-
-    @FXML
-    private HBox publisherBox;
-
-    @FXML
-    private HBox pagesBox;
 
     @FXML
     private Button inspectButton;
@@ -100,6 +80,8 @@ public class BookItemController {
 
     private final TemporaryMessagesFactory temporaryMessagesFactory;
 
+    private final LabelTextClamp labelTextClamp;
+
     private BookItemViewModel viewModel;
 
     public void init(BookItemViewModel viewModel) {
@@ -108,28 +90,15 @@ public class BookItemController {
 
     @FXML
     public void initialize() {
-        titleLabel.textProperty().bind(viewModel.getTitle());
-        descriptionLabel.textProperty().bind(viewModel.getDescription());
-
-        publisherLabel.textProperty().bind(bindingsCreator.createBindingWithKey("books.items.publisher", viewModel.getPublisher()));
-        pagesLabel.textProperty().bind(bindingsCreator.createBindingWithKey("books.items.pages", viewModel.getPages()));
+        labelTextClamp.bindTwoLineClamp(titleLabel, viewModel.getTitle());
         authorsLabel.textProperty().bind(bindingsCreator.createBindingWithKey("books.items.authors", viewModel.getAuthors()));
-        genresLabel.textProperty().bind(bindingsCreator.createBindingWithKey("books.items.genres", viewModel.getGenres()));
         statusLabel.textProperty().bind(createStatusBinding());
-        coverImageView.imageProperty().bind(Bindings.createObjectBinding(
-                () -> coverImageProvider.getImageCover(viewModel.getCoverImage().get()),
-                viewModel.getCoverImage()
-        ));
-
-        ratingStars.getChildren().clear();
-        ratingStars.getChildren().addAll(starsFactory.createStars(viewModel));
-
-        inspectButton.textProperty().bind(bindingsCreator.createBinding("books.items.inspectButton"));
-        editButton.textProperty().bind(bindingsCreator.createBinding("books.items.editButton"));
-        duplicateButton.textProperty().bind(bindingsCreator.createBinding("books.items.duplicateButton"));
-        deleteButton.textProperty().bind(bindingsCreator.createBinding("books.items.deleteButton"));
-
-        setupFieldsVisibility();
+        bindCoverImage();
+        bindRatingStars();
+        bindButton(inspectButton, "books.items.inspectButton");
+        bindButton(editButton, "books.items.editButton");
+        bindButton(duplicateButton, "books.items.duplicateButton");
+        bindButton(deleteButton, "books.items.deleteButton");
     }
 
     @FXML
@@ -149,15 +118,6 @@ public class BookItemController {
     private void onEditBookClicked() {
         log.info("Edit book button clicked");
         applicationEventPublisher.publishEvent(new OnEditBookClicked(viewModel.getBook()));
-    }
-
-    private void setupFieldsVisibility() {
-        genresBox.visibleProperty().bind(viewModel.getGenres().isNotEmpty());
-        genresBox.managedProperty().bind(genresBox.visibleProperty());
-        publisherBox.visibleProperty().bind(viewModel.getPublisher().isNotEmpty());
-        publisherBox.managedProperty().bind(publisherBox.visibleProperty());
-        pagesBox.visibleProperty().bind(viewModel.getPages().isNotEqualTo(0));
-        pagesBox.managedProperty().bind(pagesBox.visibleProperty());
     }
 
     private StringBinding createStatusBinding() {
@@ -198,5 +158,20 @@ public class BookItemController {
         String formattedMessage = MessageFormat.format(message, viewModel.getTitle().get());
         Image cover = coverImageProvider.getImageCover(viewModel.getCoverImage().get());
         return temporaryMessagesFactory.showConfirmation(formattedMessage, cover);
+    }
+
+    private void bindButton(Button button, String key) {
+        button.textProperty().bind(bindingsCreator.createBinding(key));
+    }
+
+    private void bindCoverImage() {
+        coverImageView.imageProperty().bind(Bindings.createObjectBinding(
+                () -> coverImageProvider.getImageCover(viewModel.getCoverImage().get()),
+                viewModel.getCoverImage()
+        ));
+    }
+
+    private void bindRatingStars() {
+        ratingStars.getChildren().setAll(starsFactory.createStars(viewModel));
     }
 }

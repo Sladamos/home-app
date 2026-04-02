@@ -13,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import javafx.util.Callback;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,12 +32,16 @@ public class BooksAppController {
 
     private static final String MODIFY_BOOK_FXML = "/com/sladamos/book/app/modify/ModifyBook.fxml";
     private static final String BOOK_ITEMS_FXML = "/com/sladamos/book/app/items/BooksItems.fxml";
+    private static final String BOOK_ITEMS_HEADER_ACTIONS_FXML = "/com/sladamos/book/app/items/BooksItemsHeaderActions.fxml";
 
     @FXML
     private Label titleLabel;
 
     @FXML
     private BorderPane rootPanel;
+
+    @FXML
+    private StackPane headerActionsContainer;
 
     private final ApplicationContext context;
     private final BindingsCreator bindingsCreator;
@@ -52,12 +57,14 @@ public class BooksAppController {
     @EventListener(OnAddBookClicked.class)
     public void onAddBook() {
         log.info("Switching to Add Book view");
+        clearHeaderActions();
         loadView(MODIFY_BOOK_FXML, viewsLoader::loadView);
     }
 
     @EventListener(OnEditBookClicked.class)
     public void onEditBook(OnEditBookClicked event) {
         log.info("Switching to Edit Book view");
+        clearHeaderActions();
         Function<URL, Node> nodeLoader = url -> viewsLoader.loadView(url, determineEditBookController(event));
         loadView(MODIFY_BOOK_FXML, nodeLoader);
     }
@@ -65,6 +72,7 @@ public class BooksAppController {
     @EventListener({OnDisplayItemsClicked.class, OnBookCreated.class, OnBookEdited.class})
     public void onDisplayBooks() {
         log.info("Switching to Display Items view");
+        showHeaderActions(BOOK_ITEMS_HEADER_ACTIONS_FXML);
         loadView(BOOK_ITEMS_FXML, viewsLoader::loadView);
     }
 
@@ -81,5 +89,15 @@ public class BooksAppController {
         URL url = getClass().getResource(fxmlPath);
         Node view = nodeLoader.apply(url);
         rootPanel.setCenter(view);
+    }
+
+    private void showHeaderActions(String fxmlPath) {
+        URL url = getClass().getResource(fxmlPath);
+        Node actionsView = viewsLoader.loadView(url);
+        headerActionsContainer.getChildren().setAll(actionsView);
+    }
+
+    private void clearHeaderActions() {
+        headerActionsContainer.getChildren().clear();
     }
 }

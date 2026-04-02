@@ -2,8 +2,8 @@ package com.sladamos.book.app.modify.components;
 
 import com.sladamos.app.util.messages.BindingsCreator;
 import com.sladamos.book.model.BookStatus;
-import com.sladamos.book.app.util.ListCellFactory;
-import com.sladamos.book.app.util.StatusMessageKeyProvider;
+import com.sladamos.app.util.ui.ListCellFactory;
+import com.sladamos.book.app.common.StatusMessageKeyProvider;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;

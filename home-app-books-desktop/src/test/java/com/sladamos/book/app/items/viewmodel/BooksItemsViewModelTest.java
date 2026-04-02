@@ -1,7 +1,7 @@
 package com.sladamos.book.app.items.viewmodel;
 
 import com.sladamos.book.BookService;
-import com.sladamos.book.app.util.NamedEntityFormatter;
+import com.sladamos.app.util.ui.NamedEntityFormatter;
 import com.sladamos.book.model.Author;
 import com.sladamos.book.model.Book;
 import com.sladamos.book.model.BookStatus;

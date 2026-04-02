@@ -27,7 +27,7 @@
 
     <HBox spacing="15.0" styleClass="book--item">
         <ImageView fx:id="coverImageView" fitHeight="300.0" fitWidth="200.0" preserveRatio="true" />
-        <VBox spacing="20.0">
+        <VBox spacing="20.0" HBox.hgrow="ALWAYS">
             <VBox>
                 <HBox alignment="CENTER_LEFT" spacing="5">
                     <Circle fill="white" radius="3" />
