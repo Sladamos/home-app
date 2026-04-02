@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 <?import java.net.URL?>
-<BorderPane xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sladamos.book.app.items.BooksItemsController">
+<BorderPane xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sladamos.book.app.items.controller.BooksItemsController">
     <left>
         <VBox spacing="20" BorderPane.alignment="CENTER">
             <Button fx:id="addBookButton" mnemonicParsing="false" onAction="#onAddBookClicked" styleClass="primary--button" text="Add book" />
@@ -14,22 +14,22 @@
         </VBox>
     </left>
     <right>
-        <VBox alignment="CENTER" BorderPane.alignment="CENTER">
+        <StackPane BorderPane.alignment="CENTER">
+            <VBox fx:id="noBooksFound" alignment="CENTER">
+                <Label fx:id="noBooksFoundLabel" text="No books found">
+                    <font>
+                        <Font name="Segoe UI Black Italic" size="36.0" />
+                    </font>
+                </Label>
+            </VBox>
             <ScrollPane fitToWidth="true" maxWidth="800.0">
                 <VBox fx:id="booksContainer" spacing="40">
-                    <VBox fx:id="noBooksFound" alignment="CENTER">
-                        <Label fx:id="noBooksFoundLabel" text="No books found">
-                            <font>
-                                <Font name="Segoe UI Black Italic" size="36.0" />
-                            </font>
-                        </Label>
-                    </VBox>
                 </VBox>
                 <padding>
                     <Insets bottom="16.0" right="16.0" />
                 </padding>
             </ScrollPane>
-        </VBox>
+        </StackPane>
     </right>
     <stylesheets>
         <URL value="@../books-common.css" />

@@ -1,4 +1,4 @@
-package com.sladamos.app.util;
+package com.sladamos.app.util.load;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.ConfigurableEnvironment;

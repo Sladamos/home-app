@@ -1,5 +1,8 @@
 package com.sladamos.book;
 
+import com.sladamos.book.exception.BookDuplicationException;
+import com.sladamos.book.exception.BookNotFoundException;
+import com.sladamos.book.exception.BookValidationException;
 import com.sladamos.book.image.ImageCoverResizer;
 import com.sladamos.book.model.Author;
 import com.sladamos.book.model.Book;
@@ -14,13 +17,18 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class BookServiceImpl implements BookService {
+
+    private static final Pattern COUNTER_SUFFIX = Pattern.compile(" \\((\\d+)\\)$");
 
     private final BookRepository bookRepository;
 
@@ -61,6 +69,37 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
+    public Book duplicateBook(UUID id) throws BookNotFoundException, BookValidationException, BookDuplicationException {
+        Book sourceBook = getBookById(id);
+        log.info("Duplicating book: [id: {}, title: {}]", sourceBook.getId(), sourceBook.getTitle());
+
+        List<String> existingTitles = bookRepository.findAll().stream()
+                .map(Book::getTitle)
+                .distinct()
+                .toList();
+
+        return duplicateBook(sourceBook, existingTitles);
+    }
+
+    @Override
+    @Transactional
+    public Book duplicateBook(Book sourceBook, List<String> existingTitles) throws BookValidationException, BookDuplicationException {
+        validateDuplicateInput(sourceBook, existingTitles);
+
+        String duplicatedTitle = buildDuplicateTitle(sourceBook.getTitle(), existingTitles);
+        LocalDateTime now = LocalDateTime.now();
+        Book duplicatedBook = sourceBook.toBuilder()
+                .id(UUID.randomUUID())
+                .title(duplicatedTitle)
+                .creationDate(now)
+                .modificationDate(now)
+                .build();
+
+        return processAndSaveBook(duplicatedBook);
+    }
+
+    @Override
+    @Transactional
     public void deleteBook(UUID id) throws BookNotFoundException {
         log.info("Deleting book with id: {}", id);
         Book book = getBookById(id);
@@ -68,11 +107,11 @@ public class BookServiceImpl implements BookService {
         log.info("Book successfully deleted: [id: {}]", id);
     }
 
-    private void processAndSaveBook(Book book) throws BookValidationException {
+    private Book processAndSaveBook(Book book) throws BookValidationException {
         validateBook(book);
         resizeBookCover(book);
         attachExistingAuthorsAndGenres(book);
-        bookRepository.save(book);
+        return bookRepository.save(book);
     }
 
     private void validateBook(Book book) throws BookValidationException {
@@ -109,5 +148,43 @@ public class BookServiceImpl implements BookService {
                         .orElse(genre))
                 .collect(Collectors.toSet());
         book.setGenres(managedGenres);
+    }
+
+    private String buildDuplicateTitle(String sourceTitle, List<String> existingTitles) throws BookDuplicationException {
+        String baseTitle = extractBaseTitle(sourceTitle);
+        long nextNumber = findNextNumber(baseTitle, existingTitles);
+        return String.format("%s (%d)", baseTitle, nextNumber);
+    }
+
+    private void validateDuplicateInput(Book sourceBook, List<String> existingTitles) throws BookDuplicationException {
+        if (sourceBook == null) {
+            throw new BookDuplicationException("Source book cannot be null");
+        }
+        if (existingTitles == null) {
+            throw new BookDuplicationException("Existing titles cannot be null");
+        }
+        if (!existingTitles.contains(sourceBook.getTitle())) {
+            throw new BookDuplicationException("Book with title '" + sourceBook.getTitle() + "' does not exist in the list");
+        }
+    }
+
+    private String extractBaseTitle(String title) {
+        return COUNTER_SUFFIX.matcher(title).replaceAll("");
+    }
+
+    private long extractCounter(String title) {
+        Matcher matcher = COUNTER_SUFFIX.matcher(title);
+        return matcher.find() ? Long.parseLong(matcher.group(1)) : 0;
+    }
+
+    private long findNextNumber(String baseTitle, List<String> existingTitles) {
+        return existingTitles.stream()
+                .mapToLong(title -> {
+                    if (title.equals(baseTitle)) return 0;
+                    if (extractBaseTitle(title).equals(baseTitle)) return extractCounter(title);
+                    return -1;
+                })
+                .max()
+                .orElse(-1) + 1;
     }
 }

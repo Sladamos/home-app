@@ -1,5 +1,6 @@
 package com.sladamos.app.util;
 
+import com.sladamos.app.util.load.ProfilesLoader;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;

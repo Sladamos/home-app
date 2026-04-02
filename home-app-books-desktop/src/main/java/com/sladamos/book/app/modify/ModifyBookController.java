@@ -4,14 +4,14 @@ import com.sladamos.app.util.messages.BindingsCreator;
 import com.sladamos.app.util.components.ComponentsGenerator;
 import com.sladamos.book.model.Book;
 import com.sladamos.book.BookService;
-import com.sladamos.book.BookValidationException;
+import com.sladamos.book.exception.BookValidationException;
 import com.sladamos.book.app.add.OnBookCreated;
 import com.sladamos.book.app.modify.components.*;
 import com.sladamos.book.app.modify.validation.ValidationsOperator;
 import com.sladamos.book.app.modify.validation.ViolationDisplayer;
 import com.sladamos.book.app.modify.validation.ViolationDisplayerFactory;
 import com.sladamos.book.app.edit.OnBookEdited;
-import com.sladamos.book.app.items.OnDisplayItemsClicked;
+import com.sladamos.book.app.items.event.OnDisplayItemsClicked;
 import com.sladamos.app.util.components.FocusableFinder;
 import com.sladamos.app.util.components.NodeScroller;
 import jakarta.validation.ConstraintViolation;
@@ -259,7 +259,7 @@ public class ModifyBookController {
             viewModel.reset();
             applicationEventPublisher.publishEvent(new OnBookCreated(book));
         } catch (BookValidationException e) {
-            log.error("Unable to create book: [reason: {}]", e.getReason());
+            log.error("Unable to create book: [reason: {}]", e.getMessage());
             updateValidationLabels(e.getViolations());
         }
     }
@@ -269,7 +269,7 @@ public class ModifyBookController {
             bookService.updateBook(book);
             applicationEventPublisher.publishEvent(new OnBookEdited(book));
         } catch (BookValidationException e) {
-            log.error("Unable to edit book: [reason: {}]", e.getReason());
+            log.error("Unable to edit book: [reason: {}]", e.getMessage());
             updateValidationLabels(e.getViolations());
         }
     }

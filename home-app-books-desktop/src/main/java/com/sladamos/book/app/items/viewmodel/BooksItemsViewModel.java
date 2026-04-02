@@ -1,7 +1,10 @@
-package com.sladamos.book.app.items;
+package com.sladamos.book.app.items.viewmodel;
 
+import com.sladamos.book.BookService;
+import com.sladamos.book.app.items.BooksItemsSortOption;
 import com.sladamos.book.model.Book;
 import jakarta.annotation.PostConstruct;
+import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -14,6 +17,7 @@ import javafx.collections.transformation.SortedList;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -24,7 +28,15 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class BooksItemsViewModel {
 
-    private final ObservableList<BookItemViewModel> books = FXCollections.observableArrayList();
+    private final ObjectProvider<BookItemViewModel> viewModelProvider;
+    private final BookService bookService;
+
+    @Getter
+    private final ObservableList<BookItemViewModel> books = FXCollections.observableArrayList(
+            vm -> new Observable[]{
+                    vm.getTitle(), vm.getModificationDate(), vm.getCreationDate(), vm.getPages()
+            }
+    );
 
     private final FilteredList<BookItemViewModel> filteredBooks = new FilteredList<>(books, b -> true);
 
@@ -35,33 +47,33 @@ public class BooksItemsViewModel {
     private final StringProperty searchQuery = new SimpleStringProperty("");
 
     @Getter
-    private final ObjectProperty<BooksItemsSortOption> sortOption = new SimpleObjectProperty<>(BooksItemsSortOption.CREATE_DATE_DESC);
+    private final ObjectProperty<BooksItemsSortOption> sortOption = new SimpleObjectProperty<>(BooksItemsSortOption.MODIFICATION_DATE_DESC);
+
+    private boolean loaded = false;
 
     @PostConstruct
     public void init() {
         filteredBooks.predicateProperty().bind(
-                Bindings.createObjectBinding(
-                        () -> b -> searchQuery.get().isBlank()
-                                || b.getTitle().get().toLowerCase().startsWith(searchQuery.get().toLowerCase()),
-                        searchQuery
-                )
+                Bindings.createObjectBinding(() -> b -> searchQuery.get().isBlank() ||
+                        b.getTitle().get().toLowerCase().startsWith(searchQuery.get().toLowerCase()), searchQuery)
         );
 
         sortedBooks.setComparator(sortOption.get().getComparator());
         sortOption.addListener((obs, oldVal, newVal) -> resort());
     }
 
-    public void loadBooks(List<Book> allBooks) {
+    public void loadBooks() {
+        log.info("Loading books from service");
         books.clear();
-        List<BookItemViewModel> booksVms = allBooks.stream()
+        List<BookItemViewModel> booksVms = bookService.getAllBooks().stream()
                 .map(this::toViewModel)
                 .toList();
         books.addAll(booksVms);
+        loaded = true;
     }
 
     public void addBook(Book book) {
         books.add(toViewModel(book));
-        forceResort();
     }
 
     public void updateBook(Book book) {
@@ -69,7 +81,6 @@ public class BooksItemsViewModel {
                 .filter(vm -> vm.getId().get().equals(book.getId()))
                 .findFirst()
                 .ifPresent(vm -> vm.updateFrom(book));
-        forceResort();
     }
 
     public void deleteBook(UUID bookId) {
@@ -77,17 +88,13 @@ public class BooksItemsViewModel {
     }
 
     public boolean areBooksNotLoaded() {
-        return books.isEmpty();
+        return !loaded;
     }
 
     private BookItemViewModel toViewModel(Book book) {
-        return new BookItemViewModel(book);
-    }
-
-    private void forceResort() {
-        log.info("Forcing resort of books");
-        sortedBooks.setComparator(null);
-        resort();
+        BookItemViewModel vm = viewModelProvider.getObject();
+        vm.init(book);
+        return vm;
     }
 
     private void resort() {

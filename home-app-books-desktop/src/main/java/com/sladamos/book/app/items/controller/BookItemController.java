@@ -1,8 +1,11 @@
-package com.sladamos.book.app.items;
+package com.sladamos.book.app.items.controller;
 
 import com.sladamos.app.util.LocaleProvider;
 import com.sladamos.app.util.messages.BindingsCreator;
 import com.sladamos.app.util.messages.TemporaryMessagesFactory;
+import com.sladamos.book.app.items.viewmodel.BookItemViewModel;
+import com.sladamos.book.app.items.event.OnBookDeleted;
+import com.sladamos.book.app.items.event.OnBookDuplicated;
 import com.sladamos.book.model.BookStatus;
 import com.sladamos.book.app.edit.OnEditBookClicked;
 import com.sladamos.book.app.util.CoverImageProvider;
@@ -18,7 +21,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import java.text.MessageFormat;
 import java.time.LocalDate;
@@ -27,6 +33,8 @@ import java.util.Optional;
 import static javafx.scene.control.ButtonBar.ButtonData;
 
 @Slf4j
+@Component
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @RequiredArgsConstructor
 public class BookItemController {
 
@@ -78,8 +86,6 @@ public class BookItemController {
     @FXML
     private Button deleteButton;
 
-    private final BookItemViewModel viewModel;
-
     private final LocaleProvider localeProvider;
 
     private final BindingsCreator bindingsCreator;
@@ -93,6 +99,12 @@ public class BookItemController {
     private final CoverImageProvider coverImageProvider;
 
     private final TemporaryMessagesFactory temporaryMessagesFactory;
+
+    private BookItemViewModel viewModel;
+
+    public void init(BookItemViewModel viewModel) {
+        this.viewModel = viewModel;
+    }
 
     @FXML
     public void initialize() {

@@ -10,7 +10,7 @@
 
 <VBox xmlns="http://javafx.com/javafx/11.0.14-internal"
       xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.sladamos.book.app.items.BookItemController">
+      fx:controller="com.sladamos.book.app.items.controller.BookItemController">
     <HBox>
         <Label fx:id="titleLabel" styleClass="book--title" text="Author">
             <HBox.margin>

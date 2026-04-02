@@ -3,6 +3,9 @@ package com.sladamos.book;
 import com.sladamos.book.dto.GetBooksResponse;
 import com.sladamos.book.dto.PatchBookRequest;
 import com.sladamos.book.dto.PutBookRequest;
+import com.sladamos.book.exception.BookDuplicationException;
+import com.sladamos.book.exception.BookNotFoundException;
+import com.sladamos.book.exception.BookValidationException;
 import com.sladamos.book.functions.BooksToResponseFunction;
 import com.sladamos.book.functions.RequestToBookFunction;
 import com.sladamos.book.functions.RequestToUpdateBookFunction;
@@ -74,13 +77,27 @@ public class BookController {
         }
     }
 
+    @PostMapping("/{id}/duplicate")
+    public void duplicateBook(@PathVariable("id") UUID id) {
+        log.info("Request duplicating book: [id: {}]", id);
+        try {
+            service.duplicateBook(id);
+            log.info("Book duplicated: [id: {}]", id);
+        } catch (BookNotFoundException e) {
+            onNotFoundExceptionOccurred(id);
+        } catch (BookValidationException | BookDuplicationException e) {
+            log.info("Book duplication failed: [id: {}, reason: {}]", id, e.getMessage());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+    }
+
     private static void onNotFoundExceptionOccurred(UUID id) {
         log.info("Book not found: [id: {}]", id);
         throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
 
     private static void onValidationExceptionOccurred(UUID id, String request, BookValidationException e) {
-        log.info("Book validation failed: [id: {}, title: {}, reason: {}]", id, request, e.getReason());
+        log.info("Book validation failed: [id: {}, title: {}, reason: {}]", id, request, e.getMessage());
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
     }
 }

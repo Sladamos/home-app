@@ -1,6 +1,6 @@
 package com.sladamos.app.util.components;
 
-import javafx.fxml.FXMLLoader;
+import com.sladamos.app.util.load.ViewsLoader;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import org.springframework.stereotype.Component;
@@ -10,25 +10,15 @@ import java.net.URL;
 @Component
 public class ComponentsGenerator {
 
-    public Node addComponentAtBeginning(Object controller, Pane wrapper, URL resource) {
-        Node itemRoot = loadAndAttach(controller, wrapper, resource);
-        wrapper.getChildren().addFirst(itemRoot);
-        return itemRoot;
+    private final ViewsLoader viewsLoader;
+
+    public ComponentsGenerator(ViewsLoader viewsLoader) {
+        this.viewsLoader = viewsLoader;
     }
 
     public Node addComponentAtEnd(Object controller, Pane wrapper, URL resource) {
-        Node itemRoot = loadAndAttach(controller, wrapper, resource);
+        Node itemRoot = viewsLoader.loadView(resource, param -> controller);
         wrapper.getChildren().add(itemRoot);
         return itemRoot;
-    }
-
-    private Node loadAndAttach(Object controller, Pane wrapper, URL resource) {
-        try {
-            FXMLLoader loader = new FXMLLoader(resource);
-            loader.setControllerFactory(param -> controller);
-            return loader.load();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 }
