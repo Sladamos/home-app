@@ -9,12 +9,13 @@
 <HBox xmlns="http://javafx.com/javafx/11.0.14-internal"
       xmlns:fx="http://javafx.com/fxml/1"
       alignment="CENTER_RIGHT"
+      fillHeight="true"
       spacing="12.0"
       styleClass="books-header-actions"
       fx:controller="com.sladamos.book.app.items.controller.BooksItemsHeaderActionsController">
     <Button fx:id="addBookButton" mnemonicParsing="false" onAction="#onAddBookClicked" styleClass="primary--button" text="Add book" />
     <ComboBox fx:id="sortComboBox" prefWidth="220.0" promptText="Sort by" />
-    <TextField fx:id="searchField" prefWidth="280.0" promptText="Search by title" />
+    <TextField fx:id="searchField" prefWidth="224.0" promptText="Search by title" />
 
     <stylesheets>
         <URL value="@../books-common.css" />

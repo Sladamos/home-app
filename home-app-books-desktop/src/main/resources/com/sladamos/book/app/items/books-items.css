@@ -4,6 +4,7 @@
             #3c005e;
     -fx-prompt-text-fill: #dcdcdc;
     -fx-text-fill: #efefef;
+    -fx-padding: 8 12;
     -fx-font-family: "Noto Sans";
     -fx-font-size: 14px;
 }
@@ -21,6 +22,19 @@
 .books-app-header__actions,
 .books-header-actions {
     -fx-alignment: center-right;
+    -fx-padding: 0 14 0 0;
+}
+
+.books-header-actions > .button,
+.books-header-actions > .combo-box,
+.books-header-actions > .text-field {
+    -fx-max-height: infinity;
+}
+
+.books-header-actions > .primary--button {
+    -fx-background-insets: 0, 1;
+    -fx-font-family: "Noto Sans";
+    -fx-font-size: 14px;
 }
 
 #booksScrollPane > .viewport {
