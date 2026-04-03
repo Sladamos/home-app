@@ -1,0 +1,6 @@
+package com.sladamos.book.app.items.event;
+
+import com.sladamos.book.model.Book;
+
+public record OnEditBookClicked(Book book) {
+}

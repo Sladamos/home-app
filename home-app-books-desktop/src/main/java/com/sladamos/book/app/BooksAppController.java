@@ -2,27 +2,23 @@ package com.sladamos.book.app;
 
 import com.sladamos.app.util.load.ViewsLoader;
 import com.sladamos.app.util.messages.BindingsCreator;
-import com.sladamos.book.app.add.OnAddBookClicked;
-import com.sladamos.book.app.add.OnBookCreated;
-import com.sladamos.book.app.edit.EditBookControllerFactory;
-import com.sladamos.book.app.edit.OnBookEdited;
-import com.sladamos.book.app.edit.OnEditBookClicked;
+import com.sladamos.book.app.items.event.OnAddBookClicked;
+import com.sladamos.book.app.modify.event.OnBookCreated;
+import com.sladamos.book.app.modify.event.OnBookEdited;
+import com.sladamos.book.app.items.event.OnEditBookClicked;
 import com.sladamos.book.app.items.event.OnDisplayItemsClicked;
-import com.sladamos.book.app.modify.ModifyBookController;
+import com.sladamos.book.app.modify.ModifyBookControllerFactory;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
-import javafx.util.Callback;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
-import java.util.Objects;
 import java.util.function.Function;
 
 @Slf4j
@@ -30,7 +26,7 @@ import java.util.function.Function;
 @RequiredArgsConstructor
 public class BooksAppController {
 
-    private static final String MODIFY_BOOK_FXML = "/com/sladamos/book/app/modify/ModifyBook.fxml";
+    private static final String MODIFY_BOOK_FXML = "/com/sladamos/book/app/modify/screen/ModifyBook.fxml";
     private static final String BOOK_ITEMS_FXML = "/com/sladamos/book/app/items/BooksItems.fxml";
     private static final String BOOK_ITEMS_HEADER_ACTIONS_FXML = "/com/sladamos/book/app/items/BooksItemsHeaderActions.fxml";
 
@@ -43,9 +39,8 @@ public class BooksAppController {
     @FXML
     private StackPane headerActionsContainer;
 
-    private final ApplicationContext context;
     private final BindingsCreator bindingsCreator;
-    private final EditBookControllerFactory editBookControllerFactory;
+    private final ModifyBookControllerFactory modifyBookControllerFactory;
     private final ViewsLoader viewsLoader;
 
     @FXML
@@ -58,15 +53,14 @@ public class BooksAppController {
     public void onAddBook() {
         log.info("Switching to Add Book view");
         clearHeaderActions();
-        loadView(MODIFY_BOOK_FXML, viewsLoader::loadView);
+        loadView(MODIFY_BOOK_FXML, url -> viewsLoader.loadView(url, modifyBookControllerFactory.forAdd()));
     }
 
     @EventListener(OnEditBookClicked.class)
     public void onEditBook(OnEditBookClicked event) {
         log.info("Switching to Edit Book view");
         clearHeaderActions();
-        Function<URL, Node> nodeLoader = url -> viewsLoader.loadView(url, determineEditBookController(event));
-        loadView(MODIFY_BOOK_FXML, nodeLoader);
+        loadView(MODIFY_BOOK_FXML, url -> viewsLoader.loadView(url, modifyBookControllerFactory.forEdit(event.book())));
     }
 
     @EventListener({OnDisplayItemsClicked.class, OnBookCreated.class, OnBookEdited.class})
@@ -74,15 +68,6 @@ public class BooksAppController {
         log.info("Switching to Display Items view");
         showHeaderActions(BOOK_ITEMS_HEADER_ACTIONS_FXML);
         loadView(BOOK_ITEMS_FXML, viewsLoader::loadView);
-    }
-
-    private Callback<Class<?>, Object> determineEditBookController(OnEditBookClicked event) {
-        return clazz -> {
-            if (Objects.equals(clazz, ModifyBookController.class)) {
-                return editBookControllerFactory.createEditController(event.book());
-            }
-            return context.getBean(clazz);
-        };
     }
 
     private void loadView(String fxmlPath, Function<URL, Node> nodeLoader) {

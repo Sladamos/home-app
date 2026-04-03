@@ -7,7 +7,7 @@ import com.sladamos.book.app.items.viewmodel.BookItemViewModel;
 import com.sladamos.book.app.items.event.OnBookDeleted;
 import com.sladamos.book.app.items.event.OnBookDuplicated;
 import com.sladamos.book.model.BookStatus;
-import com.sladamos.book.app.edit.OnEditBookClicked;
+import com.sladamos.book.app.items.event.OnEditBookClicked;
 import com.sladamos.app.util.ui.LabelTextClamp;
 import com.sladamos.book.app.common.CoverImageProvider;
 import com.sladamos.book.app.items.StarsFactory;

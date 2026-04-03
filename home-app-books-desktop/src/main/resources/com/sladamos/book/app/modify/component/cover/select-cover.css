@@ -1,0 +1,10 @@
+.delete--cover-button {
+    -fx-background-color:
+            white,
+            darkred;
+}
+.delete--cover-button:hover {
+    -fx-background-color:
+            white,
+            firebrick;
+}

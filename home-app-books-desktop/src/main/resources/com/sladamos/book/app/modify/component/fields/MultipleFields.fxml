@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+<?import java.net.URL?>
+<VBox xmlns="http://javafx.com/javafx"
+	  xmlns:fx="http://javafx.com/fxml"
+	  fx:controller="com.sladamos.book.app.modify.component.fields.MultipleFieldsController"
+	  fx:id="fieldsContainer"
+	  spacing="10">
+	<stylesheets>
+		<URL value="@multiple-fields.css" />
+		<URL value="@../../../books-common.css" />
+	</stylesheets>
+</VBox>
+

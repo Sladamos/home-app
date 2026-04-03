@@ -1,41 +1,41 @@
 package com.sladamos.book.app.modify;
 
-import com.sladamos.app.util.messages.BindingsCreator;
 import com.sladamos.app.util.components.ComponentsGenerator;
-import com.sladamos.book.model.Book;
+import com.sladamos.app.util.messages.BindingsCreator;
 import com.sladamos.book.BookService;
-import com.sladamos.book.exception.BookValidationException;
-import com.sladamos.book.app.add.OnBookCreated;
-import com.sladamos.book.app.modify.components.*;
-import com.sladamos.book.app.modify.validation.ValidationsOperator;
-import com.sladamos.book.app.modify.validation.ViolationDisplayer;
-import com.sladamos.book.app.modify.validation.ViolationDisplayerFactory;
-import com.sladamos.book.app.edit.OnBookEdited;
 import com.sladamos.book.app.items.event.OnDisplayItemsClicked;
-import com.sladamos.app.util.components.FocusableFinder;
-import com.sladamos.app.util.components.NodeScroller;
-import jakarta.validation.ConstraintViolation;
+import com.sladamos.book.app.modify.component.fields.MultipleFieldsController;
+import com.sladamos.book.app.modify.component.fields.MultipleFieldsViewModel;
+import com.sladamos.book.app.modify.component.cover.SelectCoverController;
+import com.sladamos.book.app.modify.component.rating.SelectRatingController;
+import com.sladamos.book.app.modify.component.rating.SelectRatingViewModel;
+import com.sladamos.book.app.modify.component.status.SelectStatusController;
+import com.sladamos.book.app.modify.component.status.SelectStatusViewModel;
+import com.sladamos.book.app.modify.mode.ModifyBookMode;
+import com.sladamos.book.exception.BookValidationException;
+import com.sladamos.book.model.Book;
+import com.sladamos.book.app.modify.validation.ModifyBookValidationHandler;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.stereotype.Component;
 
 import java.net.URL;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
 
-import static com.sladamos.book.model.Book.*;
+import static com.sladamos.book.model.Book.MIN_NUMBER_OF_AUTHORS;
+import static com.sladamos.book.model.Book.MIN_NUMBER_OF_GENRES;
 
+// Not a Spring bean - created by ModifyBookControllerFactory
 @Slf4j
-@Component
 @RequiredArgsConstructor
 public class ModifyBookController {
 
@@ -81,7 +81,7 @@ public class ModifyBookController {
     private Label descriptionLabel;
 
     @FXML
-    private Label addBookLabel;
+    private Label submitBookLabel;
 
     @FXML
     private HBox genresWrapper;
@@ -96,7 +96,7 @@ public class ModifyBookController {
     private Button returnToItemsButton;
 
     @FXML
-    private Button addBookButton;
+    private Button submitBookButton;
 
     @FXML
     private TextField titleField;
@@ -119,45 +119,29 @@ public class ModifyBookController {
     @FXML
     private Button addGenreButton;
 
-    private final SelectCoverController selectCoverController;
-
-    private final SelectRatingController selectRatingController;
-
-    private final SelectStatusController selectStatusController;
-
     private final ApplicationEventPublisher applicationEventPublisher;
-
-    private final BindingsCreator bindingsCreator;
-
-    private final ComponentsGenerator componentsGenerator;
-
     private final ModifyBookViewModel viewModel;
-
+    private final ModifyBookMode mode;
     private final BookService bookService;
-
-    private final FocusableFinder focusableFinder;
-
-    private final NodeScroller nodeScroller;
-
-    private final ValidationsOperator validationsOperator;
-
-    private final ViolationDisplayerFactory violationDisplayerFactory;
-
-    private final ModifyBookViewModelConverter viewModelConverter;
+    private final BindingsCreator bindingsCreator;
+    private final ComponentsGenerator componentsGenerator;
+    private final SelectCoverController selectCoverController;
+    private final SelectRatingController selectRatingController;
+    private final SelectStatusController selectStatusController;
+    private final ModifyBookValidationHandler validationHandler;
 
     private final MultipleFieldsController authorsMultipleFieldsController = new MultipleFieldsController();
-
     private final MultipleFieldsController genresMultipleFieldsController = new MultipleFieldsController();
-
-    private final Map<String, ViolationDisplayer> violationDisplayers = new LinkedHashMap<>();
 
     @FXML
     public void initialize() {
-        componentsGenerator.addComponentAtEnd(genresMultipleFieldsController, genresPanel, MULTIPLE_FIELDS_COMPONENT_RESOURCE);
-        componentsGenerator.addComponentAtEnd(authorsMultipleFieldsController, authorsPanel, MULTIPLE_FIELDS_COMPONENT_RESOURCE);
-        setupBindings();
-        setupViolationDisplayersMap();
-        validationsOperator.disableValidationLabels(violationDisplayers);
+        initializeMultipleFields();
+        initializeChildComponents();
+        initializeMessages();
+        bindScalarFields();
+        bindGenresVisibility();
+        bindPagesField();
+        initializeValidation();
     }
 
     @FXML
@@ -167,14 +151,19 @@ public class ModifyBookController {
     }
 
     @FXML
-    private void onAddBookClicked() {
-        log.info("Add book button clicked");
-        validationsOperator.disableValidationLabels(violationDisplayers);
-        Book book = viewModelConverter.convert(viewModel);
-        if (viewModel.isEditMode()) {
-            updateBook(book);
-        } else {
-            saveBook(book);
+    private void onSubmitBookClicked() {
+        log.info("Submit button clicked");
+        validationHandler.clear();
+        Book book = mode.convert(viewModel);
+        try {
+            mode.persist(bookService, book);
+            mode.onSuccess(applicationEventPublisher, book);
+            if (mode.shouldResetAfterSubmit()) {
+                viewModel.reset();
+            }
+        } catch (BookValidationException e) {
+            log.error("Book validation failed: [reason: {}]", e.getMessage());
+            validationHandler.display(e.getViolations());
         }
     }
 
@@ -190,33 +179,23 @@ public class ModifyBookController {
         genresMultipleFieldsController.addEmptyField();
     }
 
-    private void setupViolationDisplayersMap() {
-        violationDisplayers.clear();
-        violationDisplayers.put("title", violationDisplayerFactory.createNoArgsViolationsDisplayer(titleValidationLabel));
-        violationDisplayers.put("authors", violationDisplayerFactory.createNoArgsViolationsDisplayer(authorsValidationLabel));
-        violationDisplayers.put("isbn", violationDisplayerFactory.createNoArgsViolationsDisplayer(isbnValidationLabel));
-        violationDisplayers.put("genres", violationDisplayerFactory.createNoArgsViolationsDisplayer(genresValidationLabel));
-        violationDisplayers.put("pages", violationDisplayerFactory.createNoArgsViolationsDisplayer(pagesValidationLabel));
-        violationDisplayers.put("description", violationDisplayerFactory.createSingleArgViolationsDisplayer(MAX_DESCRIPTION_SIZE, descriptionValidationLabel));
-        violationDisplayers.put("borrowedBy", violationDisplayerFactory.createNoArgsViolationsDisplayer(selectStatusController.borrowedByValidationLabel));
+    private void initializeMultipleFields() {
+        componentsGenerator.addComponentAtEnd(genresMultipleFieldsController, genresPanel, MULTIPLE_FIELDS_COMPONENT_RESOURCE);
+        componentsGenerator.addComponentAtEnd(authorsMultipleFieldsController, authorsPanel, MULTIPLE_FIELDS_COMPONENT_RESOURCE);
+
+        authorsMultipleFieldsController.bindTo(new MultipleFieldsViewModel(viewModel.getAuthors(), MIN_NUMBER_OF_AUTHORS));
+        genresMultipleFieldsController.bindTo(new MultipleFieldsViewModel(viewModel.getGenres(), MIN_NUMBER_OF_GENRES));
     }
 
-    private void setupBindings() {
+    private void initializeChildComponents() {
         selectCoverController.bindTo(viewModel);
         selectRatingController.bindTo(new SelectRatingViewModel(viewModel.getRating(), viewModel.getFavorite()));
         selectStatusController.bindTo(new SelectStatusViewModel(viewModel.getBorrowedBy(), viewModel.getReadDate(), viewModel.getStatus()));
-        authorsMultipleFieldsController.bindTo(new MultipleFieldsViewModel(viewModel.getAuthors(), Book.MIN_NUMBER_OF_AUTHORS));
-        genresMultipleFieldsController.bindTo(new MultipleFieldsViewModel(viewModel.getGenres(), MIN_NUMBER_OF_GENRES));
-        genresWrapper.visibleProperty().bind(Bindings.isEmpty(viewModel.getGenres()).not());
-        genresWrapper.managedProperty().bind(genresWrapper.visibleProperty());
+    }
 
-        if (viewModel.isEditMode()) {
-            addBookLabel.setText(bindingsCreator.getMessage("books.edit.name"));
-            addBookButton.setText(bindingsCreator.getMessage("books.edit.name"));
-        } else {
-            addBookLabel.setText(bindingsCreator.getMessage("books.add.name"));
-            addBookButton.setText(bindingsCreator.getMessage("books.add.name"));
-        }
+    private void initializeMessages() {
+        submitBookLabel.setText(bindingsCreator.getMessage(mode.getModifyBookLabel()));
+        submitBookButton.setText(bindingsCreator.getMessage(mode.getSubmitBookButtonKey()));
 
         returnToItemsButton.textProperty().bind(bindingsCreator.createBinding("books.add.returnToBooks"));
         addAuthorButton.textProperty().bind(bindingsCreator.createBinding("books.add.addAuthor"));
@@ -228,24 +207,23 @@ public class ModifyBookController {
         genresLabel.textProperty().bind(bindingsCreator.createBinding("books.add.genres"));
         pagesLabel.textProperty().bind(bindingsCreator.createBinding("books.add.pages"));
         descriptionLabel.textProperty().bind(bindingsCreator.createBinding("books.add.description"));
+    }
 
+    private void bindScalarFields() {
         titleField.textProperty().bindBidirectional(viewModel.getTitle());
         isbnField.textProperty().bindBidirectional(viewModel.getIsbn());
         descriptionArea.textProperty().bindBidirectional(viewModel.getDescription());
         publisherField.textProperty().bindBidirectional(viewModel.getPublisher());
-        bindPagesField();
+    }
+
+    private void bindGenresVisibility() {
+        genresWrapper.visibleProperty().bind(Bindings.isEmpty(viewModel.getGenres()).not());
+        genresWrapper.managedProperty().bind(genresWrapper.visibleProperty());
     }
 
     private void bindPagesField() {
-        TextFormatter<Integer> integerFormatter = new TextFormatter<>(change -> {
-            String newText = change.getControlNewText();
-            if (newText.matches("\\d*")) {
-                return change;
-            }
-            return null;
-        });
+        TextFormatter<Integer> integerFormatter = new TextFormatter<>(change -> change.getControlNewText().matches("\\d*") ? change : null);
         pagesField.setTextFormatter(integerFormatter);
-
         Bindings.bindBidirectional(
                 pagesField.textProperty(),
                 viewModel.getPages(),
@@ -253,39 +231,16 @@ public class ModifyBookController {
         );
     }
 
-    private void saveBook(Book book) {
-        try {
-            bookService.createBook(book);
-            viewModel.reset();
-            applicationEventPublisher.publishEvent(new OnBookCreated(book));
-        } catch (BookValidationException e) {
-            log.error("Unable to create book: [reason: {}]", e.getMessage());
-            updateValidationLabels(e.getViolations());
-        }
-    }
-
-    private void updateBook(Book book) {
-        try {
-            bookService.updateBook(book);
-            applicationEventPublisher.publishEvent(new OnBookEdited(book));
-        } catch (BookValidationException e) {
-            log.error("Unable to edit book: [reason: {}]", e.getMessage());
-            updateValidationLabels(e.getViolations());
-        }
-    }
-
-    private void updateValidationLabels(Set<ConstraintViolation<Book>> violations) {
-        Optional<Label> firstLabel = validationsOperator.updateValidationLabels(violationDisplayers, violations);
-        firstLabel.ifPresent(this::focusOnFirstFieldConnectedWithLabel);
-    }
-
-    private void focusOnFirstFieldConnectedWithLabel(Label label) {
-        Pane pane = (Pane) label.getParent();
-        Optional<Node> field = focusableFinder.findFirstFocusableNode(pane);
-        field.ifPresent(f -> {
-            log.info("Focusing on field: [field: {}]", f);
-            f.requestFocus();
-            nodeScroller.scrollToNode(formScrollPane, f);
-        });
+    private void initializeValidation() {
+        validationHandler.initialize(
+                formScrollPane,
+                titleValidationLabel,
+                authorsValidationLabel,
+                isbnValidationLabel,
+                genresValidationLabel,
+                pagesValidationLabel,
+                descriptionValidationLabel,
+                selectStatusController.getBorrowedByValidationLabel()
+        );
     }
 }

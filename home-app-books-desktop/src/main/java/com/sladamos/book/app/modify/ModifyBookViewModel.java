@@ -4,21 +4,17 @@ import com.sladamos.book.model.Book;
 import com.sladamos.book.model.BookStatus;
 import com.sladamos.book.model.Author;
 import com.sladamos.book.model.Genre;
-import com.sladamos.book.app.modify.components.SelectCoverViewModel;
+import com.sladamos.book.app.modify.component.cover.SelectCoverViewModel;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Component
 @Getter
-@NoArgsConstructor
 public class ModifyBookViewModel implements SelectCoverViewModel {
 
     private final StringProperty title = new SimpleStringProperty();
@@ -36,25 +32,23 @@ public class ModifyBookViewModel implements SelectCoverViewModel {
     private final ObjectProperty<BookStatus> status = new SimpleObjectProperty<>(BookStatus.ON_SHELF);
     private final ObservableList<String> authors = FXCollections.observableArrayList();
     private final ObservableList<String> genres = FXCollections.observableArrayList();
-    private boolean isEditMode = false;
 
-    public ModifyBookViewModel(Book book) {
-        this.isEditMode = true;
-        this.id.set(book.getId());
-        this.title.set(book.getTitle());
-        this.isbn.set(book.getIsbn());
-        this.description.set(book.getDescription());
-        this.publisher.set(book.getPublisher());
-        this.borrowedBy.set(book.getBorrowedBy());
-        this.pages.set(book.getPages());
-        this.rating.set(book.getRating());
-        this.favorite.set(book.isFavorite());
-        this.readDate.set(book.getReadDate());
-        this.creationDate.set(book.getCreationDate());
-        this.coverImage.set(book.getCoverImage());
-        this.status.set(book.getStatus());
-        this.authors.addAll(book.getAuthors().stream().map(Author::getName).toList());
-        this.genres.addAll(book.getGenres().stream().map(Genre::getName).toList());
+    public void initFrom(Book book) {
+        id.set(book.getId());
+        title.set(book.getTitle());
+        isbn.set(book.getIsbn());
+        description.set(book.getDescription());
+        publisher.set(book.getPublisher());
+        borrowedBy.set(book.getBorrowedBy());
+        pages.set(book.getPages());
+        rating.set(book.getRating());
+        favorite.set(book.isFavorite());
+        readDate.set(book.getReadDate());
+        creationDate.set(book.getCreationDate());
+        coverImage.set(book.getCoverImage());
+        status.set(book.getStatus());
+        authors.setAll(book.getAuthors().stream().map(Author::getName).toList());
+        genres.setAll(book.getGenres().stream().map(Genre::getName).toList());
     }
 
     public void reset() {

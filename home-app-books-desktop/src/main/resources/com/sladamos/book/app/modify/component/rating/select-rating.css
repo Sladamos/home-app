@@ -1,0 +1,69 @@
+.select-rating--container {
+    -fx-pref-height: 125px;
+    -fx-spacing: 30px;
+}
+
+.select-rating--container Slider {
+    -fx-pref-width: 150px;
+}
+
+.select-rating--container Slider .track {
+    -fx-padding: 0;
+    -fx-background-color: #6000a2;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-border-color: white;
+    -fx-border-width: 1;
+    -fx-pref-height: 20px;
+}
+
+.select-rating--container Slider .thumb {
+    -fx-background-color: white;
+    -fx-background-radius: 50%;
+    -fx-pref-width: 12px;
+    -fx-pref-height: 12px;
+}
+
+.select-rating--container Slider .tick-mark {
+    -fx-stroke: #efefef;
+}
+
+.select-rating--container Slider .tick-label {
+    -fx-text-fill: #efefef;
+}
+
+.select-rating--favorite-container {
+    -fx-spacing: 15px;
+}
+
+.select-rating--favorite-container CheckBox {
+    -fx-background-color: transparent;
+    -fx-padding: 0 6 0 0;
+}
+
+.select-rating--favorite-container CheckBox .box {
+    -fx-background-color: #3c005e;
+    -fx-border-color: white;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+    -fx-pref-width: 18px;
+    -fx-pref-height: 18px;
+}
+
+.select-rating--favorite-container CheckBox .mark {
+    -fx-background-color: transparent;
+}
+
+
+.select-rating--favorite-container CheckBox:selected .box {
+    -fx-background-color: #6000a2;
+    -fx-border-color: white;
+}
+
+.select-rating--favorite-container CheckBox:selected .mark {
+    -fx-background-color: white;
+}
+
+#favoriteLabel {
+    -fx-min-width: 30px;
+}
