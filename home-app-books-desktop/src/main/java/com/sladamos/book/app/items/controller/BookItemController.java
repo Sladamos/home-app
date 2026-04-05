@@ -1,8 +1,8 @@
 package com.sladamos.book.app.items.controller;
 
 import com.sladamos.app.util.LocaleProvider;
-import com.sladamos.app.util.messages.BindingsCreator;
-import com.sladamos.app.util.messages.TemporaryMessagesFactory;
+import com.sladamos.app.util.message.BindingsCreator;
+import com.sladamos.app.util.message.TemporaryMessagesFactory;
 import com.sladamos.book.app.items.viewmodel.BookItemViewModel;
 import com.sladamos.book.app.items.event.OnBookDeleted;
 import com.sladamos.book.app.items.event.OnBookDuplicated;

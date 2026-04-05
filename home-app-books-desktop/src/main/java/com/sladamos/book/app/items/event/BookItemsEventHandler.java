@@ -1,7 +1,7 @@
 package com.sladamos.book.app.items.event;
 
-import com.sladamos.app.util.messages.BindingsCreator;
-import com.sladamos.app.util.messages.TemporaryMessagesFactory;
+import com.sladamos.app.util.message.BindingsCreator;
+import com.sladamos.app.util.message.TemporaryMessagesFactory;
 import com.sladamos.book.BookService;
 import com.sladamos.book.app.items.BookCacheService;
 import com.sladamos.book.app.items.viewmodel.BookItemsActiveState;
@@ -90,9 +90,9 @@ public class BookItemsEventHandler {
         BookItemsViewModel activeViewModel = activeState.getActive();
         if (activeViewModel != null) {
             switch (event) {
-                case OnBookCacheChanged.Created created -> activeViewModel.addBook(created.book());
-                case OnBookCacheChanged.Updated updated -> activeViewModel.updateBook(updated.book());
-                case OnBookCacheChanged.Deleted deleted -> activeViewModel.deleteBook(deleted.bookId());
+                case OnBookCacheChanged.Created(Book book) -> activeViewModel.addBook(book);
+                case OnBookCacheChanged.Updated(Book book) -> activeViewModel.updateBook(book);
+                case OnBookCacheChanged.Deleted(UUID bookId) -> activeViewModel.deleteBook(bookId);
             }
         }
     }

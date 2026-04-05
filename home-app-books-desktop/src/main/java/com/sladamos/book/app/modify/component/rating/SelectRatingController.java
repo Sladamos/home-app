@@ -1,6 +1,6 @@
 package com.sladamos.book.app.modify.component.rating;
 
-import com.sladamos.app.util.messages.BindingsCreator;
+import com.sladamos.app.util.message.BindingsCreator;
 import com.sladamos.book.model.Book;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;

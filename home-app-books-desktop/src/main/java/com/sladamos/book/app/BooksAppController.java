@@ -1,7 +1,7 @@
 package com.sladamos.book.app;
 
 import com.sladamos.app.util.load.ViewsLoader;
-import com.sladamos.app.util.messages.BindingsCreator;
+import com.sladamos.app.util.message.BindingsCreator;
 import com.sladamos.book.app.items.event.OnAddBookClicked;
 import com.sladamos.book.app.items.event.OnDisplayItemsClicked;
 import com.sladamos.book.app.items.event.OnEditBookClicked;

@@ -1,4 +1,4 @@
-package com.sladamos.app.util.component;
+package com.sladamos.app.util.ui.navigation;
 
 import javafx.scene.Node;
 import javafx.scene.control.TextArea;

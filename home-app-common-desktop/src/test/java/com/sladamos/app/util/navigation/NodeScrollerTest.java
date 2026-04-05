@@ -1,5 +1,6 @@
-package com.sladamos.app.util.component;
+package com.sladamos.app.util.navigation;
 
+import com.sladamos.app.util.ui.navigation.NodeScroller;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;

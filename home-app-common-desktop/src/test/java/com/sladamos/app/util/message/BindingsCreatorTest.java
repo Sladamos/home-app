@@ -1,4 +1,4 @@
-package com.sladamos.app.util.messages;
+package com.sladamos.app.util.message;
 
 import com.sladamos.app.util.LocaleProvider;
 import javafx.beans.binding.StringBinding;

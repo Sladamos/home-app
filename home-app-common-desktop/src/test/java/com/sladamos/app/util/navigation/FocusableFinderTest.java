@@ -1,5 +1,6 @@
-package com.sladamos.app.util.component;
+package com.sladamos.app.util.navigation;
 
+import com.sladamos.app.util.ui.navigation.FocusableFinder;
 import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -22,8 +23,12 @@ class FocusableFinderTest {
     @BeforeAll
     static void initJFX() {
         try {
-            Platform.startup(() -> {});
-        } catch (IllegalStateException ignored) {
+            Platform.startup(() -> {
+            });
+        } catch (IllegalStateException e) {
+            if (e.getMessage() == null || !e.getMessage().contains("Toolkit already initialized")) {
+                throw e;
+            }
         }
     }
 

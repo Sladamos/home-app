@@ -1,7 +1,7 @@
 package com.sladamos.book.app.items.event;
 
-import com.sladamos.app.util.messages.BindingsCreator;
-import com.sladamos.app.util.messages.TemporaryMessagesFactory;
+import com.sladamos.app.util.message.BindingsCreator;
+import com.sladamos.app.util.message.TemporaryMessagesFactory;
 import com.sladamos.book.BookService;
 import com.sladamos.book.app.items.BookCacheService;
 import com.sladamos.book.app.items.viewmodel.BookItemsActiveState;
@@ -12,9 +12,6 @@ import com.sladamos.book.exception.BookNotFoundException;
 import com.sladamos.book.exception.BookValidationException;
 import com.sladamos.book.model.Book;
 import com.sladamos.book.model.BookStatus;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,10 +23,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 

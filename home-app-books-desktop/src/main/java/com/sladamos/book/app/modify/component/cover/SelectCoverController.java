@@ -1,7 +1,7 @@
 package com.sladamos.book.app.modify.component.cover;
 
-import com.sladamos.app.util.messages.BindingsCreator;
-import com.sladamos.app.util.messages.TemporaryMessagesFactory;
+import com.sladamos.app.util.message.BindingsCreator;
+import com.sladamos.app.util.message.TemporaryMessagesFactory;
 import com.sladamos.book.app.common.CoverImageProvider;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;

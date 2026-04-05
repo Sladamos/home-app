@@ -1,6 +1,6 @@
 package com.sladamos.app.util.ui;
 
-import com.sladamos.app.util.messages.BindingsCreator;
+import com.sladamos.app.util.message.BindingsCreator;
 import javafx.scene.control.ListCell;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

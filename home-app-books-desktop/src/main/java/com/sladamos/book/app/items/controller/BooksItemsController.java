@@ -1,6 +1,6 @@
 package com.sladamos.book.app.items.controller;
 
-import com.sladamos.app.util.messages.BindingsCreator;
+import com.sladamos.app.util.message.BindingsCreator;
 import com.sladamos.book.app.items.viewmodel.BookItemsViewModel;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;

@@ -1,6 +1,6 @@
 package com.sladamos.book.app.items.controller;
 
-import com.sladamos.app.util.messages.BindingsCreator;
+import com.sladamos.app.util.message.BindingsCreator;
 import com.sladamos.book.app.items.event.OnAddBookClicked;
 import com.sladamos.book.app.items.BookItemsSortOption;
 import com.sladamos.book.app.items.viewmodel.BookItemsActiveState;

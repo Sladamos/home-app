@@ -1,4 +1,4 @@
-package com.sladamos.app.util.messages;
+package com.sladamos.app.util.message;
 
 import com.sladamos.app.util.FXWinUtil;
 import com.sladamos.app.util.IconFactory;

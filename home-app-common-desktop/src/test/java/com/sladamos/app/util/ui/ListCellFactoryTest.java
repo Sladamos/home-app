@@ -1,7 +1,6 @@
 package com.sladamos.app.util.ui;
 
-import com.sladamos.app.util.messages.BindingsCreator;
-import com.sladamos.app.util.ui.ListCellFactory;
+import com.sladamos.app.util.message.BindingsCreator;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;

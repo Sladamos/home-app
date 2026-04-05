@@ -1,6 +1,7 @@
 package com.sladamos.book.app.modify;
 
-import com.sladamos.app.util.messages.BindingsCreator;
+import com.sladamos.app.util.message.BindingsCreator;
+import com.sladamos.app.util.ui.navigation.NodeScroller;
 import com.sladamos.book.app.items.event.OnDisplayItemsClicked;
 import com.sladamos.book.app.modify.component.cover.SelectCoverController;
 import com.sladamos.book.app.modify.component.fields.MultipleFieldsController;
@@ -10,7 +11,7 @@ import com.sladamos.book.app.modify.component.rating.SelectRatingViewModel;
 import com.sladamos.book.app.modify.component.status.SelectStatusController;
 import com.sladamos.book.app.modify.component.status.SelectStatusViewModel;
 import com.sladamos.book.app.modify.mode.ModifyBookMode;
-import com.sladamos.book.app.modify.validation.ModifyBookValidationHandler;
+import com.sladamos.book.app.modify.validation.FormValidationHandler;
 import com.sladamos.book.exception.BookValidationException;
 import com.sladamos.book.model.Book;
 import javafx.beans.binding.Bindings;
@@ -123,7 +124,8 @@ public class ModifyBookController {
 
     private final ApplicationEventPublisher applicationEventPublisher;
     private final BindingsCreator bindingsCreator;
-    private final ModifyBookValidationHandler validationHandler;
+    private final FormValidationHandler validationHandler;
+    private final NodeScroller nodeScroller;
     private ModifyBookViewModel viewModel;
     private ModifyBookMode mode;
 
@@ -153,14 +155,18 @@ public class ModifyBookController {
     @FXML
     private void onSubmitBookClicked() {
         log.info("Submit button clicked");
-        validationHandler.clear();
+        validationHandler.disableLabels();
         Book book = mode.convert(viewModel);
         try {
             mode.persist(book);
             mode.onSuccess(book);
         } catch (BookValidationException e) {
             log.error("Book validation failed: [reason: {}]", e.getMessage());
-            validationHandler.display(e.getViolations());
+            validationHandler.display(e.getViolations()).ifPresent(field -> {
+                log.info("Focusing and scrolling to field: [{}]", field);
+                field.requestFocus();
+                nodeScroller.scrollToNode(formScrollPane, field);
+            });
         }
     }
 
@@ -226,15 +232,13 @@ public class ModifyBookController {
     }
 
     private void initializeValidation() {
-        validationHandler.initialize(
-                formScrollPane,
-                titleValidationLabel,
-                authorsValidationLabel,
-                isbnValidationLabel,
-                genresValidationLabel,
-                pagesValidationLabel,
-                descriptionValidationLabel,
-                selectStatusController.getBorrowedByValidationLabel()
-        );
+        validationHandler.registerField("title", titleValidationLabel);
+        validationHandler.registerField("authors", authorsValidationLabel);
+        validationHandler.registerField("isbn", isbnValidationLabel);
+        validationHandler.registerField("genres", genresValidationLabel);
+        validationHandler.registerField("pages", pagesValidationLabel);
+        validationHandler.registerField("borrowedBy", selectStatusController.getBorrowedByValidationLabel());
+        validationHandler.registerFieldWithLimit("description", descriptionValidationLabel, Book.MAX_DESCRIPTION_SIZE);
+        validationHandler.disableLabels();
     }
 }

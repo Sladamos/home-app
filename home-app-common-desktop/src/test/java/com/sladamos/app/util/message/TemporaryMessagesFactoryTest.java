@@ -1,4 +1,4 @@
-package com.sladamos.app.util.messages;
+package com.sladamos.app.util.message;
 
 import com.sladamos.app.util.FXWinUtil;
 import com.sladamos.app.util.IconFactory;
@@ -15,7 +15,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationExtension;
-import org.testfx.framework.junit5.Start;
 
 import java.lang.reflect.Field;
 import java.util.concurrent.CompletableFuture;
@@ -39,10 +38,6 @@ class TemporaryMessagesFactoryTest {
 
     @InjectMocks
     private TemporaryMessagesFactory factory;
-
-    @Start
-    private void start(Stage stage) {
-    }
 
     @BeforeEach
     void setUp() throws Exception {
