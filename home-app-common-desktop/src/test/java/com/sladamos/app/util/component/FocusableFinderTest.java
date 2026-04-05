@@ -1,4 +1,4 @@
-package com.sladamos.app.util.components;
+package com.sladamos.app.util.component;
 
 import javafx.application.Platform;
 import javafx.scene.Node;

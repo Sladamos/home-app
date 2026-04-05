@@ -1,7 +1,7 @@
 package com.sladamos.book.app.modify.validation;
 
-import com.sladamos.app.util.components.FocusableFinder;
-import com.sladamos.app.util.components.NodeScroller;
+import com.sladamos.app.util.component.FocusableFinder;
+import com.sladamos.app.util.component.NodeScroller;
 import com.sladamos.book.model.Book;
 import jakarta.validation.ConstraintViolation;
 import javafx.scene.Node;

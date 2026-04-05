@@ -1,4 +1,4 @@
-package com.sladamos.app.util.components;
+package com.sladamos.app.util.component;
 
 import javafx.geometry.Bounds;
 import javafx.scene.Node;

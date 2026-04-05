@@ -3,10 +3,10 @@ package com.sladamos.book.app.items.event;
 import com.sladamos.app.util.messages.BindingsCreator;
 import com.sladamos.app.util.messages.TemporaryMessagesFactory;
 import com.sladamos.book.BookService;
+import com.sladamos.book.app.items.BookCacheService;
+import com.sladamos.book.app.items.viewmodel.BookItemsActiveState;
 import com.sladamos.book.app.modify.event.OnBookCreated;
 import com.sladamos.book.app.modify.event.OnBookEdited;
-import com.sladamos.book.app.items.viewmodel.BookItemViewModel;
-import com.sladamos.book.app.items.viewmodel.BookItemsViewModel;
 import com.sladamos.book.exception.BookDuplicationException;
 import com.sladamos.book.exception.BookNotFoundException;
 import com.sladamos.book.exception.BookValidationException;
@@ -24,6 +24,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -39,7 +40,7 @@ class BookItemsEventHandlerTest {
     private BookService bookService;
 
     @Mock
-    private BookItemsViewModel viewModel;
+    private BookCacheService bookCacheService;
 
     @Mock
     private BindingsCreator bindingsCreator;
@@ -47,36 +48,22 @@ class BookItemsEventHandlerTest {
     @Mock
     private TemporaryMessagesFactory temporaryMessagesFactory;
 
+    @Mock
+    private BookItemsActiveState activeState;
+
     @InjectMocks
     private BookItemsEventHandler handler;
 
     @Nested
     class OnBookCreatedEvent {
 
-        private StringProperty searchQuery;
-
-        @BeforeEach
-        void setUp() {
-            searchQuery = new SimpleStringProperty("some search");
-            when(viewModel.getSearchQuery()).thenReturn(searchQuery);
-        }
-
         @Test
-        void shouldAddBookToViewModel() {
+        void shouldAddBookToCache() {
             Book book = createBook("New Book");
 
             handler.onBookCreated(new OnBookCreated(book));
 
-            verify(viewModel).addBook(book);
-        }
-
-        @Test
-        void shouldClearSearchQuery() {
-            Book book = createBook("New Book");
-
-            handler.onBookCreated(new OnBookCreated(book));
-
-            assertThat(searchQuery.get()).isEmpty();
+            verify(bookCacheService).addBook(book);
         }
     }
 
@@ -84,12 +71,36 @@ class BookItemsEventHandlerTest {
     class OnBookEditedEvent {
 
         @Test
-        void shouldUpdateBookInViewModel() {
+        void shouldUpdateBookInCache() {
             Book book = createBook("Edited Book");
 
             handler.onBookEdited(new OnBookEdited(book));
 
-            verify(viewModel).updateBook(book);
+            verify(bookCacheService).updateBook(book);
+        }
+    }
+
+    @Nested
+    class OnBookDeletedEvent {
+
+        @Test
+        void shouldDeleteFromCacheAfterService() throws BookNotFoundException {
+            UUID bookId = UUID.randomUUID();
+
+            handler.onBookDeleted(new OnBookDeleted(bookId, "Book Title"));
+
+            verify(bookService).deleteBook(bookId);
+            verify(bookCacheService).deleteBook(bookId);
+        }
+
+        @Test
+        void shouldStillDeleteFromCacheWhenServiceThrows() throws BookNotFoundException {
+            UUID bookId = UUID.randomUUID();
+            doThrow(new BookNotFoundException("Not found")).when(bookService).deleteBook(bookId);
+
+            handler.onBookDeleted(new OnBookDeleted(bookId, "Book Title"));
+
+            verify(bookCacheService).deleteBook(bookId);
         }
     }
 
@@ -98,72 +109,43 @@ class BookItemsEventHandlerTest {
 
         @Test
         void shouldDuplicateAndSaveBook() throws BookValidationException, BookDuplicationException {
-            Book original = createBook("Eragon");
-            Book duplicated = createBook("Eragon (1)");
-            BookItemViewModel vm = mock(BookItemViewModel.class);
-            when(vm.getTitle()).thenReturn(new SimpleStringProperty("Eragon"));
-            when(viewModel.getSortedBooks()).thenReturn(new javafx.collections.transformation.SortedList<>(javafx.collections.FXCollections.observableArrayList(vm)));
-            when(bookService.duplicateBook(eq(original), eq(List.of("Eragon")))).thenReturn(duplicated);
+            Book book = createBook("Original");
+            Book duplicatedBook = book.toBuilder().id(UUID.randomUUID()).build();
+            when(bookCacheService.getBooks()).thenReturn(List.of(book));
+            when(bookService.duplicateBook(eq(book), anyList())).thenReturn(duplicatedBook);
 
-            handler.onBookDuplicated(new OnBookDuplicated(original));
+            handler.onBookDuplicated(new OnBookDuplicated(book));
 
-            verify(viewModel).addBook(duplicated);
+            verify(bookService).duplicateBook(eq(book), anyList());
+            verify(bookCacheService).addBook(duplicatedBook);
         }
 
         @Test
         void shouldShowErrorOnValidationException() throws BookValidationException, BookDuplicationException {
-            Book original = createBook("Eragon");
-            BookItemViewModel vm = mock(BookItemViewModel.class);
-            when(vm.getTitle()).thenReturn(new SimpleStringProperty("Eragon"));
-            when(viewModel.getSortedBooks()).thenReturn(new javafx.collections.transformation.SortedList<>(javafx.collections.FXCollections.observableArrayList(vm)));
-            doThrow(new BookValidationException(Set.of())).when(bookService).duplicateBook(eq(original), eq(List.of("Eragon")));
-            when(bindingsCreator.getMessage(anyString())).thenReturn("Error message");
+            Book book = createBook("Original");
+            when(bookCacheService.getBooks()).thenReturn(Collections.emptyList());
+            when(bookService.duplicateBook(any(), anyList()))
+                    .thenThrow(new BookValidationException(Collections.emptySet()));
+            when(bindingsCreator.getMessage("books.items.duplicateBookError"))
+                    .thenReturn("Duplication failed");
 
-            handler.onBookDuplicated(new OnBookDuplicated(original));
+            handler.onBookDuplicated(new OnBookDuplicated(book));
 
-            verify(temporaryMessagesFactory).showError("Error message");
-            verify(viewModel, never()).addBook(any());
+            verify(temporaryMessagesFactory).showError("Duplication failed");
         }
 
         @Test
         void shouldShowErrorWhenDuplicationFails() throws BookValidationException, BookDuplicationException {
-            Book original = createBook("Eragon");
-            BookItemViewModel vm = mock(BookItemViewModel.class);
-            when(vm.getTitle()).thenReturn(new SimpleStringProperty("Eragon"));
-            when(viewModel.getSortedBooks()).thenReturn(new javafx.collections.transformation.SortedList<>(javafx.collections.FXCollections.observableArrayList(vm)));
-            doThrow(new BookDuplicationException("Duplication failed")).when(bookService).duplicateBook(eq(original), eq(List.of("Eragon")));
-            when(bindingsCreator.getMessage(anyString())).thenReturn("Error message");
+            Book book = createBook("Original");
+            when(bookCacheService.getBooks()).thenReturn(Collections.emptyList());
+            when(bookService.duplicateBook(any(), anyList()))
+                    .thenThrow(new BookDuplicationException("Failed"));
+            when(bindingsCreator.getMessage("books.items.duplicateBookError"))
+                    .thenReturn("Duplication failed");
 
-            handler.onBookDuplicated(new OnBookDuplicated(original));
+            handler.onBookDuplicated(new OnBookDuplicated(book));
 
-            verify(temporaryMessagesFactory).showError("Error message");
-            verify(viewModel, never()).addBook(any());
-        }
-    }
-
-    @Nested
-    class OnBookDeletedEvent {
-
-        @Test
-        void shouldDeleteFromServiceAndViewModel() throws BookNotFoundException {
-            UUID bookId = UUID.randomUUID();
-
-            handler.onBookDeleted(new OnBookDeleted(bookId, "Test Book"));
-
-            verify(bookService).deleteBook(bookId);
-            verify(viewModel).deleteBook(bookId);
-        }
-
-        @Test
-        void shouldStillDeleteFromViewModelWhenServiceThrows() throws BookNotFoundException {
-            UUID bookId = UUID.randomUUID();
-            doThrow(new BookNotFoundException("not found")).when(bookService).deleteBook(bookId);
-            when(bindingsCreator.getMessage(anyString())).thenReturn("Error message");
-
-            handler.onBookDeleted(new OnBookDeleted(bookId, "Missing Book"));
-
-            verify(viewModel).deleteBook(bookId);
-            verify(temporaryMessagesFactory).showError("Error message");
+            verify(temporaryMessagesFactory).showError("Duplication failed");
         }
     }
 
@@ -172,20 +154,20 @@ class BookItemsEventHandlerTest {
         return Book.builder()
                 .id(UUID.randomUUID())
                 .title(title)
-                .isbn("")
-                .description("")
-                .publisher("")
+                .isbn("1234567890")
+                .description("Desc")
+                .publisher("Publisher")
                 .borrowedBy("")
-                .pages(100)
-                .rating(3)
+                .pages(300)
+                .rating(4)
                 .favorite(false)
-                .status(BookStatus.ON_SHELF)
-                .coverImage(new byte[]{})
                 .readDate(LocalDate.now())
                 .creationDate(now)
                 .modificationDate(now)
-                .authors(Set.of())
-                .genres(Set.of())
+                .coverImage(new byte[]{})
+                .status(BookStatus.ON_SHELF)
+                .authors(Collections.emptySet())
+                .genres(Collections.emptySet())
                 .build();
     }
 }

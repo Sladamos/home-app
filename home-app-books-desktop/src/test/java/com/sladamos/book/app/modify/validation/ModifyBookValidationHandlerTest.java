@@ -1,7 +1,7 @@
 package com.sladamos.book.app.modify.validation;
 
-import com.sladamos.app.util.components.FocusableFinder;
-import com.sladamos.app.util.components.NodeScroller;
+import com.sladamos.app.util.component.FocusableFinder;
+import com.sladamos.app.util.component.NodeScroller;
 import com.sladamos.book.model.Book;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;

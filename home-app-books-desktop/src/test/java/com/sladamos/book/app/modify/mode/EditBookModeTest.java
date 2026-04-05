@@ -1,11 +1,14 @@
 package com.sladamos.book.app.modify.mode;
 
 import com.sladamos.book.BookService;
+import com.sladamos.book.app.modify.ModifyBookDataMapper;
+import com.sladamos.book.app.modify.ModifyBookDraft;
 import com.sladamos.book.app.modify.ModifyBookViewModel;
 import com.sladamos.book.model.Author;
 import com.sladamos.book.model.Book;
 import com.sladamos.book.model.BookStatus;
 import com.sladamos.book.model.Genre;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,6 +30,15 @@ class EditBookModeTest {
 
     @Mock
     private ApplicationEventPublisher eventPublisher;
+
+    private ModifyBookDataMapper dataMapper;
+    private ModifyBookDraft draft;
+
+    @BeforeEach
+    void setUp() {
+        dataMapper = new ModifyBookDataMapper();
+        draft = new ModifyBookDraft();
+    }
 
     @Nested
     class Convert {
@@ -94,23 +106,21 @@ class EditBookModeTest {
             EditBookMode mode = createMode(createBook());
             assertThat(mode.getSubmitBookButtonKey()).isEqualTo("books.edit.name");
         }
-
-        @Test
-        void shouldNotResetAfterSubmit() {
-            EditBookMode mode = createMode(createBook());
-            assertThat(mode.shouldResetAfterSubmit()).isFalse();
-        }
     }
 
     private EditBookMode createMode(Book book) {
-        EditBookMode mode = new EditBookMode(bookService, eventPublisher);
+        ModifyBookDraft editDraft = new ModifyBookDraft();
+        dataMapper.updateDraftFromBook(editDraft, book);
+        EditBookMode mode = new EditBookMode(bookService, eventPublisher, dataMapper, editDraft);
         mode.init(book);
         return mode;
     }
 
     private ModifyBookViewModel createViewModel(Book book) {
         ModifyBookViewModel vm = new ModifyBookViewModel();
-        vm.initFrom(book);
+        ModifyBookDraft tempDraft = new ModifyBookDraft();
+        dataMapper.updateDraftFromBook(tempDraft, book);
+        dataMapper.updateViewModelFromDraft(vm, tempDraft);
         return vm;
     }
 

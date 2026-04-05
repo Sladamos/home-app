@@ -1,6 +1,8 @@
 package com.sladamos.book.app.modify.mode;
 
 import com.sladamos.book.BookService;
+import com.sladamos.book.app.modify.ModifyBookDataMapper;
+import com.sladamos.book.app.modify.ModifyBookDraft;
 import com.sladamos.book.app.modify.ModifyBookViewModel;
 import com.sladamos.book.model.Book;
 import com.sladamos.book.model.BookStatus;
@@ -25,11 +27,15 @@ class AddBookModeTest {
     @Mock
     private ApplicationEventPublisher eventPublisher;
 
+    private ModifyBookDataMapper dataMapper;
+    private ModifyBookDraft draft;
     private AddBookMode mode;
 
     @BeforeEach
     void setUp() {
-        mode = new AddBookMode(bookService, eventPublisher);
+        dataMapper = new ModifyBookDataMapper();
+        draft = new ModifyBookDraft();
+        mode = new AddBookMode(bookService, eventPublisher, dataMapper, draft);
     }
 
     @Nested
@@ -97,11 +103,6 @@ class AddBookModeTest {
         @Test
         void shouldReturnAddButtonKey() {
             assertThat(mode.getSubmitBookButtonKey()).isEqualTo("books.add.name");
-        }
-
-        @Test
-        void shouldResetAfterSubmit() {
-            assertThat(mode.shouldResetAfterSubmit()).isTrue();
         }
     }
 

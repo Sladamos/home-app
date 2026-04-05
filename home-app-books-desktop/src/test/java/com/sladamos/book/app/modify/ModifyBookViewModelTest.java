@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
 
@@ -40,123 +39,44 @@ class ModifyBookViewModelTest {
     }
 
     @Nested
-    class InitFrom {
+    class Properties {
 
         @Test
-        void shouldMapAllScalarFields() {
-            Book book = createBook();
+        void shouldSetAndGetTitle() {
             ModifyBookViewModel vm = new ModifyBookViewModel();
-
-            vm.initFrom(book);
-
-            assertThat(vm.getId().get()).isEqualTo(book.getId());
-            assertThat(vm.getTitle().get()).isEqualTo(book.getTitle());
-            assertThat(vm.getIsbn().get()).isEqualTo(book.getIsbn());
-            assertThat(vm.getDescription().get()).isEqualTo(book.getDescription());
-            assertThat(vm.getPublisher().get()).isEqualTo(book.getPublisher());
-            assertThat(vm.getBorrowedBy().get()).isEqualTo(book.getBorrowedBy());
-            assertThat(vm.getPages().get()).isEqualTo(book.getPages());
-            assertThat(vm.getRating().get()).isEqualTo(book.getRating());
-            assertThat(vm.getFavorite().get()).isEqualTo(book.isFavorite());
-            assertThat(vm.getStatus().get()).isEqualTo(book.getStatus());
-            assertThat(vm.getReadDate().get()).isEqualTo(book.getReadDate());
-            assertThat(vm.getCreationDate().get()).isEqualTo(book.getCreationDate());
-            assertThat(vm.getCoverImage().get()).isEqualTo(book.getCoverImage());
+            vm.getTitle().set("Test Book");
+            assertThat(vm.getTitle().get()).isEqualTo("Test Book");
         }
 
         @Test
-        void shouldMapAuthorsAsStrings() {
-            Book book = createBook().toBuilder()
-                    .authors(Set.of(new Author("Alice"), new Author("Bob")))
-                    .build();
+        void shouldSetAndGetAllFields() {
             ModifyBookViewModel vm = new ModifyBookViewModel();
+            UUID id = UUID.randomUUID();
+            
+            vm.getId().set(id);
+            vm.getTitle().set("Test");
+            vm.getIsbn().set("123");
+            vm.getPages().set(100);
+            vm.getRating().set(5);
+            vm.getFavorite().set(true);
+            
+            assertThat(vm.getId().get()).isEqualTo(id);
+            assertThat(vm.getTitle().get()).isEqualTo("Test");
+            assertThat(vm.getIsbn().get()).isEqualTo("123");
+            assertThat(vm.getPages().get()).isEqualTo(100);
+            assertThat(vm.getRating().get()).isEqualTo(5);
+            assertThat(vm.getFavorite().get()).isTrue();
+        }
 
-            vm.initFrom(book);
-
+        @Test
+        void shouldHandleCollections() {
+            ModifyBookViewModel vm = new ModifyBookViewModel();
+            vm.getAuthors().addAll("Alice", "Bob");
+            vm.getGenres().addAll("Sci-Fi", "Adventure");
+            
             assertThat(vm.getAuthors()).containsExactlyInAnyOrder("Alice", "Bob");
+            assertThat(vm.getGenres()).containsExactlyInAnyOrder("Sci-Fi", "Adventure");
         }
-
-        @Test
-        void shouldMapGenresAsStrings() {
-            Book book = createBook().toBuilder()
-                    .genres(Set.of(new Genre("Sci-Fi"), new Genre("Fantasy")))
-                    .build();
-            ModifyBookViewModel vm = new ModifyBookViewModel();
-
-            vm.initFrom(book);
-
-            assertThat(vm.getGenres()).containsExactlyInAnyOrder("Sci-Fi", "Fantasy");
-        }
-
-        @Test
-        void shouldReplaceExistingCollections() {
-            ModifyBookViewModel vm = new ModifyBookViewModel();
-            vm.getAuthors().add("OldAuthor");
-
-            Book book = createBook().toBuilder()
-                    .authors(Set.of(new Author("NewAuthor")))
-                    .build();
-            vm.initFrom(book);
-
-            assertThat(vm.getAuthors()).containsExactly("NewAuthor");
-        }
-    }
-
-    @Nested
-    class Reset {
-
-        @Test
-        void shouldClearAllFieldsToDefaults() {
-            ModifyBookViewModel vm = new ModifyBookViewModel();
-            vm.initFrom(createBook());
-
-            vm.reset();
-
-            assertThat(vm.getTitle().get()).isEmpty();
-            assertThat(vm.getIsbn().get()).isEmpty();
-            assertThat(vm.getDescription().get()).isEmpty();
-            assertThat(vm.getPublisher().get()).isEmpty();
-            assertThat(vm.getPages().get()).isZero();
-            assertThat(vm.getRating().get()).isZero();
-            assertThat(vm.getFavorite().get()).isFalse();
-            assertThat(vm.getStatus().get()).isEqualTo(BookStatus.ON_SHELF);
-            assertThat(vm.getReadDate().get()).isNull();
-            assertThat(vm.getCoverImage().get()).isNull();
-            assertThat(vm.getAuthors()).isEmpty();
-            assertThat(vm.getGenres()).isEmpty();
-        }
-
-        @Test
-        void shouldGenerateNewId() {
-            ModifyBookViewModel vm = new ModifyBookViewModel();
-            vm.initFrom(createBook());
-            UUID idBeforeReset = vm.getId().get();
-
-            vm.reset();
-
-            assertThat(vm.getId().get()).isNotEqualTo(idBeforeReset);
-        }
-    }
-
-    private Book createBook() {
-        LocalDateTime now = LocalDateTime.now();
-        return Book.builder()
-                .id(UUID.randomUUID())
-                .title("Test Book")
-                .isbn("1234567890")
-                .description("A test book")
-                .publisher("Test Publisher")
-                .borrowedBy("Someone")
-                .pages(300)
-                .rating(4)
-                .favorite(true)
-                .readDate(LocalDate.of(2024, 1, 15))
-                .creationDate(now.minusDays(10))
-                .modificationDate(now)
-                .coverImage(new byte[]{1, 2, 3})
-                .status(BookStatus.FINISHED_READING)
-                .authors(Set.of(new Author("Author One")))
-                .genres(Set.of(new Genre("Genre One")))
-                .build();
     }
 }
+
