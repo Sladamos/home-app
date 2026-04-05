@@ -53,7 +53,7 @@ public class BooksItemsGridRenderer {
     private Node createCard(BookItemViewModel viewModel) {
         BookItemController controller = controllerProvider.getObject();
         controller.init(viewModel);
-        return viewsLoader.loadView(getClass().getResource(BOOK_ITEM_CARD_FXML), param -> controller);
+        return viewsLoader.loadViewWithController(getClass().getResource(BOOK_ITEM_CARD_FXML), controller);
     }
 
     private void pruneRemovedCards() {

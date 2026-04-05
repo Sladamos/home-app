@@ -10,6 +10,9 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Pane;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -19,6 +22,8 @@ import java.util.Set;
 import static com.sladamos.book.model.Book.MAX_DESCRIPTION_SIZE;
 
 @Slf4j
+@Component
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @RequiredArgsConstructor
 public class ModifyBookValidationHandler {
 

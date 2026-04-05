@@ -1,6 +1,6 @@
-package com.sladamos.book.app.modify.mode.edit;
+package com.sladamos.book.app.modify.mode;
 
-import com.sladamos.book.app.modify.mode.EditBookMode;
+import com.sladamos.book.BookService;
 import com.sladamos.book.app.modify.ModifyBookViewModel;
 import com.sladamos.book.model.Author;
 import com.sladamos.book.model.Book;
@@ -8,6 +8,10 @@ import com.sladamos.book.model.BookStatus;
 import com.sladamos.book.model.Genre;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
 
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -15,7 +19,14 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@ExtendWith(MockitoExtension.class)
 class EditBookModeTest {
+
+    @Mock
+    private BookService bookService;
+
+    @Mock
+    private ApplicationEventPublisher eventPublisher;
 
     @Nested
     class Convert {
@@ -23,7 +34,7 @@ class EditBookModeTest {
         @Test
         void shouldPreserveOriginalCreationDate() {
             Book originalBook = createBook();
-            EditBookMode mode = new EditBookMode(originalBook);
+            EditBookMode mode = createMode(originalBook);
             ModifyBookViewModel vm = createViewModel(originalBook);
 
             Book result = mode.convert(vm);
@@ -34,7 +45,7 @@ class EditBookModeTest {
         @Test
         void shouldUpdateModificationDate() {
             Book originalBook = createBook();
-            EditBookMode mode = new EditBookMode(originalBook);
+            EditBookMode mode = createMode(originalBook);
             ModifyBookViewModel vm = createViewModel(originalBook);
             LocalDateTime before = LocalDateTime.now();
 
@@ -46,7 +57,7 @@ class EditBookModeTest {
         @Test
         void shouldPreserveOriginalId() {
             Book originalBook = createBook();
-            EditBookMode mode = new EditBookMode(originalBook);
+            EditBookMode mode = createMode(originalBook);
             ModifyBookViewModel vm = createViewModel(originalBook);
 
             Book result = mode.convert(vm);
@@ -57,7 +68,7 @@ class EditBookModeTest {
         @Test
         void shouldMapEditedFields() {
             Book originalBook = createBook();
-            EditBookMode mode = new EditBookMode(originalBook);
+            EditBookMode mode = createMode(originalBook);
             ModifyBookViewModel vm = createViewModel(originalBook);
             vm.getTitle().set("Updated Title");
             vm.getPages().set(999);
@@ -74,21 +85,27 @@ class EditBookModeTest {
 
         @Test
         void shouldReturnEditTitleKey() {
-            EditBookMode mode = new EditBookMode(createBook());
+            EditBookMode mode = createMode(createBook());
             assertThat(mode.getModifyBookLabel()).isEqualTo("books.edit.name");
         }
 
         @Test
         void shouldReturnEditButtonKey() {
-            EditBookMode mode = new EditBookMode(createBook());
+            EditBookMode mode = createMode(createBook());
             assertThat(mode.getSubmitBookButtonKey()).isEqualTo("books.edit.name");
         }
 
         @Test
         void shouldNotResetAfterSubmit() {
-            EditBookMode mode = new EditBookMode(createBook());
+            EditBookMode mode = createMode(createBook());
             assertThat(mode.shouldResetAfterSubmit()).isFalse();
         }
+    }
+
+    private EditBookMode createMode(Book book) {
+        EditBookMode mode = new EditBookMode(bookService, eventPublisher);
+        mode.init(book);
+        return mode;
     }
 
     private ModifyBookViewModel createViewModel(Book book) {

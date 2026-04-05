@@ -16,7 +16,7 @@
         <VBox alignment="CENTER" spacing="10.0">
             <Label fx:id="submitBookLabel" styleClass="form--header" text="Add book" />
             <HBox alignment="CENTER" spacing="20.0" styleClass="form--container">
-                <fx:include source="../component/cover/SelectCover.fxml" />
+                <fx:include fx:id="selectCover" source="../component/cover/SelectCover.fxml" />
                 <ScrollPane fx:id="formScrollPane" fitToWidth="true">
                     <VBox spacing="20" styleClass="form--fields-wrapper">
                         <HBox>
@@ -30,7 +30,7 @@
                         <HBox>
                             <Label fx:id="authorsLabel" text="Authors:*" />
                             <VBox styleClass="form--field-wrapper">
-                                <Pane fx:id="authorsPanel" />
+                                <fx:include fx:id="authorsMultipleFields" source="../component/fields/MultipleFields.fxml" />
                                 <Label fx:id="authorsValidationLabel" styleClass="form--validation-label" />
                             </VBox>
                         </HBox>
@@ -43,7 +43,7 @@
                         <HBox fx:id="genresWrapper">
                             <Label fx:id="genresLabel" text="Genres:" />
                             <VBox styleClass="form--field-wrapper">
-                                <Pane fx:id="genresPanel" />
+                                <fx:include fx:id="genresMultipleFields" source="../component/fields/MultipleFields.fxml" />
                                 <Label fx:id="genresValidationLabel" styleClass="form--validation-label" />
                             </VBox>
                         </HBox>
@@ -72,9 +72,9 @@
                             </VBox>
                         </HBox>
 
-                        <fx:include source="../component/rating/SelectRating.fxml" />
+                        <fx:include fx:id="selectRating" source="../component/rating/SelectRating.fxml" />
 
-                        <fx:include source="../component/status/SelectStatus.fxml" />
+                        <fx:include fx:id="selectStatus" source="../component/status/SelectStatus.fxml" />
 
                         <Button fx:id="submitBookButton" alignment="CENTER" onAction="#onSubmitBookClicked" styleClass="primary--button" text="Add book" />
                     </VBox>

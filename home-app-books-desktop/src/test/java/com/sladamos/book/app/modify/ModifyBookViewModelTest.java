@@ -1,6 +1,5 @@
-package com.sladamos.book.app.modify.screen;
+package com.sladamos.book.app.modify;
 
-import com.sladamos.book.app.modify.ModifyBookViewModel;
 import com.sladamos.book.model.Author;
 import com.sladamos.book.model.Book;
 import com.sladamos.book.model.BookStatus;

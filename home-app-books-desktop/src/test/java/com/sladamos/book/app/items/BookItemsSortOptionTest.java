@@ -17,7 +17,7 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class BooksItemsSortOptionTest {
+class BookItemsSortOptionTest {
 
     private static final NamedEntityFormatter FORMATTER = new NamedEntityFormatter();
     private static final LocalDateTime EARLIER = LocalDateTime.of(2025, 1, 1, 0, 0);
@@ -31,7 +31,7 @@ class BooksItemsSortOptionTest {
             BookItemViewModel newer = createVM("A", LATER, LATER, 100);
             BookItemViewModel older = createVM("B", EARLIER, EARLIER, 200);
 
-            int result = compare(BooksItemsSortOption.CREATE_DATE_DESC, newer, older);
+            int result = compare(BookItemsSortOption.CREATE_DATE_DESC, newer, older);
 
             assertThat(result).isNegative();
         }
@@ -41,7 +41,7 @@ class BooksItemsSortOptionTest {
             BookItemViewModel newer = createVM("A", LATER, LATER, 100);
             BookItemViewModel older = createVM("B", EARLIER, EARLIER, 200);
 
-            int result = compare(BooksItemsSortOption.CREATE_DATE_ASC, older, newer);
+            int result = compare(BookItemsSortOption.CREATE_DATE_ASC, older, newer);
 
             assertThat(result).isNegative();
         }
@@ -55,7 +55,7 @@ class BooksItemsSortOptionTest {
             BookItemViewModel newer = createVM("A", EARLIER, LATER, 100);
             BookItemViewModel older = createVM("B", EARLIER, EARLIER, 200);
 
-            int result = compare(BooksItemsSortOption.MODIFICATION_DATE_DESC, newer, older);
+            int result = compare(BookItemsSortOption.MODIFICATION_DATE_DESC, newer, older);
 
             assertThat(result).isNegative();
         }
@@ -65,7 +65,7 @@ class BooksItemsSortOptionTest {
             BookItemViewModel newer = createVM("A", EARLIER, LATER, 100);
             BookItemViewModel older = createVM("B", EARLIER, EARLIER, 200);
 
-            int result = compare(BooksItemsSortOption.MODIFICATION_DATE_ASC, older, newer);
+            int result = compare(BookItemsSortOption.MODIFICATION_DATE_ASC, older, newer);
 
             assertThat(result).isNegative();
         }
@@ -79,7 +79,7 @@ class BooksItemsSortOptionTest {
             BookItemViewModel a = createVM("Alpha", EARLIER, EARLIER, 100);
             BookItemViewModel z = createVM("Zulu", EARLIER, EARLIER, 100);
 
-            int result = compare(BooksItemsSortOption.TITLE_DESC, z, a);
+            int result = compare(BookItemsSortOption.TITLE_DESC, z, a);
 
             assertThat(result).isNegative();
         }
@@ -89,7 +89,7 @@ class BooksItemsSortOptionTest {
             BookItemViewModel a = createVM("Alpha", EARLIER, EARLIER, 100);
             BookItemViewModel z = createVM("Zulu", EARLIER, EARLIER, 100);
 
-            int result = compare(BooksItemsSortOption.TITLE_ASC, a, z);
+            int result = compare(BookItemsSortOption.TITLE_ASC, a, z);
 
             assertThat(result).isNegative();
         }
@@ -99,7 +99,7 @@ class BooksItemsSortOptionTest {
             BookItemViewModel lower = createVM("alpha", EARLIER, EARLIER, 100);
             BookItemViewModel upper = createVM("Alpha", EARLIER, EARLIER, 100);
 
-            int result = compare(BooksItemsSortOption.TITLE_ASC, lower, upper);
+            int result = compare(BookItemsSortOption.TITLE_ASC, lower, upper);
 
             assertThat(result).isZero();
         }
@@ -113,7 +113,7 @@ class BooksItemsSortOptionTest {
             BookItemViewModel more = createVM("A", EARLIER, EARLIER, 500);
             BookItemViewModel less = createVM("B", EARLIER, EARLIER, 100);
 
-            int result = compare(BooksItemsSortOption.PAGES_DESC, more, less);
+            int result = compare(BookItemsSortOption.PAGES_DESC, more, less);
 
             assertThat(result).isNegative();
         }
@@ -123,7 +123,7 @@ class BooksItemsSortOptionTest {
             BookItemViewModel more = createVM("A", EARLIER, EARLIER, 500);
             BookItemViewModel less = createVM("B", EARLIER, EARLIER, 100);
 
-            int result = compare(BooksItemsSortOption.PAGES_ASC, less, more);
+            int result = compare(BookItemsSortOption.PAGES_ASC, less, more);
 
             assertThat(result).isNegative();
         }
@@ -134,13 +134,13 @@ class BooksItemsSortOptionTest {
 
         @Test
         void allOptionsShouldHaveNonBlankTranslationKey() {
-            for (BooksItemsSortOption option : BooksItemsSortOption.values()) {
+            for (BookItemsSortOption option : BookItemsSortOption.values()) {
                 assertThat(option.getTranslationKey()).isNotBlank();
             }
         }
     }
 
-    private int compare(BooksItemsSortOption option, BookItemViewModel a, BookItemViewModel b) {
+    private int compare(BookItemsSortOption option, BookItemViewModel a, BookItemViewModel b) {
         Comparator<BookItemViewModel> comparator = option.getComparator();
         return comparator.compare(a, b);
     }

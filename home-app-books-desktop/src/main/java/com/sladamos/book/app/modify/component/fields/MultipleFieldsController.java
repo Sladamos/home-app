@@ -10,25 +10,26 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Slf4j
+@Component
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @RequiredArgsConstructor
 public class MultipleFieldsController {
 
-    private final static int INITIAL_NUMBER_OF_FIELDS = 1;
+    private static final int INITIAL_NUMBER_OF_FIELDS = 1;
 
     @FXML
     private VBox fieldsContainer;
 
     private MultipleFieldsViewModel viewModel;
-
-    @FXML
-    public void initialize() {
-    }
 
     public void bindTo(MultipleFieldsViewModel viewModel) {
         this.viewModel = viewModel;

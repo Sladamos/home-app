@@ -1,24 +1,35 @@
-package com.sladamos.book.app.modify.mode.add;
+package com.sladamos.book.app.modify.mode;
 
-import com.sladamos.book.app.modify.mode.AddBookMode;
+import com.sladamos.book.BookService;
 import com.sladamos.book.app.modify.ModifyBookViewModel;
 import com.sladamos.book.model.Book;
 import com.sladamos.book.model.BookStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
 
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@ExtendWith(MockitoExtension.class)
 class AddBookModeTest {
+
+    @Mock
+    private BookService bookService;
+
+    @Mock
+    private ApplicationEventPublisher eventPublisher;
 
     private AddBookMode mode;
 
     @BeforeEach
     void setUp() {
-        mode = new AddBookMode();
+        mode = new AddBookMode(bookService, eventPublisher);
     }
 
     @Nested

@@ -1,45 +1,37 @@
 package com.sladamos.book.app.modify;
 
-import com.sladamos.app.util.components.ComponentsGenerator;
 import com.sladamos.app.util.messages.BindingsCreator;
-import com.sladamos.book.BookService;
 import com.sladamos.book.app.items.event.OnDisplayItemsClicked;
+import com.sladamos.book.app.modify.component.cover.SelectCoverController;
 import com.sladamos.book.app.modify.component.fields.MultipleFieldsController;
 import com.sladamos.book.app.modify.component.fields.MultipleFieldsViewModel;
-import com.sladamos.book.app.modify.component.cover.SelectCoverController;
 import com.sladamos.book.app.modify.component.rating.SelectRatingController;
 import com.sladamos.book.app.modify.component.rating.SelectRatingViewModel;
 import com.sladamos.book.app.modify.component.status.SelectStatusController;
 import com.sladamos.book.app.modify.component.status.SelectStatusViewModel;
 import com.sladamos.book.app.modify.mode.ModifyBookMode;
+import com.sladamos.book.app.modify.validation.ModifyBookValidationHandler;
 import com.sladamos.book.exception.BookValidationException;
 import com.sladamos.book.model.Book;
-import com.sladamos.book.app.modify.validation.ModifyBookValidationHandler;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.ApplicationEventPublisher;
-
-import java.net.URL;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import static com.sladamos.book.model.Book.MIN_NUMBER_OF_AUTHORS;
 import static com.sladamos.book.model.Book.MIN_NUMBER_OF_GENRES;
 
-// Not a Spring bean - created by ModifyBookControllerFactory
 @Slf4j
+@Component
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @RequiredArgsConstructor
 public class ModifyBookController {
-
-    private static final URL MULTIPLE_FIELDS_COMPONENT_RESOURCE = MultipleFieldsController.class.getResource("MultipleFields.fxml");
 
     @FXML
     private ScrollPane formScrollPane;
@@ -87,12 +79,6 @@ public class ModifyBookController {
     private HBox genresWrapper;
 
     @FXML
-    private Pane genresPanel;
-
-    @FXML
-    private Pane authorsPanel;
-
-    @FXML
     private Button returnToItemsButton;
 
     @FXML
@@ -119,19 +105,32 @@ public class ModifyBookController {
     @FXML
     private Button addGenreButton;
 
-    private final ApplicationEventPublisher applicationEventPublisher;
-    private final ModifyBookViewModel viewModel;
-    private final ModifyBookMode mode;
-    private final BookService bookService;
-    private final BindingsCreator bindingsCreator;
-    private final ComponentsGenerator componentsGenerator;
-    private final SelectCoverController selectCoverController;
-    private final SelectRatingController selectRatingController;
-    private final SelectStatusController selectStatusController;
-    private final ModifyBookValidationHandler validationHandler;
+    @FXML
+    private SelectCoverController selectCoverController;
 
-    private final MultipleFieldsController authorsMultipleFieldsController = new MultipleFieldsController();
-    private final MultipleFieldsController genresMultipleFieldsController = new MultipleFieldsController();
+    @FXML
+    private SelectRatingController selectRatingController;
+
+    @FXML
+    private SelectStatusController selectStatusController;
+
+    @FXML
+    private MultipleFieldsController authorsMultipleFieldsController;
+
+    @FXML
+    private MultipleFieldsController genresMultipleFieldsController;
+
+
+    private final ApplicationEventPublisher applicationEventPublisher;
+    private final BindingsCreator bindingsCreator;
+    private final ModifyBookValidationHandler validationHandler;
+    private ModifyBookViewModel viewModel;
+    private ModifyBookMode mode;
+
+    public void init(ModifyBookViewModel viewModel, ModifyBookMode mode) {
+        this.viewModel = viewModel;
+        this.mode = mode;
+    }
 
     @FXML
     public void initialize() {
@@ -147,6 +146,7 @@ public class ModifyBookController {
     @FXML
     private void onReturnButtonClicked() {
         log.info("Return to items button clicked");
+        mode.onExit(viewModel);
         applicationEventPublisher.publishEvent(new OnDisplayItemsClicked());
     }
 
@@ -156,11 +156,8 @@ public class ModifyBookController {
         validationHandler.clear();
         Book book = mode.convert(viewModel);
         try {
-            mode.persist(bookService, book);
-            mode.onSuccess(applicationEventPublisher, book);
-            if (mode.shouldResetAfterSubmit()) {
-                viewModel.reset();
-            }
+            mode.persist(book);
+            mode.onSuccess(book);
         } catch (BookValidationException e) {
             log.error("Book validation failed: [reason: {}]", e.getMessage());
             validationHandler.display(e.getViolations());
@@ -180,9 +177,6 @@ public class ModifyBookController {
     }
 
     private void initializeMultipleFields() {
-        componentsGenerator.addComponentAtEnd(genresMultipleFieldsController, genresPanel, MULTIPLE_FIELDS_COMPONENT_RESOURCE);
-        componentsGenerator.addComponentAtEnd(authorsMultipleFieldsController, authorsPanel, MULTIPLE_FIELDS_COMPONENT_RESOURCE);
-
         authorsMultipleFieldsController.bindTo(new MultipleFieldsViewModel(viewModel.getAuthors(), MIN_NUMBER_OF_AUTHORS));
         genresMultipleFieldsController.bindTo(new MultipleFieldsViewModel(viewModel.getGenres(), MIN_NUMBER_OF_GENRES));
     }

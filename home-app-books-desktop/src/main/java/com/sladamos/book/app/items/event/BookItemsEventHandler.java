@@ -2,13 +2,15 @@ package com.sladamos.book.app.items.event;
 
 import com.sladamos.app.util.messages.BindingsCreator;
 import com.sladamos.app.util.messages.TemporaryMessagesFactory;
-import com.sladamos.book.exception.BookDuplicationException;
-import com.sladamos.book.exception.BookNotFoundException;
 import com.sladamos.book.BookService;
-import com.sladamos.book.exception.BookValidationException;
+import com.sladamos.book.app.items.BookCacheService;
+import com.sladamos.book.app.items.viewmodel.BookItemsActiveState;
+import com.sladamos.book.app.items.viewmodel.BookItemsViewModel;
 import com.sladamos.book.app.modify.event.OnBookCreated;
 import com.sladamos.book.app.modify.event.OnBookEdited;
-import com.sladamos.book.app.items.viewmodel.BooksItemsViewModel;
+import com.sladamos.book.exception.BookDuplicationException;
+import com.sladamos.book.exception.BookNotFoundException;
+import com.sladamos.book.exception.BookValidationException;
 import com.sladamos.book.model.Book;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,19 +28,20 @@ public class BookItemsEventHandler {
 
     private final BookService bookService;
 
-    private final BooksItemsViewModel viewModel;
+    private final BookCacheService bookCacheService;
 
     private final BindingsCreator bindingsCreator;
 
     private final TemporaryMessagesFactory temporaryMessagesFactory;
+
+    private final BookItemsActiveState activeState;
 
     @EventListener(OnBookCreated.class)
     @Order(1)
     public void onBookCreated(OnBookCreated event) {
         Book book = event.book();
         log.info("Adding new book to items: [id: {}, title: {}]", book.getId(), book.getTitle());
-        viewModel.addBook(book);
-        viewModel.getSearchQuery().setValue("");
+        bookCacheService.addBook(book);
     }
 
     @EventListener(OnBookEdited.class)
@@ -46,7 +49,7 @@ public class BookItemsEventHandler {
     public void onBookEdited(OnBookEdited event) {
         Book book = event.book();
         log.info("Updating book in items: [id: {}, title: {}]", book.getId(), book.getTitle());
-        viewModel.updateBook(book);
+        bookCacheService.updateBook(book);
     }
 
     @EventListener(OnBookDuplicated.class)
@@ -54,12 +57,12 @@ public class BookItemsEventHandler {
         Book book = event.book();
         log.info("Duplicating book in items: [id: {}, title: {}]", book.getId(), book.getTitle());
         try {
-            List<String> existingTitles = viewModel.getSortedBooks().stream()
-                    .map(vm -> vm.getTitle().get())
+            List<String> existingTitles = bookCacheService.getBooks().stream()
+                    .map(Book::getTitle)
                     .distinct()
                     .toList();
             Book duplicatedBook = bookService.duplicateBook(book, existingTitles);
-            viewModel.addBook(duplicatedBook);
+            bookCacheService.addBook(duplicatedBook);
         } catch (BookValidationException | BookDuplicationException e) {
             log.error("Unable to duplicate book: [reason: {}]", e.getMessage());
             temporaryMessagesFactory.showError(bindingsCreator.getMessage("books.items.duplicateBookError"));
@@ -77,7 +80,20 @@ public class BookItemsEventHandler {
             log.error("Book not found in service, removing from view: [id: {}, title: {}]", bookId, bookTitle);
             temporaryMessagesFactory.showError(bindingsCreator.getMessage("books.items.deleteBookError"));
         } finally {
-            viewModel.deleteBook(bookId);
+            bookCacheService.deleteBook(bookId);
+        }
+    }
+
+    @EventListener(OnBookCacheChanged.class)
+    public void onBookCacheChanged(OnBookCacheChanged event) {
+        log.info("Book cache changed, refreshing items view");
+        BookItemsViewModel activeViewModel = activeState.getActive();
+        if (activeViewModel != null) {
+            switch (event) {
+                case OnBookCacheChanged.Created created -> activeViewModel.addBook(created.book());
+                case OnBookCacheChanged.Updated updated -> activeViewModel.updateBook(updated.book());
+                case OnBookCacheChanged.Deleted deleted -> activeViewModel.deleteBook(deleted.bookId());
+            }
         }
     }
 }

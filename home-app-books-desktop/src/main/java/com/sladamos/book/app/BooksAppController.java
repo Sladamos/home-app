@@ -3,11 +3,12 @@ package com.sladamos.book.app;
 import com.sladamos.app.util.load.ViewsLoader;
 import com.sladamos.app.util.messages.BindingsCreator;
 import com.sladamos.book.app.items.event.OnAddBookClicked;
+import com.sladamos.book.app.items.event.OnDisplayItemsClicked;
+import com.sladamos.book.app.items.event.OnEditBookClicked;
+import com.sladamos.book.app.modify.ModifyBookController;
+import com.sladamos.book.app.modify.ModifyBookControllerFactory;
 import com.sladamos.book.app.modify.event.OnBookCreated;
 import com.sladamos.book.app.modify.event.OnBookEdited;
-import com.sladamos.book.app.items.event.OnEditBookClicked;
-import com.sladamos.book.app.items.event.OnDisplayItemsClicked;
-import com.sladamos.book.app.modify.ModifyBookControllerFactory;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -52,22 +53,30 @@ public class BooksAppController {
     @EventListener(OnAddBookClicked.class)
     public void onAddBook() {
         log.info("Switching to Add Book view");
+        ModifyBookController addBookController = modifyBookControllerFactory.createForAdd();
+        Function<URL, Node> nodeLoader = createNodeLoader(addBookController);
+        loadView(MODIFY_BOOK_FXML, nodeLoader);
         clearHeaderActions();
-        loadView(MODIFY_BOOK_FXML, url -> viewsLoader.loadView(url, modifyBookControllerFactory.forAdd()));
     }
 
     @EventListener(OnEditBookClicked.class)
     public void onEditBook(OnEditBookClicked event) {
         log.info("Switching to Edit Book view");
+        ModifyBookController editBookController = modifyBookControllerFactory.createForEdit(event.book());
+        Function<URL, Node> nodeLoader = createNodeLoader(editBookController);
+        loadView(MODIFY_BOOK_FXML, nodeLoader);
         clearHeaderActions();
-        loadView(MODIFY_BOOK_FXML, url -> viewsLoader.loadView(url, modifyBookControllerFactory.forEdit(event.book())));
     }
 
     @EventListener({OnDisplayItemsClicked.class, OnBookCreated.class, OnBookEdited.class})
     public void onDisplayBooks() {
         log.info("Switching to Display Items view");
-        showHeaderActions(BOOK_ITEMS_HEADER_ACTIONS_FXML);
         loadView(BOOK_ITEMS_FXML, viewsLoader::loadView);
+        showHeaderActions(BOOK_ITEMS_HEADER_ACTIONS_FXML);
+    }
+
+    private Function<URL, Node> createNodeLoader(Object controller) {
+        return url -> viewsLoader.loadViewWithController(url, controller);
     }
 
     private void loadView(String fxmlPath, Function<URL, Node> nodeLoader) {

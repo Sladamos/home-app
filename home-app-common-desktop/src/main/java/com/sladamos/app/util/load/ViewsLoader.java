@@ -19,10 +19,19 @@ public class ViewsLoader {
     private final ApplicationContext context;
 
     public Node loadView(URL url) {
-        return loadView(url, context::getBean);
+        return executeLoad(url, context::getBean);
     }
 
-    public Node loadView(URL url, Callback<Class<?>, Object> controllerFactory) {
+    public Node loadViewWithController(URL url, Object controllerInstance) {
+        return executeLoad(url, clazz -> {
+            if (clazz.isInstance(controllerInstance)) {
+                return controllerInstance;
+            }
+            return context.getBean(clazz);
+        });
+    }
+
+    private Node executeLoad(URL url, Callback<Class<?>, Object> controllerFactory) {
         log.info("Loading view from url: [url: {}]", url);
         try {
             FXMLLoader loader = new FXMLLoader(url);

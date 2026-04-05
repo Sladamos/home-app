@@ -6,7 +6,7 @@ import com.sladamos.book.BookService;
 import com.sladamos.book.app.modify.event.OnBookCreated;
 import com.sladamos.book.app.modify.event.OnBookEdited;
 import com.sladamos.book.app.items.viewmodel.BookItemViewModel;
-import com.sladamos.book.app.items.viewmodel.BooksItemsViewModel;
+import com.sladamos.book.app.items.viewmodel.BookItemsViewModel;
 import com.sladamos.book.exception.BookDuplicationException;
 import com.sladamos.book.exception.BookNotFoundException;
 import com.sladamos.book.exception.BookValidationException;
@@ -39,7 +39,7 @@ class BookItemsEventHandlerTest {
     private BookService bookService;
 
     @Mock
-    private BooksItemsViewModel viewModel;
+    private BookItemsViewModel viewModel;
 
     @Mock
     private BindingsCreator bindingsCreator;

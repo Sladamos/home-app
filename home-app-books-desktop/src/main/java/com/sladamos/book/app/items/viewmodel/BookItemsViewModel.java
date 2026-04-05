@@ -1,7 +1,7 @@
 package com.sladamos.book.app.items.viewmodel;
 
-import com.sladamos.book.BookService;
-import com.sladamos.book.app.items.BooksItemsSortOption;
+import com.sladamos.book.app.items.BookCacheService;
+import com.sladamos.book.app.items.BookItemsSortOption;
 import com.sladamos.book.model.Book;
 import jakarta.annotation.PostConstruct;
 import javafx.beans.Observable;
@@ -18,6 +18,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -25,11 +27,13 @@ import java.util.UUID;
 
 @Slf4j
 @Component
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @RequiredArgsConstructor
-public class BooksItemsViewModel {
+public class BookItemsViewModel {
 
     private final ObjectProvider<BookItemViewModel> viewModelProvider;
-    private final BookService bookService;
+    private final BookItemsActiveState activeState;
+    private final BookCacheService bookCacheService;
 
     @Getter
     private final ObservableList<BookItemViewModel> books = FXCollections.observableArrayList(
@@ -47,9 +51,7 @@ public class BooksItemsViewModel {
     private final StringProperty searchQuery = new SimpleStringProperty("");
 
     @Getter
-    private final ObjectProperty<BooksItemsSortOption> sortOption = new SimpleObjectProperty<>(BooksItemsSortOption.MODIFICATION_DATE_DESC);
-
-    private boolean loaded = false;
+    private final ObjectProperty<BookItemsSortOption> sortOption = new SimpleObjectProperty<>(BookItemsSortOption.MODIFICATION_DATE_DESC);
 
     @PostConstruct
     public void init() {
@@ -60,20 +62,14 @@ public class BooksItemsViewModel {
 
         sortedBooks.setComparator(sortOption.get().getComparator());
         sortOption.addListener((obs, oldVal, newVal) -> resort());
-    }
 
-    public void loadBooks() {
-        log.info("Loading books from service");
-        books.clear();
-        List<BookItemViewModel> booksVms = bookService.getAllBooks().stream()
-                .map(this::toViewModel)
-                .toList();
-        books.addAll(booksVms);
-        loaded = true;
+        activeState.register(this);
+        getBooksFromCache();
     }
 
     public void addBook(Book book) {
         books.add(toViewModel(book));
+        searchQuery.setValue("");
     }
 
     public void updateBook(Book book) {
@@ -87,8 +83,10 @@ public class BooksItemsViewModel {
         books.removeIf(e -> e.getId().get().equals(bookId));
     }
 
-    public boolean areBooksNotLoaded() {
-        return !loaded;
+    private void getBooksFromCache() {
+        List<Book> books = bookCacheService.getBooks();
+        List<BookItemViewModel> booksVm = books.stream().map(this::toViewModel).toList();
+        this.books.addAll(booksVm);
     }
 
     private BookItemViewModel toViewModel(Book book) {

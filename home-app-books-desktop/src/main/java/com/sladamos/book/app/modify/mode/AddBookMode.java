@@ -1,16 +1,26 @@
 package com.sladamos.book.app.modify.mode;
 
-import com.sladamos.book.app.modify.event.OnBookCreated;
+import com.sladamos.book.BookService;
+import com.sladamos.book.app.modify.ModifyBookDataMapper;
+import com.sladamos.book.app.modify.ModifyBookDraft;
 import com.sladamos.book.app.modify.ModifyBookViewModel;
-import com.sladamos.book.app.modify.ModifyBookViewModelMapper;
+import com.sladamos.book.app.modify.event.OnBookCreated;
 import com.sladamos.book.exception.BookValidationException;
 import com.sladamos.book.model.Book;
-import com.sladamos.book.BookService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
+@Component
+@RequiredArgsConstructor
 public class AddBookMode implements ModifyBookMode {
+
+    private final BookService bookService;
+    private final ApplicationEventPublisher eventPublisher;
+    private final ModifyBookDataMapper modifyBookDataMapper;
+    private final ModifyBookDraft addBookDraft;
 
     @Override
     public String getModifyBookLabel() {
@@ -22,27 +32,32 @@ public class AddBookMode implements ModifyBookMode {
         return "books.add.name";
     }
 
+    public ModifyBookDraft getBookDraft() {
+        return addBookDraft;
+    }
+
     @Override
     public Book convert(ModifyBookViewModel viewModel) {
         LocalDateTime now = LocalDateTime.now();
-        return ModifyBookViewModelMapper.toBookBuilder(viewModel)
+        return modifyBookDataMapper.toBookBuilder(viewModel)
                 .creationDate(now)
                 .modificationDate(now)
                 .build();
     }
 
     @Override
-    public void persist(BookService bookService, Book book) throws BookValidationException {
+    public void persist(Book book) throws BookValidationException {
         bookService.createBook(book);
     }
 
     @Override
-    public void onSuccess(ApplicationEventPublisher publisher, Book book) {
-        publisher.publishEvent(new OnBookCreated(book));
+    public void onSuccess(Book book) {
+        addBookDraft.reset();
+        eventPublisher.publishEvent(new OnBookCreated(book));
     }
 
     @Override
-    public boolean shouldResetAfterSubmit() {
-        return true;
+    public void onExit(ModifyBookViewModel viewModel) {
+        modifyBookDataMapper.updateDraftFromViewModel(addBookDraft, viewModel);
     }
 }

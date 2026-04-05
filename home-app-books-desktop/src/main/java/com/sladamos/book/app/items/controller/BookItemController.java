@@ -10,7 +10,7 @@ import com.sladamos.book.model.BookStatus;
 import com.sladamos.book.app.items.event.OnEditBookClicked;
 import com.sladamos.app.util.ui.LabelTextClamp;
 import com.sladamos.book.app.common.CoverImageProvider;
-import com.sladamos.book.app.items.StarsFactory;
+import com.sladamos.book.app.items.StarFactory;
 import com.sladamos.book.app.common.StatusMessageKeyProvider;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
@@ -72,7 +72,7 @@ public class BookItemController {
 
     private final StatusMessageKeyProvider statusMessageKeyProvider;
 
-    private final StarsFactory starsFactory;
+    private final StarFactory starFactory;
 
     private final ApplicationEventPublisher applicationEventPublisher;
 
@@ -172,6 +172,6 @@ public class BookItemController {
     }
 
     private void bindRatingStars() {
-        ratingStars.getChildren().setAll(starsFactory.createStars(viewModel));
+        ratingStars.getChildren().setAll(starFactory.createStars(viewModel));
     }
 }

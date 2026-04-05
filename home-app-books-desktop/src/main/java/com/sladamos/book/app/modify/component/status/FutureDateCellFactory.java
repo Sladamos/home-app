@@ -11,16 +11,11 @@ import java.time.LocalDate;
 public class FutureDateCellFactory {
 
     public Callback<DatePicker, DateCell> create() {
-        return new Callback<>() {
+        return picker -> new DateCell() {
             @Override
-            public DateCell call(DatePicker datePicker) {
-                return new DateCell() {
-                    @Override
-                    public void updateItem(LocalDate item, boolean empty) {
-                        super.updateItem(item, empty);
-                        setDisable(item != null && item.isAfter(LocalDate.now()));
-                    }
-                };
+            public void updateItem(LocalDate item, boolean empty) {
+                super.updateItem(item, empty);
+                setDisable(item != null && item.isAfter(LocalDate.now()));
             }
         };
     }

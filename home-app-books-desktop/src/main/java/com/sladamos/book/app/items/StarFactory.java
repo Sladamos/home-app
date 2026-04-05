@@ -13,7 +13,7 @@ import java.util.List;
 
 @Component
 @NoArgsConstructor
-public class StarsFactory {
+public class StarFactory {
 
     private static final PseudoClass FAVORITE_PSEUDO_CLASS = PseudoClass.getPseudoClass("favorite");
     private static final String RATING_STAR_CLASS = "rating-star";

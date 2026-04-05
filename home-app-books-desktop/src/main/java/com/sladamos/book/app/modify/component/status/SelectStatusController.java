@@ -1,20 +1,25 @@
 package com.sladamos.book.app.modify.component.status;
 
 import com.sladamos.app.util.messages.BindingsCreator;
-import com.sladamos.book.model.BookStatus;
 import com.sladamos.app.util.ui.ListCellFactory;
 import com.sladamos.book.app.common.StatusMessageKeyProvider;
-import javafx.beans.binding.Bindings;
+import com.sladamos.book.model.BookStatus;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-@RequiredArgsConstructor
 @Component
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+@RequiredArgsConstructor
 public class SelectStatusController {
 
     @FXML
@@ -73,3 +78,4 @@ public class SelectStatusController {
         statusComboBox.valueProperty().bindBidirectional(viewModel.status());
     }
 }
+

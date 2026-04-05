@@ -1,6 +1,5 @@
 package com.sladamos.book.app.items;
 
-import com.sladamos.book.app.items.StarsFactory;
 import com.sladamos.book.app.items.viewmodel.RateableViewModel;
 import com.sladamos.book.model.Book;
 import javafx.beans.property.BooleanProperty;
@@ -22,11 +21,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @ExtendWith({ApplicationExtension.class, MockitoExtension.class})
-class StarsFactoryTest {
+class StarFactoryTest {
 
     private static final PseudoClass FAVORITE_PSEUDO_CLASS = PseudoClass.getPseudoClass("favorite");
 
-    private StarsFactory starsFactory;
+    private StarFactory starFactory;
 
     @Mock
     private RateableViewModel viewModel;
@@ -36,7 +35,7 @@ class StarsFactoryTest {
 
     @BeforeEach
     void setUp() {
-        starsFactory = new StarsFactory();
+        starFactory = new StarFactory();
         ratingProperty = new SimpleIntegerProperty(0);
         favoriteProperty = new SimpleBooleanProperty(false);
 
@@ -46,21 +45,21 @@ class StarsFactoryTest {
 
     @Test
     void shouldAssignRatingStarStyleClassToAllStars() {
-        List<Label> stars = starsFactory.createStars(viewModel);
+        List<Label> stars = starFactory.createStars(viewModel);
 
         assertThat(stars).allMatch(star -> star.getStyleClass().contains("rating-star"));
     }
 
     @Test
     void shouldNotHaveFavoritePseudoClassInitially() {
-        List<Label> stars = starsFactory.createStars(viewModel);
+        List<Label> stars = starFactory.createStars(viewModel);
 
         assertThat(stars.getFirst().getPseudoClassStates()).doesNotContain(FAVORITE_PSEUDO_CLASS);
     }
 
     @Test
     void shouldAddFavoritePseudoClassWhenFavoriteIsTrue() {
-        List<Label> stars = starsFactory.createStars(viewModel);
+        List<Label> stars = starFactory.createStars(viewModel);
 
         favoriteProperty.set(true);
 
@@ -69,7 +68,7 @@ class StarsFactoryTest {
 
     @Test
     void shouldRemoveFavoritePseudoClassWhenFavoriteIsChangedToFalse() {
-        List<Label> stars = starsFactory.createStars(viewModel);
+        List<Label> stars = starFactory.createStars(viewModel);
         favoriteProperty.set(true);
 
         favoriteProperty.set(false);
@@ -79,7 +78,7 @@ class StarsFactoryTest {
 
     @Test
     void shouldSetAllStarsToFilledWhenRatingIsMax() {
-        List<Label> stars = starsFactory.createStars(viewModel);
+        List<Label> stars = starFactory.createStars(viewModel);
 
         ratingProperty.set(Book.MAX_RATING);
 
@@ -88,7 +87,7 @@ class StarsFactoryTest {
 
     @Test
     void shouldSetAllStarsToEmptyWhenRatingIsBelowMin() {
-        List<Label> stars = starsFactory.createStars(viewModel);
+        List<Label> stars = starFactory.createStars(viewModel);
 
         ratingProperty.set(Book.MIN_RATING - 1);
 

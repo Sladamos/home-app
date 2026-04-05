@@ -17,7 +17,7 @@ public class ComponentsGenerator {
     }
 
     public Node addComponentAtEnd(Object controller, Pane wrapper, URL resource) {
-        Node itemRoot = viewsLoader.loadView(resource, param -> controller);
+        Node itemRoot = viewsLoader.loadViewWithController(resource, controller);
         wrapper.getChildren().add(itemRoot);
         return itemRoot;
     }

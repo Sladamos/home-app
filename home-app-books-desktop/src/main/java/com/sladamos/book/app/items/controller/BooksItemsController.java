@@ -1,7 +1,7 @@
 package com.sladamos.book.app.items.controller;
 
 import com.sladamos.app.util.messages.BindingsCreator;
-import com.sladamos.book.app.items.viewmodel.BooksItemsViewModel;
+import com.sladamos.book.app.items.viewmodel.BookItemsViewModel;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -11,10 +11,13 @@ import javafx.scene.layout.Region;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @RequiredArgsConstructor
 public class BooksItemsController {
 
@@ -30,7 +33,7 @@ public class BooksItemsController {
     @FXML
     private Label noBooksFoundLabel;
 
-    private final BooksItemsViewModel viewModel;
+    private final BookItemsViewModel viewModel;
 
     private final BindingsCreator bindingsCreator;
 
@@ -40,7 +43,6 @@ public class BooksItemsController {
 
     @FXML
     public void initialize() {
-        loadBooks();
         gridRenderer = gridRendererProvider.getObject();
         bindUiComponents();
     }
@@ -60,11 +62,5 @@ public class BooksItemsController {
                 booksScrollPane.viewportBoundsProperty()
         ));
         gridRenderer.bind(booksFlowPane, viewModel.getSortedBooks());
-    }
-
-    private void loadBooks() {
-        if (viewModel.areBooksNotLoaded()) {
-            viewModel.loadBooks();
-        }
     }
 }

@@ -15,6 +15,8 @@ public class CoverImageProvider {
 
     private static final String DEFAULT_COVER_PATH = "/default-cover.jpg";
 
+    private Image cachedDefaultCover;
+
     public Image getImageCover(byte[] imageCover) {
         if (imageCover == null || imageCover.length == 0) {
             return getDefaultCover();
@@ -28,6 +30,9 @@ public class CoverImageProvider {
     }
 
     private Image getDefaultCover() {
-        return new Image(Objects.requireNonNull(getClass().getResourceAsStream(DEFAULT_COVER_PATH)));
+        if (cachedDefaultCover == null) {
+            cachedDefaultCover = new Image(Objects.requireNonNull(getClass().getResourceAsStream(DEFAULT_COVER_PATH)));
+        }
+        return cachedDefaultCover;
     }
 }

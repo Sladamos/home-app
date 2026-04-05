@@ -4,10 +4,7 @@ import com.sladamos.book.validators.BorrowedByRequired;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -16,7 +13,8 @@ import java.util.UUID;
 
 @Entity
 @Builder(toBuilder = true)
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @BorrowedByRequired(message = "book.validation.borrowedBy")
@@ -92,4 +90,31 @@ public class Book {
             inverseJoinColumns = @JoinColumn(name = "genre_id")
     )
     private Set<Genre> genres;
+
+    public void replace(Book book) {
+        this.title = book.getTitle();
+        this.isbn = book.getIsbn();
+        this.description = book.getDescription();
+        this.publisher = book.getPublisher();
+        this.borrowedBy = book.getBorrowedBy();
+        this.pages = book.getPages();
+        this.rating = book.getRating();
+        this.favorite = book.isFavorite();
+        this.readDate = book.getReadDate();
+        this.status = book.getStatus();
+        this.coverImage = book.getCoverImage();
+        this.modificationDate = LocalDateTime.now();
+        if (this.authors != null) {
+            this.authors.clear();
+            this.authors.addAll(book.getAuthors());
+        } else {
+            this.authors = book.getAuthors();
+        }
+        if (this.genres != null) {
+            this.genres.clear();
+            this.genres.addAll(book.getGenres());
+        } else {
+            this.genres = book.getGenres();
+        }
+    }
 }

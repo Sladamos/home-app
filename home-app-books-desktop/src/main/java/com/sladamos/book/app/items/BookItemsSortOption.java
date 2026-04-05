@@ -8,7 +8,7 @@ import java.util.Comparator;
 
 @Getter
 @RequiredArgsConstructor
-public enum BooksItemsSortOption {
+public enum BookItemsSortOption {
     CREATE_DATE_DESC("books.items.sort.createDateDesc", Comparator.comparing((BookItemViewModel b) -> b.getCreationDate().get()).reversed()),
     CREATE_DATE_ASC("books.items.sort.createDateAsc", Comparator.comparing(b -> b.getCreationDate().get())),
     MODIFICATION_DATE_DESC("books.items.sort.modificationDateDesc", Comparator.comparing((BookItemViewModel b) -> b.getModificationDate().get()).reversed()),
