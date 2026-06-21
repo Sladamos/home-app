@@ -20,7 +20,7 @@ public class BookCacheService {
 
     private final ApplicationEventPublisher eventPublisher;
 
-    private final List<Book> books;
+    private final List<Book> books = new java.util.ArrayList<>();
 
     private boolean booksLoaded = false;
 
