@@ -1,7 +1,6 @@
 package com.sladamos.book.app.modify.validation;
 
-import com.sladamos.app.util.messages.BindingsCreator;
-import com.sladamos.book.Book;
+import com.sladamos.app.util.message.BindingsCreator;
 import jakarta.validation.ConstraintViolation;
 import javafx.scene.control.Label;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 public record NoArgsViolationDisplayer(BindingsCreator bindingsCreator, Label label) implements ViolationDisplayer {
 
     @Override
-    public void displayViolation(ConstraintViolation<Book> violation) {
+    public void displayViolation(ConstraintViolation<?> violation) {
         label.setManaged(true);
         label.setVisible(true);
         label.textProperty().bind(bindingsCreator.createBinding(violation.getMessage()));

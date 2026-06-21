@@ -4,9 +4,8 @@
 
 .book--item {
     -fx-background-radius: 15px;
-    -fx-background-color:
-            white,
-            #3c005e;
+    -fx-background-color: white,
+    #3c005e;
     -fx-background-insets: 1, 2;
 }
 
@@ -15,9 +14,29 @@
     -fx-font-weight: bold;
 }
 
+.book--title-compact {
+    -fx-font-size: 22px;
+}
+
 .book--description {
     -fx-font-size: 16px;
-    -fx-pref-width: 600px;
+}
+
+.book--item-compact {
+    -fx-background-radius: 14px;
+}
+
+.book--meta-compact {
+    -fx-font-size: 16px;
+}
+
+.book--status-compact {
+    -fx-opacity: 0.95;
+}
+
+.book--action-button-compact {
+    -fx-font-size: 13px;
+    -fx-padding: 6px 12px;
 }
 
 .book--delete-button {
@@ -60,4 +79,13 @@
     -fx-font-size: 16px;
     -fx-border-color: white;
     -fx-border-width: 1;
+}
+
+.rating-star {
+    -fx-font-size: 24px;
+    -fx-text-fill: #FFD700;
+}
+
+.rating-star:favorite {
+    -fx-text-fill: #00DCF4;
 }

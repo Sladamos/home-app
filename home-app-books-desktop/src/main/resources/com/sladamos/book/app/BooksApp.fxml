@@ -4,6 +4,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 <?import java.net.URL?>
 <BorderPane prefHeight="675.0" prefWidth="1200.0"
@@ -16,18 +17,26 @@
         <Insets bottom="20.0" left="30.0" right="30.0" top="20.0" />
     </padding>
     <top>
-        <HBox BorderPane.alignment="CENTER">
+        <BorderPane BorderPane.alignment="CENTER" styleClass="books-app-header">
             <BorderPane.margin>
-                <Insets bottom="20.0" />
+                <Insets bottom="16.0" />
             </BorderPane.margin>
-            <Label fx:id="titleLabel" text="Bookcase">
-                <font>
-                    <Font name="Segoe UI Black Italic" size="36.0" />
-                </font>
-            </Label>
-        </HBox>
+            <left>
+                <HBox alignment="CENTER_LEFT">
+                    <Label fx:id="titleLabel" text="Bookcase">
+                        <font>
+                            <Font name="Segoe UI Black Italic" size="36.0" />
+                        </font>
+                    </Label>
+                </HBox>
+            </left>
+            <right>
+                <StackPane fx:id="headerActionsContainer" alignment="CENTER_RIGHT" styleClass="books-app-header__actions" />
+            </right>
+        </BorderPane>
     </top>
     <stylesheets>
         <URL value="@books-common.css" />
+        <URL value="@items/books-items.css" />
     </stylesheets>
 </BorderPane>

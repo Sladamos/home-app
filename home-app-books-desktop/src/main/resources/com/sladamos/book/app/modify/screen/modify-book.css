@@ -1,0 +1,81 @@
+.form--container {
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-padding: 32 16;
+    -fx-background-color:
+            white,
+            #3c005e;
+}
+
+.form--image-container {
+    -fx-padding: 0 16;
+    -fx-background-color:
+            white,
+            #3c005e;
+}
+
+.form--header {
+    -fx-font-size: 30px;
+    -fx-font-weight: bold;
+}
+
+.scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-padding: 8 4 8 16;
+    -fx-pref-width: 30px;
+}
+
+.form--fields-wrapper HBox {
+    -fx-spacing: 10px;
+    -fx-alignment: center-left;
+}
+
+.form--fields-wrapper * {
+    -fx-text-fill: #efefef;
+    -fx-font-size: 14px;
+    -fx-font-family: "Noto Sans";
+}
+
+.form--fields-wrapper TextField,
+.form--fields-wrapper TextArea {
+    -fx-background-color:
+            white,
+            #6000a2;
+}
+
+#pagesField {
+    -fx-pref-width: 75px;
+}
+
+.form--fields-wrapper TextArea,
+.form--validation-label {
+    -fx-max-width: 350px;
+    -fx-wrap-text: true;
+}
+
+.form--fields-wrapper TextArea .content {
+    -fx-background-color: transparent;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-padding: 0;
+}
+
+.form--fields-wrapper .label {
+    -fx-min-width: 100px;
+}
+
+.isbn--wrapper {
+    -fx-pref-width: 150px;
+}
+
+.form--field-wrapper {
+    -fx-spacing: 10px;
+}
+
+.form--fields-wrapper {
+    -fx-padding: 0 15 0 0;
+}
+
+.form--validation-label {
+    -fx-text-fill: red;
+}

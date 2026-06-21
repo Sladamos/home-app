@@ -1,0 +1,98 @@
+.book-card {
+    -fx-background-radius: 18px;
+    -fx-background-color:
+            white,
+            #3c005e;
+    -fx-background-insets: 1, 2;
+    -fx-padding: 18px 16px 14px 16px;
+    -fx-pref-width: 330px;
+    -fx-min-width: 330px;
+    -fx-max-width: 330px;
+}
+
+.book-card__cover-container {
+    -fx-min-height: 268px;
+    -fx-pref-height: 268px;
+    -fx-alignment: center;
+}
+
+.book-card__content {
+    -fx-min-height: 118px;
+}
+
+.book-card__title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffffff;
+    -fx-min-height: 76px;
+    -fx-pref-height: 76px;
+    -fx-max-height: 76px;
+    -fx-text-overrun: clip;
+    -fx-line-spacing: 0px;
+}
+
+.book-card__authors {
+    -fx-font-size: 17px;
+    -fx-text-fill: #efefef;
+    -fx-min-height: 22px;
+}
+
+.book-card__status {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #d9c4ff;
+}
+
+.book-card__actions {
+    -fx-alignment: center;
+    -fx-min-height: 52px;
+}
+
+.book-card__action-button {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-padding: 8px 0;
+    -fx-background-radius: 13px;
+    -fx-border-radius: 13px;
+}
+
+.book-card__action-button--inspect {
+    -fx-background-color: white, indigo;
+}
+
+.book-card__action-button--inspect:hover {
+    -fx-background-color: white, darkslateblue;
+}
+
+.book-card__action-button--edit {
+    -fx-background-color: white, olive;
+}
+
+.book-card__action-button--edit:hover {
+    -fx-background-color: white, darkgoldenrod;
+}
+
+.book-card__action-button--duplicate {
+    -fx-background-color: white, darkgreen;
+}
+
+.book-card__action-button--duplicate:hover {
+    -fx-background-color: white, forestgreen;
+}
+
+.book-card__action-button--delete {
+    -fx-background-color: white, darkred;
+}
+
+.book-card__action-button--delete:hover {
+    -fx-background-color: white, firebrick;
+}
+
+.rating-star {
+    -fx-font-size: 21px;
+    -fx-text-fill: #FFD700;
+}
+
+.rating-star:favorite {
+    -fx-text-fill: #00DCF4;
+}

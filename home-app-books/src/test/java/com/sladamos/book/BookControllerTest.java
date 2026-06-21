@@ -3,9 +3,13 @@ package com.sladamos.book;
 import com.sladamos.book.dto.GetBooksResponse;
 import com.sladamos.book.dto.PatchBookRequest;
 import com.sladamos.book.dto.PutBookRequest;
+import com.sladamos.book.exception.BookDuplicationException;
+import com.sladamos.book.exception.BookNotFoundException;
+import com.sladamos.book.exception.BookValidationException;
 import com.sladamos.book.functions.BooksToResponseFunction;
 import com.sladamos.book.functions.RequestToBookFunction;
 import com.sladamos.book.functions.RequestToUpdateBookFunction;
+import com.sladamos.book.model.Book;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -93,6 +97,16 @@ class BookControllerTest {
     }
 
     @Test
+    void shouldDuplicateExistingBook() throws BookNotFoundException, BookValidationException, BookDuplicationException {
+        UUID id = UUID.randomUUID();
+        when(service.duplicateBook(id)).thenReturn(Book.builder().id(UUID.randomUUID()).title("copy").build());
+
+        controller.duplicateBook(id);
+
+        verify(service).duplicateBook(id);
+    }
+
+    @Test
     void shouldThrowResponseStatusExceptionWhenPatchBookNotFound() throws BookNotFoundException {
         UUID id = UUID.randomUUID();
         PatchBookRequest req = PatchBookRequest.builder().title("T2").build();
@@ -127,5 +141,25 @@ class BookControllerTest {
         assertThatThrownBy(() -> controller.deleteBook(id))
                 .isInstanceOf(ResponseStatusException.class)
                 .hasMessageContaining("404");
+    }
+
+    @Test
+    void shouldThrowResponseStatusExceptionWhenDuplicateBookNotFound() throws BookNotFoundException, BookValidationException, BookDuplicationException {
+        UUID id = UUID.randomUUID();
+        doThrow(new BookNotFoundException("not found")).when(service).duplicateBook(id);
+
+        assertThatThrownBy(() -> controller.duplicateBook(id))
+                .isInstanceOf(ResponseStatusException.class)
+                .hasMessageContaining("404");
+    }
+
+    @Test
+    void shouldThrowResponseStatusExceptionWhenDuplicateFailsValidation() throws BookNotFoundException, BookValidationException, BookDuplicationException {
+        UUID id = UUID.randomUUID();
+        doThrow(new BookValidationException(Set.of())).when(service).duplicateBook(id);
+
+        assertThatThrownBy(() -> controller.duplicateBook(id))
+                .isInstanceOf(ResponseStatusException.class)
+                .hasMessageContaining("400");
     }
 }

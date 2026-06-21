@@ -4,12 +4,83 @@
             #3c005e;
     -fx-prompt-text-fill: #dcdcdc;
     -fx-text-fill: #efefef;
+    -fx-padding: 8 12;
     -fx-font-family: "Noto Sans";
     -fx-font-size: 14px;
 }
 
-#booksContainer {
-    -fx-pref-width: 800px;
+.books-app-header {
+    -fx-padding: 0 0 4 0;
+}
+
+#booksScrollPane {
+    -fx-background-color: transparent;
+    -fx-border-width: 0;
+    -fx-padding: 0 6 0 0;
+}
+
+.books-app-header__actions,
+.books-header-actions {
+    -fx-alignment: center-right;
+    -fx-padding: 0 14 0 0;
+}
+
+.books-header-actions > .button,
+.books-header-actions > .combo-box,
+.books-header-actions > .text-field {
+    -fx-max-height: infinity;
+}
+
+.books-header-actions > .primary--button {
+    -fx-background-insets: 0, 1;
+    -fx-font-family: "Noto Sans";
+    -fx-font-size: 14px;
+}
+
+#booksScrollPane > .viewport {
+    -fx-background-color: transparent;
+}
+
+.books-items-content {
+    -fx-padding: 0 18 18 18;
+}
+
+#booksFlowPane {
+    -fx-alignment: top-center;
+}
+
+#booksScrollPane .scroll-bar:vertical {
+    -fx-padding: 8 2 8 0;
+    -fx-pref-width: 12px;
+}
+
+#booksScrollPane .scroll-bar:horizontal {
+    -fx-opacity: 0;
+    -fx-pref-height: 0;
+    -fx-max-height: 0;
+}
+
+#booksScrollPane .corner {
+    -fx-background-color: transparent;
+}
+
+#booksScrollPane .scroll-bar:vertical .increment-button,
+#booksScrollPane .scroll-bar:vertical .decrement-button,
+#booksScrollPane .scroll-bar:horizontal .increment-button,
+#booksScrollPane .scroll-bar:horizontal .decrement-button {
+    -fx-padding: 0;
+    -fx-shape: "";
+    -fx-background-color: transparent;
+    -fx-pref-height: 0;
+    -fx-pref-width: 0;
+    -fx-opacity: 0;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-border-width: 0;
+    -fx-min-width: 0;
+    -fx-min-height: 0;
+    -fx-max-width: 0;
+    -fx-max-height: 0;
 }
 
 #sortComboBox {

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sladamos.book.app.modify.ModifyBookController">
+    <left>
+        <VBox spacing="16">
+            <Button fx:id="returnToItemsButton" mnemonicParsing="false" onAction="#onReturnButtonClicked" styleClass="primary--button" text="Return" />
+            <Button fx:id="addAuthorButton" mnemonicParsing="false" onAction="#onAddAuthorClicked" styleClass="primary--button" text="Add author" />
+            <Button fx:id="addGenreButton" mnemonicParsing="false" onAction="#onAddGenreClicked" styleClass="primary--button" text="Add genre" />
+        </VBox>
+    </left>
+    <right>
+        <VBox alignment="CENTER" spacing="10.0">
+            <Label fx:id="submitBookLabel" styleClass="form--header" text="Add book" />
+            <HBox alignment="CENTER" spacing="20.0" styleClass="form--container">
+                <fx:include fx:id="selectCover" source="../component/cover/SelectCover.fxml" />
+                <ScrollPane fx:id="formScrollPane" fitToWidth="true">
+                    <VBox spacing="20" styleClass="form--fields-wrapper">
+                        <HBox>
+                            <Label fx:id="titleLabel" text="Title:*" />
+                            <VBox styleClass="form--field-wrapper">
+                                <TextField fx:id="titleField" />
+                                <Label fx:id="titleValidationLabel" styleClass="form--validation-label" />
+                            </VBox>
+                        </HBox>
+
+                        <HBox>
+                            <Label fx:id="authorsLabel" text="Authors:*" />
+                            <VBox styleClass="form--field-wrapper">
+                                <fx:include fx:id="authorsMultipleFields" source="../component/fields/MultipleFields.fxml" />
+                                <Label fx:id="authorsValidationLabel" styleClass="form--validation-label" />
+                            </VBox>
+                        </HBox>
+
+                        <HBox>
+                            <Label fx:id="publisherLabel" text="Publisher:" />
+                            <TextField fx:id="publisherField" />
+                        </HBox>
+
+                        <HBox fx:id="genresWrapper">
+                            <Label fx:id="genresLabel" text="Genres:" />
+                            <VBox styleClass="form--field-wrapper">
+                                <fx:include fx:id="genresMultipleFields" source="../component/fields/MultipleFields.fxml" />
+                                <Label fx:id="genresValidationLabel" styleClass="form--validation-label" />
+                            </VBox>
+                        </HBox>
+
+                        <HBox>
+                            <Label text="ISBN:" />
+                            <VBox styleClass="form--field-wrapper">
+                                <TextField fx:id="isbnField" />
+                                <Label fx:id="isbnValidationLabel" styleClass="form--validation-label" />
+                            </VBox>
+                        </HBox>
+
+                        <HBox>
+                            <Label fx:id="pagesLabel" text="Pages:" />
+                            <VBox styleClass="form--field-wrapper">
+                                <TextField fx:id="pagesField"/>
+                                <Label fx:id="pagesValidationLabel" styleClass="form--validation-label" />
+                            </VBox>
+                        </HBox>
+
+                        <HBox>
+                            <Label fx:id="descriptionLabel" text="Description:" />
+                            <VBox styleClass="form--field-wrapper">
+                                <TextArea fx:id="descriptionArea" prefRowCount="3" wrapText="true" />
+                                <Label fx:id="descriptionValidationLabel" styleClass="form--validation-label" />
+                            </VBox>
+                        </HBox>
+
+                        <fx:include fx:id="selectRating" source="../component/rating/SelectRating.fxml" />
+
+                        <fx:include fx:id="selectStatus" source="../component/status/SelectStatus.fxml" />
+
+                        <Button fx:id="submitBookButton" alignment="CENTER" onAction="#onSubmitBookClicked" styleClass="primary--button" text="Add book" />
+                    </VBox>
+                </ScrollPane>
+            </HBox>
+        </VBox>
+    </right>
+    <stylesheets>
+        <URL value="@modify-book.css" />
+        <URL value="@../../books-common.css" />
+    </stylesheets>
+</BorderPane>

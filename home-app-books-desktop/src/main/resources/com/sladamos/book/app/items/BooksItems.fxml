@@ -1,36 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 <?import java.net.URL?>
-<BorderPane xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sladamos.book.app.items.BooksItemsController">
-    <left>
-        <VBox spacing="20" BorderPane.alignment="CENTER">
-            <Button fx:id="addBookButton" mnemonicParsing="false" onAction="#onAddBookClicked" styleClass="primary--button" text="Add book" />
-            <ComboBox fx:id="sortComboBox" promptText="Sort by" prefWidth="250" />
-            <TextField fx:id="searchField" promptText="Search by title" prefWidth="250" />
-        </VBox>
-    </left>
-    <right>
-        <VBox alignment="CENTER" BorderPane.alignment="CENTER">
-            <ScrollPane fitToWidth="true" maxWidth="800.0">
-                <VBox fx:id="booksContainer" spacing="40">
-                    <VBox fx:id="noBooksFound" alignment="CENTER">
-                        <Label fx:id="noBooksFoundLabel" text="No books found">
-                            <font>
-                                <Font name="Segoe UI Black Italic" size="36.0" />
-                            </font>
-                        </Label>
+<BorderPane xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sladamos.book.app.items.controller.BooksItemsController">
+    <center>
+        <StackPane BorderPane.alignment="CENTER">
+            <VBox fx:id="noBooksFound" alignment="CENTER">
+                <Label fx:id="noBooksFoundLabel" text="No books found">
+                    <font>
+                        <Font name="Segoe UI Black Italic" size="36.0" />
+                    </font>
+                </Label>
+            </VBox>
+            <ScrollPane fx:id="booksScrollPane" fitToWidth="true" hbarPolicy="NEVER" pannable="false" vbarPolicy="AS_NEEDED">
+                <content>
+                    <VBox styleClass="books-items-content">
+                        <FlowPane fx:id="booksFlowPane" alignment="TOP_CENTER" hgap="16.0" rowValignment="TOP" vgap="18.0" />
                     </VBox>
-                </VBox>
-                <padding>
-                    <Insets bottom="16.0" right="16.0" />
-                </padding>
+                </content>
             </ScrollPane>
-        </VBox>
-    </right>
+        </StackPane>
+    </center>
     <stylesheets>
         <URL value="@../books-common.css" />
         <URL value="@books-items.css" />

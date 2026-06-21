@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/11.0.14-internal"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.sladamos.book.app.items.controller.BookItemController"
+      fillWidth="true"
+      maxWidth="330.0"
+      minWidth="330.0"
+      prefWidth="330.0">
+    <VBox spacing="14.0" styleClass="book-card">
+        <StackPane alignment="CENTER" styleClass="book-card__cover-container">
+            <ImageView fx:id="coverImageView" fitHeight="268.0" fitWidth="182.0" preserveRatio="true" smooth="true" />
+        </StackPane>
+
+        <VBox spacing="8.0" styleClass="book-card__content">
+            <Label fx:id="titleLabel" maxWidth="1.7976931348623157E308" styleClass="book-card__title" text="Title" wrapText="true" />
+            <Label fx:id="authorsLabel" styleClass="book-card__authors" text="Authors" wrapText="true" />
+
+            <HBox alignment="CENTER_LEFT" spacing="12.0">
+                <Label fx:id="statusLabel" maxWidth="1.7976931348623157E308" styleClass="book-card__status" text="Status" wrapText="true" HBox.hgrow="ALWAYS" />
+                <HBox fx:id="ratingStars" alignment="CENTER_RIGHT" spacing="2.0" />
+            </HBox>
+        </VBox>
+
+        <HBox alignment="CENTER" spacing="6.0" styleClass="book-card__actions">
+            <Button fx:id="inspectButton" focusTraversable="false" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Inspect" HBox.hgrow="ALWAYS">
+                <styleClass>
+                    <String fx:value="primary--button" />
+                    <String fx:value="book-card__action-button" />
+                    <String fx:value="book-card__action-button--inspect" />
+                </styleClass>
+            </Button>
+            <Button fx:id="editButton" focusTraversable="false" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onEditBookClicked" text="Edit" HBox.hgrow="ALWAYS">
+                <styleClass>
+                    <String fx:value="primary--button" />
+                    <String fx:value="book-card__action-button" />
+                    <String fx:value="book-card__action-button--edit" />
+                </styleClass>
+            </Button>
+            <Button fx:id="duplicateButton" focusTraversable="false" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onDuplicateBookClicked" text="Duplicate" HBox.hgrow="ALWAYS">
+                <styleClass>
+                    <String fx:value="primary--button" />
+                    <String fx:value="book-card__action-button" />
+                    <String fx:value="book-card__action-button--duplicate" />
+                </styleClass>
+            </Button>
+            <Button fx:id="deleteButton" focusTraversable="false" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onDeleteBookClicked" text="Delete" HBox.hgrow="ALWAYS">
+                <styleClass>
+                    <String fx:value="primary--button" />
+                    <String fx:value="book-card__action-button" />
+                    <String fx:value="book-card__action-button--delete" />
+                </styleClass>
+            </Button>
+        </HBox>
+    </VBox>
+
+    <stylesheets>
+        <URL value="@../books-common.css" />
+        <URL value="@book-item-card.css" />
+    </stylesheets>
+</VBox>

@@ -2,7 +2,7 @@ package com.sladamos.app;
 
 import com.sladamos.app.util.FXWinUtil;
 import com.sladamos.app.util.IconFactory;
-import com.sladamos.app.util.ProfilesLoader;
+import com.sladamos.app.util.load.ProfilesLoader;
 import com.sladamos.book.app.BooksAppConfig;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

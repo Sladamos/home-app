@@ -1,4 +1,5 @@
 **/application-cloud.properties
+**/application-cloud-eu.properties
 
 target/
 !.mvn/wrapper/maven-wrapper.jar
