@@ -1,6 +1,5 @@
 TODO:
 
-- code cleanup, ui tests, BookUiService
 - language + sort option saved (in file, as key value -> some dicitonary class with enum)
 - global error handler?
 - left bar - books, settings (language)
