@@ -1,4 +1,4 @@
-package com.sladamos.book.image;
+package com.sladamos.common.image;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,17 +18,17 @@ public class ImageCoverResizer {
 
     private final ImageScaleCalculator imageScaleCalculator;
 
-    public byte[] resizeImage(byte[] originalBytes) throws IOException {
-        BufferedImage originalImage = ImageIO.read(new ByteArrayInputStream(originalBytes));
+    public byte[] resizeImage(ImageParameters imageParameters) throws IOException {
+        BufferedImage originalImage = ImageIO.read(new ByteArrayInputStream(imageParameters.originalBytes()));
         if (originalImage == null) {
             log.error("Image could not be resized");
-            return originalBytes;
+            return imageParameters.originalBytes();
         }
 
         int originalWidth = originalImage.getWidth();
         int originalHeight = originalImage.getHeight();
 
-        double scale = imageScaleCalculator.calculateScale(originalWidth, originalHeight);
+        double scale = imageScaleCalculator.calculateScale(originalWidth, originalHeight, imageParameters.maxCoverWidth(), imageParameters.maxCoverHeight());
 
         log.info("Scaling image with: [scale: {}]", scale);
 

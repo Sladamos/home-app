@@ -1,6 +1,5 @@
-package com.sladamos.book.exception;
+package com.sladamos.common.exception;
 
-import com.sladamos.book.model.Book;
 import jakarta.validation.ConstraintViolation;
 import lombok.Getter;
 
@@ -8,16 +7,16 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Getter
-public class BookValidationException extends Throwable {
+public class ValidationException extends Throwable {
 
-    public Set<ConstraintViolation<Book>> violations;
+    public Set<? extends ConstraintViolation<?>> violations;
 
-    public BookValidationException(Set<ConstraintViolation<Book>> violations) {
+    public ValidationException(Set<? extends ConstraintViolation<?>> violations) {
         super(getReason(violations));
         this.violations = violations;
     }
 
-    private static String getReason(Set<ConstraintViolation<Book>> violations) {
+    private static String getReason(Set<? extends ConstraintViolation<?>> violations) {
         return violations.stream()
                 .map(ConstraintViolation::getMessage)
                 .collect(Collectors.joining(", "));

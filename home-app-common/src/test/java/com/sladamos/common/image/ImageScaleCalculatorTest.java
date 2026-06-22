@@ -1,4 +1,4 @@
-package com.sladamos.book.image;
+package com.sladamos.common.image;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -6,18 +6,20 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.stream.Stream;
 
-import static com.sladamos.book.model.Book.MAX_COVER_HEIGHT;
-import static com.sladamos.book.model.Book.MAX_COVER_WIDTH;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ImageScaleCalculatorTest {
 
     private final ImageScaleCalculator imageScaleCalculator = new ImageScaleCalculator();
 
+    private static final int MAX_COVER_WIDTH = 200;
+
+    private static final int MAX_COVER_HEIGHT = 300;
+
     @ParameterizedTest
     @MethodSource("shouldCalculateScaleProperlyArgs")
     void shouldCalculateScaleProperly(int width, int height, double expectedScale) {
-        double scale = imageScaleCalculator.calculateScale(width, height);
+        double scale = imageScaleCalculator.calculateScale(width, height, MAX_COVER_WIDTH, MAX_COVER_HEIGHT);
 
         assertThat(scale).isEqualTo(expectedScale);
     }
