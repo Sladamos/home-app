@@ -3,7 +3,7 @@ package com.sladamos.book.app.modify;
 import com.sladamos.book.app.modify.mode.AddBookMode;
 import com.sladamos.book.app.modify.mode.EditBookMode;
 import com.sladamos.book.app.modify.mode.ModifyBookMode;
-import com.sladamos.book.model.Book;
+import com.sladamos.book.model.BookEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
@@ -25,7 +25,7 @@ public class ModifyBookControllerFactory {
         return createController(addViewModel, addBookMode);
     }
 
-    public ModifyBookController createForEdit(Book book) {
+    public ModifyBookController createForEdit(BookEntity book) {
         log.info("Creating modify book controller for edit");
         EditBookMode editMode = editBookModeProvider.getObject();
         editMode.init(book);

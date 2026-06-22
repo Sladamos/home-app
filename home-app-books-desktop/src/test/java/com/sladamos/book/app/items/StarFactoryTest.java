@@ -1,7 +1,7 @@
 package com.sladamos.book.app.items;
 
 import com.sladamos.book.app.items.viewmodel.RateableViewModel;
-import com.sladamos.book.model.Book;
+import com.sladamos.book.model.BookEntity;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -80,7 +80,7 @@ class StarFactoryTest {
     void shouldSetAllStarsToFilledWhenRatingIsMax() {
         List<Label> stars = starFactory.createStars(viewModel);
 
-        ratingProperty.set(Book.MAX_RATING);
+        ratingProperty.set(BookEntity.MAX_RATING);
 
         assertThat(stars).allMatch(star -> star.getText().equals("★"));
     }
@@ -89,7 +89,7 @@ class StarFactoryTest {
     void shouldSetAllStarsToEmptyWhenRatingIsBelowMin() {
         List<Label> stars = starFactory.createStars(viewModel);
 
-        ratingProperty.set(Book.MIN_RATING - 1);
+        ratingProperty.set(BookEntity.MIN_RATING - 1);
 
         assertThat(stars).allMatch(star -> star.getText().equals("☆"));
     }

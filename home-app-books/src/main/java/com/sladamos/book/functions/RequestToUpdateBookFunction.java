@@ -1,9 +1,9 @@
 package com.sladamos.book.functions;
 
-import com.sladamos.book.model.Author;
-import com.sladamos.book.model.Book;
+import com.sladamos.book.model.AuthorEntity;
+import com.sladamos.book.model.BookEntity;
 import com.sladamos.book.model.BookStatus;
-import com.sladamos.book.model.Genre;
+import com.sladamos.book.model.GenreEntity;
 import com.sladamos.book.dto.PatchBookRequest;
 import org.springframework.stereotype.Component;
 
@@ -15,11 +15,11 @@ import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
 @Component
-public class RequestToUpdateBookFunction implements BiFunction<Book, PatchBookRequest, Book> {
+public class RequestToUpdateBookFunction implements BiFunction<BookEntity, PatchBookRequest, BookEntity> {
 
     @Override
-    public Book apply(Book entity, PatchBookRequest patchBookRequest) {
-        return Book.builder()
+    public BookEntity apply(BookEntity entity, PatchBookRequest patchBookRequest) {
+        return BookEntity.builder()
                 .id(entity.getId())
                 .title(Optional.ofNullable(patchBookRequest.getTitle()).orElse(entity.getTitle()))
                 .isbn(Optional.ofNullable(patchBookRequest.getIsbn()).orElse(entity.getIsbn()))
@@ -41,19 +41,19 @@ public class RequestToUpdateBookFunction implements BiFunction<Book, PatchBookRe
                 .build();
     }
 
-    private Set<Author> toAuthors(List<String> names) {
+    private Set<AuthorEntity> toAuthors(List<String> names) {
         if (names == null) return Set.of();
         return names.stream()
                 .filter(n -> n != null && !n.isBlank())
-                .map(Author::new)
+                .map(AuthorEntity::new)
                 .collect(Collectors.toSet());
     }
 
-    private Set<Genre> toGenres(List<String> names) {
+    private Set<GenreEntity> toGenres(List<String> names) {
         if (names == null) return Set.of();
         return names.stream()
                 .filter(n -> n != null && !n.isBlank())
-                .map(Genre::new)
+                .map(GenreEntity::new)
                 .collect(Collectors.toSet());
     }
 }

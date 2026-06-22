@@ -15,17 +15,18 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Author {
+@Table(name = "GENRE")
+public class GenreEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @NotBlank(message = "author.validation.name")
+    @NotBlank(message = "genre.validation.name")
     @Column(unique = true)
     private String name;
 
     @JsonCreator
-    public Author(String name) {
+    public GenreEntity(String name) {
         this.name = name;
     }
 }

@@ -1,9 +1,9 @@
 package com.sladamos.book;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sladamos.book.model.Author;
-import com.sladamos.book.model.Book;
-import com.sladamos.book.model.Genre;
+import com.sladamos.book.model.AuthorEntity;
+import com.sladamos.book.model.BookEntity;
+import com.sladamos.book.model.GenreEntity;
 import com.sladamos.book.repository.AuthorRepository;
 import com.sladamos.book.repository.BookRepository;
 import com.sladamos.book.repository.GenreRepository;
@@ -38,7 +38,7 @@ public class BookBackupService {
         String targetPath = resolvePath(filePath);
         log.info("Creating backup in: [path: {}]", targetPath);
 
-        List<Book> books = bookRepository.findAll();
+        List<BookEntity> books = bookRepository.findAll();
         objectMapper.writeValue(new File(targetPath), books);
 
         log.info("Successfully created backup in: [path: {}]", targetPath);
@@ -49,13 +49,13 @@ public class BookBackupService {
         String targetPath = resolvePath(filePath);
         log.info("Restoring backup from: [path: {}]", targetPath);
 
-        List<Book> booksFromJson = objectMapper.readValue(new File(targetPath),
-                objectMapper.getTypeFactory().constructCollectionType(List.class, Book.class));
+        List<BookEntity> booksFromJson = objectMapper.readValue(new File(targetPath),
+                objectMapper.getTypeFactory().constructCollectionType(List.class, BookEntity.class));
 
-        Map<String, Author> uniqueAuthorsCache = new HashMap<>();
-        Map<String, Genre> uniqueGenresCache = new HashMap<>();
+        Map<String, AuthorEntity> uniqueAuthorsCache = new HashMap<>();
+        Map<String, GenreEntity> uniqueGenresCache = new HashMap<>();
 
-        for (Book book : booksFromJson) {
+        for (BookEntity book : booksFromJson) {
             book.setAuthors(processAuthors(book.getAuthors(), uniqueAuthorsCache));
             book.setGenres(processGenres(book.getGenres(), uniqueGenresCache));
         }
@@ -68,7 +68,7 @@ public class BookBackupService {
         return (filePath != null && !filePath.isEmpty()) ? filePath : defaultPath;
     }
 
-    private Set<Author> processAuthors(Set<Author> rawAuthors, Map<String, Author> cache) {
+    private Set<AuthorEntity> processAuthors(Set<AuthorEntity> rawAuthors, Map<String, AuthorEntity> cache) {
         return Optional.ofNullable(rawAuthors).orElse(Collections.emptySet()).stream()
                 .map(rawAuthor -> cache.computeIfAbsent(
                         rawAuthor.getName().trim(),
@@ -80,7 +80,7 @@ public class BookBackupService {
                 .collect(Collectors.toSet());
     }
 
-    private Set<Genre> processGenres(Set<Genre> rawGenres, Map<String, Genre> cache) {
+    private Set<GenreEntity> processGenres(Set<GenreEntity> rawGenres, Map<String, GenreEntity> cache) {
         return Optional.ofNullable(rawGenres).orElse(Collections.emptySet()).stream()
                 .map(rawGenre -> cache.computeIfAbsent(
                         rawGenre.getName().trim(),

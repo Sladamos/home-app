@@ -2,8 +2,8 @@ package com.sladamos.book.app.modify.mode;
 
 import com.sladamos.book.app.modify.ModifyBookDraft;
 import com.sladamos.book.app.modify.ModifyBookViewModel;
-import com.sladamos.book.exception.BookValidationException;
-import com.sladamos.book.model.Book;
+import com.sladamos.common.exception.ValidationException;
+import com.sladamos.book.model.BookEntity;
 
 public interface ModifyBookMode {
 
@@ -11,13 +11,13 @@ public interface ModifyBookMode {
 
     String getSubmitBookButtonKey();
 
-    Book convert(ModifyBookViewModel viewModel);
+    BookEntity convert(ModifyBookViewModel viewModel);
 
     ModifyBookDraft getBookDraft();
 
-    void persist(Book book) throws BookValidationException;
+    void persist(BookEntity book) throws ValidationException;
 
-    void onSuccess(Book book);
+    void onSuccess(BookEntity book);
 
     void onExit(ModifyBookViewModel viewModel);
 }

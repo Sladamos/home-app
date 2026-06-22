@@ -3,13 +3,13 @@ package com.sladamos.book;
 import com.sladamos.book.dto.GetBooksResponse;
 import com.sladamos.book.dto.PatchBookRequest;
 import com.sladamos.book.dto.PutBookRequest;
-import com.sladamos.book.exception.BookDuplicationException;
-import com.sladamos.book.exception.BookNotFoundException;
-import com.sladamos.book.exception.BookValidationException;
+import com.sladamos.common.exception.DuplicationException;
+import com.sladamos.common.exception.NotFoundException;
+import com.sladamos.common.exception.ValidationException;
 import com.sladamos.book.functions.BooksToResponseFunction;
 import com.sladamos.book.functions.RequestToBookFunction;
 import com.sladamos.book.functions.RequestToUpdateBookFunction;
-import com.sladamos.book.model.Book;
+import com.sladamos.book.model.BookEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -46,7 +46,7 @@ public class BookController {
         try {
             service.createBook(requestToBook.apply(id, request));
             log.info("Book created: [id: {}, title: {}]", id, request.getTitle());
-        } catch (BookValidationException e) {
+        } catch (ValidationException e) {
             onValidationExceptionOccurred(id, request.getTitle(), e);
         }
     }
@@ -55,13 +55,13 @@ public class BookController {
     public void patchBook(@PathVariable("id") UUID id, @RequestBody PatchBookRequest request) {
         log.info("Request updating book: [id: {}, title: {}]", id, request.getTitle());
         try {
-            Book book = service.getBookById(id);
+            BookEntity book = service.getBookById(id);
             log.info("Book found for update: [id: {}, title: {}]", book.getId(), book.getTitle());
             service.updateBook(requestToUpdateBook.apply(book, request));
             log.info("Book updated: [id: {}, title: {}]", book.getId(), request.getTitle());
-        } catch (BookNotFoundException e) {
+        } catch (NotFoundException e) {
             onNotFoundExceptionOccurred(id);
-        } catch (BookValidationException e) {
+        } catch (ValidationException e) {
             onValidationExceptionOccurred(id, request.getTitle(), e);
         }
     }
@@ -72,7 +72,7 @@ public class BookController {
         try {
             service.deleteBook(id);
             log.info("Book deleted: [id: {}]", id);
-        } catch (BookNotFoundException e) {
+        } catch (NotFoundException e) {
             onNotFoundExceptionOccurred(id);
         }
     }
@@ -83,9 +83,9 @@ public class BookController {
         try {
             service.duplicateBook(id);
             log.info("Book duplicated: [id: {}]", id);
-        } catch (BookNotFoundException e) {
+        } catch (NotFoundException e) {
             onNotFoundExceptionOccurred(id);
-        } catch (BookValidationException | BookDuplicationException e) {
+        } catch (ValidationException | DuplicationException e) {
             log.info("Book duplication failed: [id: {}, reason: {}]", id, e.getMessage());
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
@@ -96,7 +96,7 @@ public class BookController {
         throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
 
-    private static void onValidationExceptionOccurred(UUID id, String request, BookValidationException e) {
+    private static void onValidationExceptionOccurred(UUID id, String request, ValidationException e) {
         log.info("Book validation failed: [id: {}, title: {}, reason: {}]", id, request, e.getMessage());
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
     }

@@ -18,7 +18,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @BorrowedByRequired(message = "book.validation.borrowedBy")
-public class Book {
+@Table(name = "BOOK")
+public class BookEntity {
 
     public static final int MAX_RATING = 5;
 
@@ -80,7 +81,7 @@ public class Book {
             inverseJoinColumns = @JoinColumn(name = "author_id")
     )
     @Size(min = MIN_NUMBER_OF_AUTHORS, message = "book.validation.authors.min")
-    private Set<Author> authors;
+    private Set<AuthorEntity> authors;
 
     @Valid
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
@@ -89,9 +90,9 @@ public class Book {
             joinColumns = @JoinColumn(name = "book_id"),
             inverseJoinColumns = @JoinColumn(name = "genre_id")
     )
-    private Set<Genre> genres;
+    private Set<GenreEntity> genres;
 
-    public void replace(Book book) {
+    public void replace(BookEntity book) {
         this.title = book.getTitle();
         this.isbn = book.getIsbn();
         this.description = book.getDescription();

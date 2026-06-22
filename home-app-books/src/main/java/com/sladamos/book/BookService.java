@@ -1,19 +1,19 @@
 package com.sladamos.book;
 
-import com.sladamos.book.exception.BookDuplicationException;
-import com.sladamos.book.exception.BookNotFoundException;
-import com.sladamos.book.exception.BookValidationException;
-import com.sladamos.book.model.Book;
+import com.sladamos.common.exception.DuplicationException;
+import com.sladamos.common.exception.NotFoundException;
+import com.sladamos.common.exception.ValidationException;
+import com.sladamos.book.model.BookEntity;
 
 import java.util.List;
 import java.util.UUID;
 
 public interface BookService {
-    List<Book> getAllBooks();
-    Book getBookById(UUID id) throws BookNotFoundException;
-    void createBook(Book book) throws BookValidationException;
-    void updateBook(Book book) throws BookValidationException;
-    Book duplicateBook(Book sourceBook, List<String> existingTitles) throws BookValidationException, BookDuplicationException;
-    Book duplicateBook(UUID id) throws BookNotFoundException, BookValidationException, BookDuplicationException;
-    void deleteBook(UUID id) throws BookNotFoundException;
+    List<BookEntity> getAllBooks();
+    BookEntity getBookById(UUID id) throws NotFoundException;
+    void createBook(BookEntity book) throws ValidationException;
+    void updateBook(BookEntity book) throws ValidationException;
+    BookEntity duplicateBook(BookEntity sourceBook, List<String> existingTitles) throws ValidationException, DuplicationException;
+    BookEntity duplicateBook(UUID id) throws NotFoundException, ValidationException, DuplicationException;
+    void deleteBook(UUID id) throws NotFoundException;
 }

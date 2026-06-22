@@ -2,10 +2,10 @@ package com.sladamos.book.app.items;
 
 import com.sladamos.book.app.items.viewmodel.BookItemViewModel;
 import com.sladamos.app.util.ui.NamedEntityFormatter;
-import com.sladamos.book.model.Author;
-import com.sladamos.book.model.Book;
+import com.sladamos.book.model.AuthorEntity;
+import com.sladamos.book.model.BookEntity;
 import com.sladamos.book.model.BookStatus;
-import com.sladamos.book.model.Genre;
+import com.sladamos.book.model.GenreEntity;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -146,7 +146,7 @@ class BookItemsSortOptionTest {
     }
 
     private BookItemViewModel createVM(String title, LocalDateTime creationDate, LocalDateTime modificationDate, int pages) {
-        Book book = Book.builder()
+        BookEntity book = BookEntity.builder()
                 .id(UUID.randomUUID())
                 .title(title)
                 .isbn("")
@@ -161,8 +161,8 @@ class BookItemsSortOptionTest {
                 .readDate(LocalDate.now())
                 .creationDate(creationDate)
                 .modificationDate(modificationDate)
-                .authors(Set.of(new Author("Author")))
-                .genres(Set.of(new Genre("Genre")))
+                .authors(Set.of(new AuthorEntity("Author")))
+                .genres(Set.of(new GenreEntity("Genre")))
                 .build();
         BookItemViewModel vm = new BookItemViewModel(FORMATTER);
         vm.init(book);

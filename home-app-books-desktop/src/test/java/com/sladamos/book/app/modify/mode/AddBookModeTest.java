@@ -4,7 +4,7 @@ import com.sladamos.book.BookService;
 import com.sladamos.book.app.modify.ModifyBookDataMapper;
 import com.sladamos.book.app.modify.ModifyBookDraft;
 import com.sladamos.book.app.modify.ModifyBookViewModel;
-import com.sladamos.book.model.Book;
+import com.sladamos.book.model.BookEntity;
 import com.sladamos.book.model.BookStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -46,7 +46,7 @@ class AddBookModeTest {
             ModifyBookViewModel vm = createViewModel();
             LocalDateTime before = LocalDateTime.now();
 
-            Book result = mode.convert(vm);
+            BookEntity result = mode.convert(vm);
 
             LocalDateTime after = LocalDateTime.now();
             assertThat(result.getCreationDate()).isBetween(before, after);
@@ -60,7 +60,7 @@ class AddBookModeTest {
             vm.getIsbn().set("123");
             vm.getPages().set(200);
 
-            Book result = mode.convert(vm);
+            BookEntity result = mode.convert(vm);
 
             assertThat(result.getTitle()).isEqualTo("My Book");
             assertThat(result.getIsbn()).isEqualTo("123");
@@ -72,7 +72,7 @@ class AddBookModeTest {
             ModifyBookViewModel vm = createViewModel();
             vm.getAuthors().addAll("Alice", "", "  ", "Bob");
 
-            Book result = mode.convert(vm);
+            BookEntity result = mode.convert(vm);
 
             assertThat(result.getAuthors()).hasSize(2);
             assertThat(result.getAuthors()).extracting("name")
@@ -84,7 +84,7 @@ class AddBookModeTest {
             ModifyBookViewModel vm = createViewModel();
             vm.getGenres().addAll("Sci-Fi", "", "Fantasy");
 
-            Book result = mode.convert(vm);
+            BookEntity result = mode.convert(vm);
 
             assertThat(result.getGenres()).hasSize(2);
             assertThat(result.getGenres()).extracting("name")

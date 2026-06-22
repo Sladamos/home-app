@@ -2,7 +2,7 @@ package com.sladamos.book.app.items;
 
 import com.sladamos.book.BookService;
 import com.sladamos.book.app.items.event.OnBookCacheChanged;
-import com.sladamos.book.model.Book;
+import com.sladamos.book.model.BookEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -20,24 +20,24 @@ public class BookCacheService {
 
     private final ApplicationEventPublisher eventPublisher;
 
-    private final List<Book> books = new java.util.ArrayList<>();
+    private final List<BookEntity> books = new java.util.ArrayList<>();
 
     private boolean booksLoaded = false;
 
-    public List<Book> getBooks() {
+    public List<BookEntity> getBooks() {
         log.info("Obtaining books to cache");
         loadBooksIfNeeded();
         log.info("Books obtained: [size: {}]", books.size());
         return books;
     }
 
-    public void addBook(Book book) {
+    public void addBook(BookEntity book) {
         log.info("Adding book to cache: [id: {}, title: {}]", book.getId(), book.getTitle());
         books.add(book);
         eventPublisher.publishEvent(OnBookCacheChanged.Created.of(book));
     }
 
-    public void updateBook(Book book) {
+    public void updateBook(BookEntity book) {
         log.info("Updating book in cache: [id: {}]", book.getId());
         books.stream()
                 .filter(e -> e.getId().equals(book.getId()))

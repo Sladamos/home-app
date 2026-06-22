@@ -7,10 +7,10 @@ import com.sladamos.book.app.items.BookCacheService;
 import com.sladamos.book.app.items.viewmodel.BookItemsActiveState;
 import com.sladamos.book.app.modify.event.OnBookCreated;
 import com.sladamos.book.app.modify.event.OnBookEdited;
-import com.sladamos.book.exception.BookDuplicationException;
-import com.sladamos.book.exception.BookNotFoundException;
-import com.sladamos.book.exception.BookValidationException;
-import com.sladamos.book.model.Book;
+import com.sladamos.common.exception.DuplicationException;
+import com.sladamos.common.exception.NotFoundException;
+import com.sladamos.common.exception.ValidationException;
+import com.sladamos.book.model.BookEntity;
 import com.sladamos.book.model.BookStatus;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -54,7 +54,7 @@ class BookItemsEventHandlerTest {
 
         @Test
         void shouldAddBookToCache() {
-            Book book = createBook("New Book");
+            BookEntity book = createBook("New Book");
 
             handler.onBookCreated(new OnBookCreated(book));
 
@@ -67,7 +67,7 @@ class BookItemsEventHandlerTest {
 
         @Test
         void shouldUpdateBookInCache() {
-            Book book = createBook("Edited Book");
+            BookEntity book = createBook("Edited Book");
 
             handler.onBookEdited(new OnBookEdited(book));
 
@@ -79,7 +79,7 @@ class BookItemsEventHandlerTest {
     class OnBookDeletedEvent {
 
         @Test
-        void shouldDeleteFromCacheAfterService() throws BookNotFoundException {
+        void shouldDeleteFromCacheAfterService() throws NotFoundException {
             UUID bookId = UUID.randomUUID();
 
             handler.onBookDeleted(new OnBookDeleted(bookId, "Book Title"));
@@ -89,9 +89,9 @@ class BookItemsEventHandlerTest {
         }
 
         @Test
-        void shouldStillDeleteFromCacheWhenServiceThrows() throws BookNotFoundException {
+        void shouldStillDeleteFromCacheWhenServiceThrows() throws NotFoundException {
             UUID bookId = UUID.randomUUID();
-            doThrow(new BookNotFoundException("Not found")).when(bookService).deleteBook(bookId);
+            doThrow(new NotFoundException("Not found")).when(bookService).deleteBook(bookId);
 
             handler.onBookDeleted(new OnBookDeleted(bookId, "Book Title"));
 
@@ -103,9 +103,9 @@ class BookItemsEventHandlerTest {
     class OnBookDuplicatedEvent {
 
         @Test
-        void shouldDuplicateAndSaveBook() throws BookValidationException, BookDuplicationException {
-            Book book = createBook("Original");
-            Book duplicatedBook = book.toBuilder().id(UUID.randomUUID()).build();
+        void shouldDuplicateAndSaveBook() throws ValidationException, DuplicationException {
+            BookEntity book = createBook("Original");
+            BookEntity duplicatedBook = book.toBuilder().id(UUID.randomUUID()).build();
             when(bookCacheService.getBooks()).thenReturn(List.of(book));
             when(bookService.duplicateBook(eq(book), anyList())).thenReturn(duplicatedBook);
 
@@ -116,11 +116,11 @@ class BookItemsEventHandlerTest {
         }
 
         @Test
-        void shouldShowErrorOnValidationException() throws BookValidationException, BookDuplicationException {
-            Book book = createBook("Original");
+        void shouldShowErrorOnValidationException() throws ValidationException, DuplicationException {
+            BookEntity book = createBook("Original");
             when(bookCacheService.getBooks()).thenReturn(Collections.emptyList());
             when(bookService.duplicateBook(any(), anyList()))
-                    .thenThrow(new BookValidationException(Collections.emptySet()));
+                    .thenThrow(new ValidationException(Collections.emptySet()));
             when(bindingsCreator.getMessage("books.items.duplicateBookError"))
                     .thenReturn("Duplication failed");
 
@@ -130,11 +130,11 @@ class BookItemsEventHandlerTest {
         }
 
         @Test
-        void shouldShowErrorWhenDuplicationFails() throws BookValidationException, BookDuplicationException {
-            Book book = createBook("Original");
+        void shouldShowErrorWhenDuplicationFails() throws ValidationException, DuplicationException {
+            BookEntity book = createBook("Original");
             when(bookCacheService.getBooks()).thenReturn(Collections.emptyList());
             when(bookService.duplicateBook(any(), anyList()))
-                    .thenThrow(new BookDuplicationException("Failed"));
+                    .thenThrow(new DuplicationException("Failed"));
             when(bindingsCreator.getMessage("books.items.duplicateBookError"))
                     .thenReturn("Duplication failed");
 
@@ -144,9 +144,9 @@ class BookItemsEventHandlerTest {
         }
     }
 
-    private Book createBook(String title) {
+    private BookEntity createBook(String title) {
         LocalDateTime now = LocalDateTime.now();
-        return Book.builder()
+        return BookEntity.builder()
                 .id(UUID.randomUUID())
                 .title(title)
                 .isbn("1234567890")

@@ -1,9 +1,9 @@
 package com.sladamos.book;
 
-import com.sladamos.book.model.Author;
-import com.sladamos.book.model.Book;
+import com.sladamos.book.model.AuthorEntity;
+import com.sladamos.book.model.BookEntity;
 import com.sladamos.book.model.BookStatus;
-import com.sladamos.book.model.Genre;
+import com.sladamos.book.model.GenreEntity;
 import com.sladamos.book.repository.BookRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,15 +28,15 @@ class BookRepositoryTest {
     @Test
     void shouldSaveAndFindBookById() {
         LocalDateTime currentDate = LocalDateTime.now();
-        Book book = Book.builder()
+        BookEntity book = BookEntity.builder()
                 .id(UUID.randomUUID())
                 .title("Test Book")
                 .isbn("1234567890")
                 .description("Test description")
                 .pages(100)
                 .coverImage(new byte[]{1, 2, 3})
-                .authors(Set.of(new Author("Author")))
-                .genres(Set.of(new Genre("Genre")))
+                .authors(Set.of(new AuthorEntity("Author")))
+                .genres(Set.of(new GenreEntity("Genre")))
                 .status(BookStatus.ON_SHELF)
                 .readDate(LocalDate.of(2000, 1, 1))
                 .creationDate(currentDate)
@@ -45,7 +45,7 @@ class BookRepositoryTest {
 
         bookRepository.save(book);
 
-        Optional<Book> foundBook = bookRepository.findById(book.getId());
+        Optional<BookEntity> foundBook = bookRepository.findById(book.getId());
         assertAll("Saves and finds book by ID",
                 () -> assertThat(foundBook).isPresent(),
                 () -> assertThat(foundBook.get().getTitle()).isEqualTo("Test Book"),
@@ -57,14 +57,14 @@ class BookRepositoryTest {
                 () -> assertThat(foundBook.get().getCreationDate()).isEqualTo(currentDate),
                 () -> assertThat(foundBook.get().getModificationDate()).isEqualTo(currentDate),
                 () -> assertThat(foundBook.get().getPages()).isEqualTo(100),
-                () -> assertThat(foundBook.get().getAuthors()).extracting(Author::getName).containsExactly("Author"),
-                () -> assertThat(foundBook.get().getGenres()).extracting(Genre::getName).containsExactly("Genre")
+                () -> assertThat(foundBook.get().getAuthors()).extracting(AuthorEntity::getName).containsExactly("Author"),
+                () -> assertThat(foundBook.get().getGenres()).extracting(GenreEntity::getName).containsExactly("Genre")
         );
     }
 
     @Test
     void shouldUpdateExistingBook() {
-        Book book = Book.builder()
+        BookEntity book = BookEntity.builder()
                 .id(UUID.randomUUID())
                 .title("Original Title")
                 .isbn("1234567890")
@@ -72,8 +72,8 @@ class BookRepositoryTest {
                 .description("Desc")
                 .pages(100)
                 .coverImage(new byte[]{})
-                .authors(Set.of(new Author("Author")))
-                .genres(Set.of(new Genre("Genre")))
+                .authors(Set.of(new AuthorEntity("Author")))
+                .genres(Set.of(new GenreEntity("Genre")))
                 .build();
 
         bookRepository.save(book);
@@ -82,7 +82,7 @@ class BookRepositoryTest {
         book.setPages(200);
         bookRepository.save(book);
 
-        Optional<Book> updatedBook = bookRepository.findById(book.getId());
+        Optional<BookEntity> updatedBook = bookRepository.findById(book.getId());
         assertAll("Updates book",
                 () -> assertThat(updatedBook).isPresent(),
                 () -> assertThat(updatedBook.get().getTitle()).isEqualTo("Updated Title"),
@@ -92,7 +92,7 @@ class BookRepositoryTest {
 
     @Test
     void shouldDeleteExistingBook() {
-        Book book = Book.builder()
+        BookEntity book = BookEntity.builder()
                 .id(UUID.randomUUID())
                 .title("To Delete")
                 .isbn("1234567890")
@@ -100,8 +100,8 @@ class BookRepositoryTest {
                 .description("Desc")
                 .pages(100)
                 .coverImage(new byte[]{})
-                .authors(Set.of(new Author("Author")))
-                .genres(Set.of(new Genre("Genre")))
+                .authors(Set.of(new AuthorEntity("Author")))
+                .genres(Set.of(new GenreEntity("Genre")))
                 .build();
 
         bookRepository.save(book);
@@ -109,55 +109,55 @@ class BookRepositoryTest {
 
         bookRepository.deleteById(id);
 
-        Optional<Book> deleted = bookRepository.findById(id);
+        Optional<BookEntity> deleted = bookRepository.findById(id);
         assertThat(deleted).isNotPresent();
     }
 
     @Test
     void shouldSaveAndLoadBookWithAuthorsAndGenres() {
         UUID id = UUID.randomUUID();
-        Book book = Book.builder()
+        BookEntity book = BookEntity.builder()
                 .id(id)
                 .title("Title")
-                .authors(Set.of(new Author("A1")))
-                .genres(Set.of(new Genre("G1")))
+                .authors(Set.of(new AuthorEntity("A1")))
+                .genres(Set.of(new GenreEntity("G1")))
                 .build();
 
         bookRepository.save(book);
 
-        Book loaded = bookRepository.findById(id).orElseThrow();
-        assertThat(loaded.getAuthors()).extracting(Author::getName).containsExactly("A1");
-        assertThat(loaded.getGenres()).extracting(Genre::getName).containsExactly("G1");
+        BookEntity loaded = bookRepository.findById(id).orElseThrow();
+        assertThat(loaded.getAuthors()).extracting(AuthorEntity::getName).containsExactly("A1");
+        assertThat(loaded.getGenres()).extracting(GenreEntity::getName).containsExactly("G1");
     }
 
     @Test
     void shouldFindBookByAuthorName() {
-        Book book = Book.builder()
+        BookEntity book = BookEntity.builder()
                 .id(UUID.randomUUID())
                 .title("Title 2")
-                .authors(Set.of(new Author("A2")))
+                .authors(Set.of(new AuthorEntity("A2")))
                 .build();
         bookRepository.save(book);
 
-        List<Book> found = bookRepository.findByAuthorsName("A2");
+        List<BookEntity> found = bookRepository.findByAuthorsName("A2");
 
         assertThat(found).isNotEmpty();
-        assertThat(found.get(0).getAuthors()).extracting(Author::getName).containsExactly("A2");
+        assertThat(found.get(0).getAuthors()).extracting(AuthorEntity::getName).containsExactly("A2");
     }
 
     @Test
     void shouldFindBookByGenreName() {
-        Book book = Book.builder()
+        BookEntity book = BookEntity.builder()
                 .id(UUID.randomUUID())
                 .title("Title 3")
-                .authors(Set.of(new Author("A3")))
-                .genres(Set.of(new Genre("G3")))
+                .authors(Set.of(new AuthorEntity("A3")))
+                .genres(Set.of(new GenreEntity("G3")))
                 .build();
         bookRepository.save(book);
 
-        List<Book> found = bookRepository.findByGenresName("G3");
+        List<BookEntity> found = bookRepository.findByGenresName("G3");
 
         assertThat(found).isNotEmpty();
-        assertThat(found.get(0).getGenres()).extracting(Genre::getName).containsExactly("G3");
+        assertThat(found.get(0).getGenres()).extracting(GenreEntity::getName).containsExactly("G3");
     }
 }

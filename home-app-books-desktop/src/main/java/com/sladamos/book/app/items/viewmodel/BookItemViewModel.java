@@ -1,10 +1,10 @@
 package com.sladamos.book.app.items.viewmodel;
 
 import com.sladamos.app.util.ui.NamedEntityFormatter;
-import com.sladamos.book.model.Author;
-import com.sladamos.book.model.Book;
+import com.sladamos.book.model.AuthorEntity;
+import com.sladamos.book.model.BookEntity;
 import com.sladamos.book.model.BookStatus;
-import com.sladamos.book.model.Genre;
+import com.sladamos.book.model.GenreEntity;
 import javafx.beans.property.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -41,13 +41,13 @@ public class BookItemViewModel implements RateableViewModel {
     private final ObjectProperty<LocalDateTime> creationDate = new SimpleObjectProperty<>();
 
     private final NamedEntityFormatter formatter;
-    private Book book;
+    private BookEntity book;
 
-    public void init(Book book) {
+    public void init(BookEntity book) {
         applyFrom(book);
     }
 
-    public Book getBook() {
+    public BookEntity getBook() {
         return book.toBuilder()
                 .title(title.get())
                 .isbn(isbn.get())
@@ -65,11 +65,11 @@ public class BookItemViewModel implements RateableViewModel {
                 .build();
     }
 
-    public void updateFrom(Book book) {
+    public void updateFrom(BookEntity book) {
         applyFrom(book);
     }
 
-    private void applyFrom(Book book) {
+    private void applyFrom(BookEntity book) {
         this.book = book;
         id.set(book.getId());
         title.set(book.getTitle());
@@ -81,8 +81,8 @@ public class BookItemViewModel implements RateableViewModel {
         rating.set(Optional.ofNullable(book.getRating()).orElse(0));
         favorite.set(book.isFavorite());
         status.set(book.getStatus());
-        authors.set(formatter.format(book.getAuthors(), Author::getName));
-        genres.set(formatter.format(book.getGenres(), Genre::getName));
+        authors.set(formatter.format(book.getAuthors(), AuthorEntity::getName));
+        genres.set(formatter.format(book.getGenres(), GenreEntity::getName));
         coverImage.set(book.getCoverImage());
         readDate.set(book.getReadDate());
         modificationDate.set(book.getModificationDate());

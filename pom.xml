@@ -14,6 +14,8 @@
 		<module>home-app-books-desktop</module>
 		<module>home-app-desktop</module>
         <module>home-app-common-desktop</module>
+		<module>home-app-activity</module>
+        <module>home-app-common</module>
     </modules>
 
 	<properties>

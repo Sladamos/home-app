@@ -4,10 +4,10 @@ import com.sladamos.book.BookService;
 import com.sladamos.book.app.modify.ModifyBookDataMapper;
 import com.sladamos.book.app.modify.ModifyBookDraft;
 import com.sladamos.book.app.modify.ModifyBookViewModel;
-import com.sladamos.book.model.Author;
-import com.sladamos.book.model.Book;
+import com.sladamos.book.model.AuthorEntity;
+import com.sladamos.book.model.BookEntity;
 import com.sladamos.book.model.BookStatus;
-import com.sladamos.book.model.Genre;
+import com.sladamos.book.model.GenreEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -45,47 +45,47 @@ class EditBookModeTest {
 
         @Test
         void shouldPreserveOriginalCreationDate() {
-            Book originalBook = createBook();
+            BookEntity originalBook = createBook();
             EditBookMode mode = createMode(originalBook);
             ModifyBookViewModel vm = createViewModel(originalBook);
 
-            Book result = mode.convert(vm);
+            BookEntity result = mode.convert(vm);
 
             assertThat(result.getCreationDate()).isEqualTo(originalBook.getCreationDate());
         }
 
         @Test
         void shouldUpdateModificationDate() {
-            Book originalBook = createBook();
+            BookEntity originalBook = createBook();
             EditBookMode mode = createMode(originalBook);
             ModifyBookViewModel vm = createViewModel(originalBook);
             LocalDateTime before = LocalDateTime.now();
 
-            Book result = mode.convert(vm);
+            BookEntity result = mode.convert(vm);
 
             assertThat(result.getModificationDate()).isAfterOrEqualTo(before);
         }
 
         @Test
         void shouldPreserveOriginalId() {
-            Book originalBook = createBook();
+            BookEntity originalBook = createBook();
             EditBookMode mode = createMode(originalBook);
             ModifyBookViewModel vm = createViewModel(originalBook);
 
-            Book result = mode.convert(vm);
+            BookEntity result = mode.convert(vm);
 
             assertThat(result.getId()).isEqualTo(originalBook.getId());
         }
 
         @Test
         void shouldMapEditedFields() {
-            Book originalBook = createBook();
+            BookEntity originalBook = createBook();
             EditBookMode mode = createMode(originalBook);
             ModifyBookViewModel vm = createViewModel(originalBook);
             vm.getTitle().set("Updated Title");
             vm.getPages().set(999);
 
-            Book result = mode.convert(vm);
+            BookEntity result = mode.convert(vm);
 
             assertThat(result.getTitle()).isEqualTo("Updated Title");
             assertThat(result.getPages()).isEqualTo(999);
@@ -108,7 +108,7 @@ class EditBookModeTest {
         }
     }
 
-    private EditBookMode createMode(Book book) {
+    private EditBookMode createMode(BookEntity book) {
         ModifyBookDraft editDraft = new ModifyBookDraft();
         dataMapper.updateDraftFromBook(editDraft, book);
         EditBookMode mode = new EditBookMode(bookService, eventPublisher, dataMapper, editDraft);
@@ -116,7 +116,7 @@ class EditBookModeTest {
         return mode;
     }
 
-    private ModifyBookViewModel createViewModel(Book book) {
+    private ModifyBookViewModel createViewModel(BookEntity book) {
         ModifyBookViewModel vm = new ModifyBookViewModel();
         ModifyBookDraft tempDraft = new ModifyBookDraft();
         dataMapper.updateDraftFromBook(tempDraft, book);
@@ -124,8 +124,8 @@ class EditBookModeTest {
         return vm;
     }
 
-    private Book createBook() {
-        return Book.builder()
+    private BookEntity createBook() {
+        return BookEntity.builder()
                 .id(UUID.randomUUID())
                 .title("Original Title")
                 .isbn("1234567890")
@@ -138,8 +138,8 @@ class EditBookModeTest {
                 .creationDate(LocalDateTime.of(2023, 1, 1, 12, 0))
                 .modificationDate(LocalDateTime.of(2024, 6, 15, 10, 0))
                 .status(BookStatus.ON_SHELF)
-                .authors(Set.of(new Author("Author")))
-                .genres(Set.of(new Genre("Genre")))
+                .authors(Set.of(new AuthorEntity("Author")))
+                .genres(Set.of(new GenreEntity("Genre")))
                 .build();
     }
 }

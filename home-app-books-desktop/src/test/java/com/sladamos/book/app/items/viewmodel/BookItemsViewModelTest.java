@@ -2,10 +2,10 @@ package com.sladamos.book.app.items.viewmodel;
 
 import com.sladamos.app.util.ui.NamedEntityFormatter;
 import com.sladamos.book.app.items.BookCacheService;
-import com.sladamos.book.model.Author;
-import com.sladamos.book.model.Book;
+import com.sladamos.book.model.AuthorEntity;
+import com.sladamos.book.model.BookEntity;
 import com.sladamos.book.model.BookStatus;
-import com.sladamos.book.model.Genre;
+import com.sladamos.book.model.GenreEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -17,7 +17,6 @@ import org.springframework.beans.factory.ObjectProvider;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -56,7 +55,7 @@ class BookItemsViewModelTest {
 
         @Test
         void shouldAddBookToList() {
-            Book book = createBook("New Book");
+            BookEntity book = createBook("New Book");
             
             viewModel.addBook(book);
             
@@ -67,7 +66,7 @@ class BookItemsViewModelTest {
         @Test
         void shouldResetSearchQueryAfterAddingBook() {
             viewModel.getSearchQuery().set("some search");
-            Book book = createBook("New Book");
+            BookEntity book = createBook("New Book");
             
             viewModel.addBook(book);
             
@@ -80,7 +79,7 @@ class BookItemsViewModelTest {
 
         @Test
         void shouldRemoveBookById() {
-            Book book = createBook("To Delete");
+            BookEntity book = createBook("To Delete");
             viewModel.addBook(book);
             UUID idToDelete = viewModel.getBooks().getFirst().getId().get();
             
@@ -91,8 +90,8 @@ class BookItemsViewModelTest {
 
         @Test
         void shouldNotRemoveOtherBooks() {
-            Book bookA = createBook("Book A");
-            Book bookB = createBook("Book B");
+            BookEntity bookA = createBook("Book A");
+            BookEntity bookB = createBook("Book B");
             viewModel.addBook(bookA);
             viewModel.addBook(bookB);
             UUID idA = viewModel.getBooks().stream()
@@ -112,10 +111,10 @@ class BookItemsViewModelTest {
 
         @Test
         void shouldUpdateExistingBookProperties() {
-            Book book = createBook("Original");
+            BookEntity book = createBook("Original");
             viewModel.addBook(book);
             
-            Book updated = book.toBuilder().title("Updated").build();
+            BookEntity updated = book.toBuilder().title("Updated").build();
             viewModel.updateBook(updated);
             
             assertThat(viewModel.getBooks().getFirst().getTitle().get()).isEqualTo("Updated");
@@ -168,9 +167,9 @@ class BookItemsViewModelTest {
         }
     }
 
-    private Book createBook(String title) {
+    private BookEntity createBook(String title) {
         LocalDateTime now = LocalDateTime.now();
-        return Book.builder()
+        return BookEntity.builder()
                 .id(UUID.randomUUID())
                 .title(title)
                 .isbn("")
@@ -185,8 +184,8 @@ class BookItemsViewModelTest {
                 .readDate(LocalDate.now())
                 .creationDate(now)
                 .modificationDate(now)
-                .authors(Set.of(new Author("Author")))
-                .genres(Set.of(new Genre("Genre")))
+                .authors(Set.of(new AuthorEntity("Author")))
+                .genres(Set.of(new GenreEntity("Genre")))
                 .build();
     }
 }

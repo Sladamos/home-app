@@ -3,10 +3,10 @@ package com.sladamos.book;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sladamos.book.dto.PatchBookRequest;
 import com.sladamos.book.dto.PutBookRequest;
-import com.sladamos.book.model.Author;
-import com.sladamos.book.model.Book;
+import com.sladamos.book.model.AuthorEntity;
+import com.sladamos.book.model.BookEntity;
 import com.sladamos.book.model.BookStatus;
-import com.sladamos.book.model.Genre;
+import com.sladamos.book.model.GenreEntity;
 import com.sladamos.book.repository.BookRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -54,15 +54,15 @@ class BookIntegrationTest {
     @BeforeEach
     void setUp() {
         existingId = UUID.randomUUID();
-        Book existingBook = Book.builder()
+        BookEntity existingBook = BookEntity.builder()
                 .id(existingId)
                 .title("Test Book")
                 .isbn("1234567890")
                 .publisher("Test Publisher")
                 .description("desc")
                 .pages(100)
-                .authors(Set.of(new Author("Author1")))
-                .genres(Set.of(new Genre("Genre1")))
+                .authors(Set.of(new AuthorEntity("Author1")))
+                .genres(Set.of(new GenreEntity("Genre1")))
                 .borrowedBy("Jan Kowalski")
                 .status(BookStatus.ON_SHELF)
                 .rating(5)
@@ -114,7 +114,7 @@ class BookIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(patch)))
                 .andExpect(status().isOk());
-        Book updated = bookRepository.findById(existingId).orElseThrow();
+        BookEntity updated = bookRepository.findById(existingId).orElseThrow();
         assertThat(updated.getTitle()).isEqualTo(updatedTitle);
     }
 
@@ -150,7 +150,7 @@ class BookIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk());
-        Book created = bookRepository.findById(id).orElseThrow();
+        BookEntity created = bookRepository.findById(id).orElseThrow();
         assertAll(
                 () -> assertThat(created.getId()).isEqualTo(id),
                 () -> assertThat(created.getTitle()).isEqualTo("New Book"),
@@ -158,8 +158,8 @@ class BookIntegrationTest {
                 () -> assertThat(created.getPublisher()).isEqualTo("New Publisher"),
                 () -> assertThat(created.getDescription()).isEqualTo("New description"),
                 () -> assertThat(created.getPages()).isEqualTo(200),
-                () -> assertThat(created.getAuthors()).extracting(Author::getName).containsExactly("New Author"),
-                () -> assertThat(created.getGenres()).extracting(Genre::getName).containsExactly("New Genre"),
+                () -> assertThat(created.getAuthors()).extracting(AuthorEntity::getName).containsExactly("New Author"),
+                () -> assertThat(created.getGenres()).extracting(GenreEntity::getName).containsExactly("New Genre"),
                 () -> assertThat(created.getBorrowedBy()).isEqualTo("Adam Nowak"),
                 () -> assertThat(created.getStatus()).isEqualTo(BookStatus.BORROWED),
                 () -> assertThat(created.getRating()).isEqualTo(4),
@@ -191,7 +191,7 @@ class BookIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk());
-        Book updated = bookRepository.findById(existingId).orElseThrow();
+        BookEntity updated = bookRepository.findById(existingId).orElseThrow();
         assertAll(
                 () -> assertThat(updated.getId()).isEqualTo(existingId),
                 () -> assertThat(updated.getTitle()).isEqualTo("New Book"),
@@ -199,8 +199,8 @@ class BookIntegrationTest {
                 () -> assertThat(updated.getPublisher()).isEqualTo("New Publisher"),
                 () -> assertThat(updated.getDescription()).isEqualTo("New description"),
                 () -> assertThat(updated.getPages()).isEqualTo(200),
-                () -> assertThat(updated.getAuthors()).extracting(Author::getName).containsExactly("New Author"),
-                () -> assertThat(updated.getGenres()).extracting(Genre::getName).containsExactly("New Genre"),
+                () -> assertThat(updated.getAuthors()).extracting(AuthorEntity::getName).containsExactly("New Author"),
+                () -> assertThat(updated.getGenres()).extracting(GenreEntity::getName).containsExactly("New Genre"),
                 () -> assertThat(updated.getBorrowedBy()).isEqualTo("Adam Nowak"),
                 () -> assertThat(updated.getStatus()).isEqualTo(BookStatus.BORROWED),
                 () -> assertThat(updated.getRating()).isEqualTo(4),

@@ -1,10 +1,10 @@
 package com.sladamos.book.app.items.viewmodel;
 
 import com.sladamos.app.util.ui.NamedEntityFormatter;
-import com.sladamos.book.model.Author;
-import com.sladamos.book.model.Book;
+import com.sladamos.book.model.AuthorEntity;
+import com.sladamos.book.model.BookEntity;
 import com.sladamos.book.model.BookStatus;
-import com.sladamos.book.model.Genre;
+import com.sladamos.book.model.GenreEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -25,7 +25,7 @@ class BookItemViewModelTest {
         formatter = new NamedEntityFormatter();
     }
 
-    private BookItemViewModel createViewModel(Book book) {
+    private BookItemViewModel createViewModel(BookEntity book) {
         BookItemViewModel vm = new BookItemViewModel(formatter);
         vm.init(book);
         return vm;
@@ -36,7 +36,7 @@ class BookItemViewModelTest {
 
         @Test
         void shouldMapAllFieldsFromBook() {
-            Book book = createBook();
+            BookEntity book = createBook();
 
             BookItemViewModel vm = createViewModel(book);
 
@@ -58,7 +58,7 @@ class BookItemViewModelTest {
 
         @Test
         void shouldFormatAuthorsUsingSortedNames() {
-            Book book = createBookWithAuthors(Set.of(new Author("Zoe"), new Author("Alice")));
+            BookEntity book = createBookWithAuthors(Set.of(new AuthorEntity("Zoe"), new AuthorEntity("Alice")));
 
             BookItemViewModel vm = createViewModel(book);
 
@@ -67,7 +67,7 @@ class BookItemViewModelTest {
 
         @Test
         void shouldFormatGenresUsingSortedNames() {
-            Book book = createBookWithGenres(Set.of(new Genre("Sci-Fi"), new Genre("Drama")));
+            BookEntity book = createBookWithGenres(Set.of(new GenreEntity("Sci-Fi"), new GenreEntity("Drama")));
 
             BookItemViewModel vm = createViewModel(book);
 
@@ -76,7 +76,7 @@ class BookItemViewModelTest {
 
         @Test
         void shouldDefaultRatingToZeroWhenNull() {
-            Book book = createBook().toBuilder().rating(null).build();
+            BookEntity book = createBook().toBuilder().rating(null).build();
 
             BookItemViewModel vm = createViewModel(book);
 
@@ -89,12 +89,12 @@ class BookItemViewModelTest {
 
         @Test
         void shouldReturnCopyPreservingAuthorsAndGenres() {
-            Set<Author> authors = Set.of(new Author("Author One"), new Author("Author Two"));
-            Set<Genre> genres = Set.of(new Genre("Genre One"));
-            Book original = createBook().toBuilder().authors(authors).genres(genres).build();
+            Set<AuthorEntity> authors = Set.of(new AuthorEntity("Author One"), new AuthorEntity("Author Two"));
+            Set<GenreEntity> genres = Set.of(new GenreEntity("Genre One"));
+            BookEntity original = createBook().toBuilder().authors(authors).genres(genres).build();
 
             BookItemViewModel vm = createViewModel(original);
-            Book result = vm.getBook();
+            BookEntity result = vm.getBook();
 
             assertThat(result.getAuthors()).isEqualTo(authors);
             assertThat(result.getGenres()).isEqualTo(genres);
@@ -102,14 +102,14 @@ class BookItemViewModelTest {
 
         @Test
         void shouldReflectPropertyChangesInReturnedBook() {
-            Book book = createBook();
+            BookEntity book = createBook();
             BookItemViewModel vm = createViewModel(book);
 
             vm.getTitle().set("New Title");
             vm.getRating().set(5);
             vm.getStatus().set(BookStatus.CURRENTLY_READING);
 
-            Book result = vm.getBook();
+            BookEntity result = vm.getBook();
             assertThat(result.getTitle()).isEqualTo("New Title");
             assertThat(result.getRating()).isEqualTo(5);
             assertThat(result.getStatus()).isEqualTo(BookStatus.CURRENTLY_READING);
@@ -117,11 +117,11 @@ class BookItemViewModelTest {
 
         @Test
         void shouldReturnNewInstanceEachTime() {
-            Book book = createBook();
+            BookEntity book = createBook();
             BookItemViewModel vm = createViewModel(book);
 
-            Book first = vm.getBook();
-            Book second = vm.getBook();
+            BookEntity first = vm.getBook();
+            BookEntity second = vm.getBook();
 
             assertThat(first).isNotSameAs(second);
         }
@@ -132,16 +132,16 @@ class BookItemViewModelTest {
 
         @Test
         void shouldUpdateAllFieldsFromNewBook() {
-            Book original = createBook();
+            BookEntity original = createBook();
             BookItemViewModel vm = createViewModel(original);
 
-            Book updated = original.toBuilder()
+            BookEntity updated = original.toBuilder()
                     .title("Updated Title")
                     .rating(4)
                     .status(BookStatus.BORROWED)
                     .borrowedBy("John")
-                    .authors(Set.of(new Author("New Author")))
-                    .genres(Set.of(new Genre("New Genre")))
+                    .authors(Set.of(new AuthorEntity("New Author")))
+                    .genres(Set.of(new GenreEntity("New Genre")))
                     .build();
 
             vm.updateFrom(updated);
@@ -156,21 +156,21 @@ class BookItemViewModelTest {
 
         @Test
         void shouldPreserveOriginalAuthorsInGetBookAfterUpdate() {
-            Book original = createBook();
+            BookEntity original = createBook();
             BookItemViewModel vm = createViewModel(original);
 
-            Set<Author> newAuthors = Set.of(new Author("Updated Author"));
-            Book updated = original.toBuilder().authors(newAuthors).build();
+            Set<AuthorEntity> newAuthors = Set.of(new AuthorEntity("Updated Author"));
+            BookEntity updated = original.toBuilder().authors(newAuthors).build();
             vm.updateFrom(updated);
 
-            Book result = vm.getBook();
+            BookEntity result = vm.getBook();
             assertThat(result.getAuthors()).isEqualTo(newAuthors);
         }
     }
 
-    private Book createBook() {
+    private BookEntity createBook() {
         LocalDateTime now = LocalDateTime.now();
-        return Book.builder()
+        return BookEntity.builder()
                 .id(UUID.randomUUID())
                 .title("Test Book")
                 .isbn("1234567890")
@@ -185,16 +185,16 @@ class BookItemViewModelTest {
                 .readDate(LocalDate.now())
                 .creationDate(now)
                 .modificationDate(now)
-                .authors(Set.of(new Author("Author One")))
-                .genres(Set.of(new Genre("Genre One")))
+                .authors(Set.of(new AuthorEntity("Author One")))
+                .genres(Set.of(new GenreEntity("Genre One")))
                 .build();
     }
 
-    private Book createBookWithAuthors(Set<Author> authors) {
+    private BookEntity createBookWithAuthors(Set<AuthorEntity> authors) {
         return createBook().toBuilder().authors(authors).build();
     }
 
-    private Book createBookWithGenres(Set<Genre> genres) {
+    private BookEntity createBookWithGenres(Set<GenreEntity> genres) {
         return createBook().toBuilder().genres(genres).build();
     }
 }

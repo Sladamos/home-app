@@ -8,10 +8,10 @@ import com.sladamos.book.app.items.viewmodel.BookItemsActiveState;
 import com.sladamos.book.app.items.viewmodel.BookItemsViewModel;
 import com.sladamos.book.app.modify.event.OnBookCreated;
 import com.sladamos.book.app.modify.event.OnBookEdited;
-import com.sladamos.book.exception.BookDuplicationException;
-import com.sladamos.book.exception.BookNotFoundException;
-import com.sladamos.book.exception.BookValidationException;
-import com.sladamos.book.model.Book;
+import com.sladamos.common.exception.DuplicationException;
+import com.sladamos.common.exception.NotFoundException;
+import com.sladamos.common.exception.ValidationException;
+import com.sladamos.book.model.BookEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
@@ -39,7 +39,7 @@ public class BookItemsEventHandler {
     @EventListener(OnBookCreated.class)
     @Order(1)
     public void onBookCreated(OnBookCreated event) {
-        Book book = event.book();
+        BookEntity book = event.book();
         log.info("Adding new book to items: [id: {}, title: {}]", book.getId(), book.getTitle());
         bookCacheService.addBook(book);
     }
@@ -47,23 +47,23 @@ public class BookItemsEventHandler {
     @EventListener(OnBookEdited.class)
     @Order(1)
     public void onBookEdited(OnBookEdited event) {
-        Book book = event.book();
+        BookEntity book = event.book();
         log.info("Updating book in items: [id: {}, title: {}]", book.getId(), book.getTitle());
         bookCacheService.updateBook(book);
     }
 
     @EventListener(OnBookDuplicated.class)
     public void onBookDuplicated(OnBookDuplicated event) {
-        Book book = event.book();
+        BookEntity book = event.book();
         log.info("Duplicating book in items: [id: {}, title: {}]", book.getId(), book.getTitle());
         try {
             List<String> existingTitles = bookCacheService.getBooks().stream()
-                    .map(Book::getTitle)
+                    .map(BookEntity::getTitle)
                     .distinct()
                     .toList();
-            Book duplicatedBook = bookService.duplicateBook(book, existingTitles);
+            BookEntity duplicatedBook = bookService.duplicateBook(book, existingTitles);
             bookCacheService.addBook(duplicatedBook);
-        } catch (BookValidationException | BookDuplicationException e) {
+        } catch (ValidationException | DuplicationException e) {
             log.error("Unable to duplicate book: [reason: {}]", e.getMessage());
             temporaryMessagesFactory.showError(bindingsCreator.getMessage("books.items.duplicateBookError"));
         }
@@ -76,7 +76,7 @@ public class BookItemsEventHandler {
         log.info("Deleting book: [id: {}, title: {}]", bookId, bookTitle);
         try {
             bookService.deleteBook(bookId);
-        } catch (BookNotFoundException e) {
+        } catch (NotFoundException e) {
             log.error("Book not found in service, removing from view: [id: {}, title: {}]", bookId, bookTitle);
             temporaryMessagesFactory.showError(bindingsCreator.getMessage("books.items.deleteBookError"));
         } finally {
@@ -90,8 +90,8 @@ public class BookItemsEventHandler {
         BookItemsViewModel activeViewModel = activeState.getActive();
         if (activeViewModel != null) {
             switch (event) {
-                case OnBookCacheChanged.Created(Book book) -> activeViewModel.addBook(book);
-                case OnBookCacheChanged.Updated(Book book) -> activeViewModel.updateBook(book);
+                case OnBookCacheChanged.Created(BookEntity book) -> activeViewModel.addBook(book);
+                case OnBookCacheChanged.Updated(BookEntity book) -> activeViewModel.updateBook(book);
                 case OnBookCacheChanged.Deleted(UUID bookId) -> activeViewModel.deleteBook(bookId);
             }
         }

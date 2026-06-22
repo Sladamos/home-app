@@ -3,13 +3,13 @@ package com.sladamos.book;
 import com.sladamos.book.dto.GetBooksResponse;
 import com.sladamos.book.dto.PatchBookRequest;
 import com.sladamos.book.dto.PutBookRequest;
-import com.sladamos.book.exception.BookDuplicationException;
-import com.sladamos.book.exception.BookNotFoundException;
-import com.sladamos.book.exception.BookValidationException;
+import com.sladamos.common.exception.DuplicationException;
+import com.sladamos.common.exception.NotFoundException;
+import com.sladamos.common.exception.ValidationException;
 import com.sladamos.book.functions.BooksToResponseFunction;
 import com.sladamos.book.functions.RequestToBookFunction;
 import com.sladamos.book.functions.RequestToUpdateBookFunction;
-import com.sladamos.book.model.Book;
+import com.sladamos.book.model.BookEntity;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -45,8 +45,8 @@ class BookControllerTest {
 
     @Test
     void shouldReturnBooksProperly() {
-        Book book = Book.builder().id(UUID.randomUUID()).title("A").build();
-        List<Book> books = List.of(book);
+        BookEntity book = BookEntity.builder().id(UUID.randomUUID()).title("A").build();
+        List<BookEntity> books = List.of(book);
         GetBooksResponse response = GetBooksResponse.builder()
                 .books(List.of(GetBooksResponse.Book.builder().id(book.getId()).title(book.getTitle()).build()))
                 .build();
@@ -59,10 +59,10 @@ class BookControllerTest {
     }
 
     @Test
-    void shouldPutBookProperly() throws BookValidationException {
+    void shouldPutBookProperly() throws ValidationException {
         UUID id = UUID.randomUUID();
         PutBookRequest req = PutBookRequest.builder().title("T").build();
-        Book book = Book.builder().id(id).title("T").build();
+        BookEntity book = BookEntity.builder().id(id).title("T").build();
         when(requestToBook.apply(id, req)).thenReturn(book);
 
         controller.putBook(id, req);
@@ -71,11 +71,11 @@ class BookControllerTest {
     }
 
     @Test
-    void shouldPatchExistingBook() throws BookNotFoundException, BookValidationException {
+    void shouldPatchExistingBook() throws NotFoundException, ValidationException {
         UUID id = UUID.randomUUID();
         PatchBookRequest req = PatchBookRequest.builder().title("T2").build();
-        Book book = Book.builder().id(id).title("T1").build();
-        Book updated = Book.builder().id(id).title("T2").build();
+        BookEntity book = BookEntity.builder().id(id).title("T1").build();
+        BookEntity updated = BookEntity.builder().id(id).title("T2").build();
 
         when(service.getBookById(id)).thenReturn(book);
         when(requestToUpdateBook.apply(book, req)).thenReturn(updated);
@@ -86,7 +86,7 @@ class BookControllerTest {
     }
 
     @Test
-    void shouldDeleteExistingBook() throws BookNotFoundException {
+    void shouldDeleteExistingBook() throws NotFoundException {
         UUID id = UUID.randomUUID();
 
         doNothing().when(service).deleteBook(id);
@@ -97,9 +97,9 @@ class BookControllerTest {
     }
 
     @Test
-    void shouldDuplicateExistingBook() throws BookNotFoundException, BookValidationException, BookDuplicationException {
+    void shouldDuplicateExistingBook() throws NotFoundException, ValidationException, DuplicationException {
         UUID id = UUID.randomUUID();
-        when(service.duplicateBook(id)).thenReturn(Book.builder().id(UUID.randomUUID()).title("copy").build());
+        when(service.duplicateBook(id)).thenReturn(BookEntity.builder().id(UUID.randomUUID()).title("copy").build());
 
         controller.duplicateBook(id);
 
@@ -107,10 +107,10 @@ class BookControllerTest {
     }
 
     @Test
-    void shouldThrowResponseStatusExceptionWhenPatchBookNotFound() throws BookNotFoundException {
+    void shouldThrowResponseStatusExceptionWhenPatchBookNotFound() throws NotFoundException {
         UUID id = UUID.randomUUID();
         PatchBookRequest req = PatchBookRequest.builder().title("T2").build();
-        when(service.getBookById(id)).thenThrow(new BookNotFoundException("not found"));
+        when(service.getBookById(id)).thenThrow(new NotFoundException("not found"));
 
         assertThatThrownBy(() -> controller.patchBook(id, req))
                 .isInstanceOf(ResponseStatusException.class)
@@ -118,15 +118,15 @@ class BookControllerTest {
     }
 
     @Test
-    void shouldThrowResponseStatusExceptionWhenPatchNotValidBook() throws BookNotFoundException, BookValidationException {
+    void shouldThrowResponseStatusExceptionWhenPatchNotValidBook() throws NotFoundException, ValidationException {
         UUID id = UUID.randomUUID();
         PatchBookRequest req = PatchBookRequest.builder().title("T2").build();
-        Book book = Book.builder().id(id).title("T1").build();
-        Book updated = Book.builder().id(id).title("T2").build();
+        BookEntity book = BookEntity.builder().id(id).title("T1").build();
+        BookEntity updated = BookEntity.builder().id(id).title("T2").build();
 
         when(service.getBookById(id)).thenReturn(book);
         when(requestToUpdateBook.apply(book, req)).thenReturn(updated);
-        doThrow(new BookValidationException(Set.of())).when(service).updateBook(updated);
+        doThrow(new ValidationException(Set.of())).when(service).updateBook(updated);
 
         assertThatThrownBy(() -> controller.patchBook(id, req))
                 .isInstanceOf(ResponseStatusException.class)
@@ -134,9 +134,9 @@ class BookControllerTest {
     }
 
     @Test
-    void shouldThrowResponseStatusExceptionWhenDeletedBookNotFound() throws BookNotFoundException {
+    void shouldThrowResponseStatusExceptionWhenDeletedBookNotFound() throws NotFoundException {
         UUID id = UUID.randomUUID();
-        doThrow(new BookNotFoundException("not found")).when(service).deleteBook(id);
+        doThrow(new NotFoundException("not found")).when(service).deleteBook(id);
 
         assertThatThrownBy(() -> controller.deleteBook(id))
                 .isInstanceOf(ResponseStatusException.class)
@@ -144,9 +144,9 @@ class BookControllerTest {
     }
 
     @Test
-    void shouldThrowResponseStatusExceptionWhenDuplicateBookNotFound() throws BookNotFoundException, BookValidationException, BookDuplicationException {
+    void shouldThrowResponseStatusExceptionWhenDuplicateBookNotFound() throws NotFoundException, ValidationException, DuplicationException {
         UUID id = UUID.randomUUID();
-        doThrow(new BookNotFoundException("not found")).when(service).duplicateBook(id);
+        doThrow(new NotFoundException("not found")).when(service).duplicateBook(id);
 
         assertThatThrownBy(() -> controller.duplicateBook(id))
                 .isInstanceOf(ResponseStatusException.class)
@@ -154,9 +154,9 @@ class BookControllerTest {
     }
 
     @Test
-    void shouldThrowResponseStatusExceptionWhenDuplicateFailsValidation() throws BookNotFoundException, BookValidationException, BookDuplicationException {
+    void shouldThrowResponseStatusExceptionWhenDuplicateFailsValidation() throws NotFoundException, ValidationException, DuplicationException {
         UUID id = UUID.randomUUID();
-        doThrow(new BookValidationException(Set.of())).when(service).duplicateBook(id);
+        doThrow(new ValidationException(Set.of())).when(service).duplicateBook(id);
 
         assertThatThrownBy(() -> controller.duplicateBook(id))
                 .isInstanceOf(ResponseStatusException.class)

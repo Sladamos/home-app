@@ -1,7 +1,7 @@
 package com.sladamos.book.app.modify.component.rating;
 
 import com.sladamos.app.util.message.BindingsCreator;
-import com.sladamos.book.model.Book;
+import com.sladamos.book.model.BookEntity;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
@@ -40,8 +40,8 @@ public class SelectRatingController {
 
     public void bindTo(SelectRatingViewModel viewModel) {
         favoriteCheckBox.selectedProperty().bindBidirectional(viewModel.favorite());
-        ratingSlider.setMin(Book.MIN_RATING);
-        ratingSlider.setMax(Book.MAX_RATING);
+        ratingSlider.setMin(BookEntity.MIN_RATING);
+        ratingSlider.setMax(BookEntity.MAX_RATING);
         ratingSlider.valueProperty().bindBidirectional(viewModel.rating());
     }
 }

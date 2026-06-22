@@ -3,9 +3,9 @@ package com.sladamos.book;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
-import com.sladamos.book.model.Author;
-import com.sladamos.book.model.Book;
-import com.sladamos.book.model.Genre;
+import com.sladamos.book.model.AuthorEntity;
+import com.sladamos.book.model.BookEntity;
+import com.sladamos.book.model.GenreEntity;
 import com.sladamos.book.repository.AuthorRepository;
 import com.sladamos.book.repository.BookRepository;
 import com.sladamos.book.repository.GenreRepository;
@@ -48,7 +48,7 @@ class BookBackupServiceTest {
 
     @Test
     void shouldProperlyCreateBackupWithProvidedPath() throws Exception {
-        List<Book> books = List.of(new Book());
+        List<BookEntity> books = List.of(new BookEntity());
         when(bookRepository.findAll()).thenReturn(books);
 
         backupService.createBackup("custom.json");
@@ -59,7 +59,7 @@ class BookBackupServiceTest {
 
     @Test
     void shouldProperlyCreateBackupWithDefaultPathWhenPathIsNull() throws Exception {
-        List<Book> books = List.of(new Book());
+        List<BookEntity> books = List.of(new BookEntity());
         when(bookRepository.findAll()).thenReturn(books);
 
         backupService.createBackup(null);
@@ -70,12 +70,12 @@ class BookBackupServiceTest {
 
     @Test
     void shouldRestoreBackupAndHandleNullCollectionsGracefully() throws Exception {
-        Book bookWithNulls = Book.builder().authors(null).genres(null).build();
-        List<Book> mockedBooksFromJson = List.of(bookWithNulls);
+        BookEntity bookWithNulls = BookEntity.builder().authors(null).genres(null).build();
+        List<BookEntity> mockedBooksFromJson = List.of(bookWithNulls);
 
         CollectionType collectionType = mock(CollectionType.class);
         when(objectMapper.getTypeFactory()).thenReturn(typeFactory);
-        when(typeFactory.constructCollectionType(List.class, Book.class)).thenReturn(collectionType);
+        when(typeFactory.constructCollectionType(List.class, BookEntity.class)).thenReturn(collectionType);
         when(objectMapper.readValue(any(File.class), eq(collectionType))).thenReturn(mockedBooksFromJson);
 
         backupService.restoreBackup("test.json");
@@ -87,18 +87,18 @@ class BookBackupServiceTest {
 
     @Test
     void shouldRestoreBackupAndDeduplicateAuthorsAndGenres() throws Exception {
-        Author author1 = new Author("Stephen King");
-        Author author2 = new Author("Stephen King");
-        Genre genre1 = new Genre("Horror");
-        Genre genre2 = new Genre("Horror");
+        AuthorEntity author1 = new AuthorEntity("Stephen King");
+        AuthorEntity author2 = new AuthorEntity("Stephen King");
+        GenreEntity genre1 = new GenreEntity("Horror");
+        GenreEntity genre2 = new GenreEntity("Horror");
 
-        Book book1 = Book.builder().authors(Set.of(author1)).genres(Set.of(genre1)).build();
-        Book book2 = Book.builder().authors(Set.of(author2)).genres(Set.of(genre2)).build();
-        List<Book> mockedBooksFromJson = List.of(book1, book2);
+        BookEntity book1 = BookEntity.builder().authors(Set.of(author1)).genres(Set.of(genre1)).build();
+        BookEntity book2 = BookEntity.builder().authors(Set.of(author2)).genres(Set.of(genre2)).build();
+        List<BookEntity> mockedBooksFromJson = List.of(book1, book2);
 
         CollectionType collectionType = mock(CollectionType.class);
         when(objectMapper.getTypeFactory()).thenReturn(typeFactory);
-        when(typeFactory.constructCollectionType(List.class, Book.class)).thenReturn(collectionType);
+        when(typeFactory.constructCollectionType(List.class, BookEntity.class)).thenReturn(collectionType);
         when(objectMapper.readValue(any(File.class), eq(collectionType))).thenReturn(mockedBooksFromJson);
 
         when(authorRepository.findByName("Stephen King")).thenReturn(Optional.empty());
@@ -112,10 +112,10 @@ class BookBackupServiceTest {
         verify(bookRepository).saveAll(mockedBooksFromJson);
 
         verify(authorRepository, times(1)).findByName("Stephen King");
-        verify(authorRepository, times(1)).save(any(Author.class));
+        verify(authorRepository, times(1)).save(any(AuthorEntity.class));
 
         verify(genreRepository, times(1)).findByName("Horror");
-        verify(genreRepository, times(1)).save(any(Genre.class));
+        verify(genreRepository, times(1)).save(any(GenreEntity.class));
 
         assertThat(book1.getAuthors()).containsExactlyElementsOf(book2.getAuthors());
         assertThat(book1.getGenres()).containsExactlyElementsOf(book2.getGenres());

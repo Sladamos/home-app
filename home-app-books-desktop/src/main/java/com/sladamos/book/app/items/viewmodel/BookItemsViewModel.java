@@ -2,7 +2,7 @@ package com.sladamos.book.app.items.viewmodel;
 
 import com.sladamos.book.app.items.BookCacheService;
 import com.sladamos.book.app.items.BookItemsSortOption;
-import com.sladamos.book.model.Book;
+import com.sladamos.book.model.BookEntity;
 import jakarta.annotation.PostConstruct;
 import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
@@ -67,12 +67,12 @@ public class BookItemsViewModel {
         getBooksFromCache();
     }
 
-    public void addBook(Book book) {
+    public void addBook(BookEntity book) {
         books.add(toViewModel(book));
         searchQuery.setValue("");
     }
 
-    public void updateBook(Book book) {
+    public void updateBook(BookEntity book) {
         books.stream()
                 .filter(vm -> vm.getId().get().equals(book.getId()))
                 .findFirst()
@@ -84,12 +84,12 @@ public class BookItemsViewModel {
     }
 
     private void getBooksFromCache() {
-        List<Book> books = bookCacheService.getBooks();
+        List<BookEntity> books = bookCacheService.getBooks();
         List<BookItemViewModel> booksVm = books.stream().map(this::toViewModel).toList();
         this.books.addAll(booksVm);
     }
 
-    private BookItemViewModel toViewModel(Book book) {
+    private BookItemViewModel toViewModel(BookEntity book) {
         BookItemViewModel vm = viewModelProvider.getObject();
         vm.init(book);
         return vm;

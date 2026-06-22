@@ -36,19 +36,19 @@ class BookValidationTest {
 
     @Test
     void shouldNotReturnValidationErrorForValidBook() {
-        Book book = createValidBook();
+        BookEntity book = createValidBook();
 
-        Set<ConstraintViolation<Book>> violations = validator.validate(book);
+        Set<ConstraintViolation<BookEntity>> violations = validator.validate(book);
 
         assertThat(violations).isEmpty();
     }
 
     @Test
     void shouldReturnValidationErrorWhenTitleIsBlank() {
-        Book book = createValidBook();
+        BookEntity book = createValidBook();
         book.setTitle(" ");
 
-        Set<ConstraintViolation<Book>> violations = validator.validate(book);
+        Set<ConstraintViolation<BookEntity>> violations = validator.validate(book);
 
         assertThat(violations)
                 .anyMatch(v -> v.getPropertyPath().toString().equals("title")
@@ -57,10 +57,10 @@ class BookValidationTest {
 
     @Test
     void shouldReturnValidationErrorWhenIsbnIsInvalid() {
-        Book book = createValidBook();
+        BookEntity book = createValidBook();
         book.setIsbn("12345");
 
-        Set<ConstraintViolation<Book>> violations = validator.validate(book);
+        Set<ConstraintViolation<BookEntity>> violations = validator.validate(book);
 
         assertThat(violations)
                 .anyMatch(v -> v.getPropertyPath().toString().equals("isbn")
@@ -69,10 +69,10 @@ class BookValidationTest {
 
     @Test
     void shouldReturnValidationErrorWhenDescriptionIsTooLong() {
-        Book book = createValidBook();
+        BookEntity book = createValidBook();
         book.setDescription("a".repeat(301));
 
-        Set<ConstraintViolation<Book>> violations = validator.validate(book);
+        Set<ConstraintViolation<BookEntity>> violations = validator.validate(book);
 
         assertThat(violations)
                 .anyMatch(v -> v.getPropertyPath().toString().equals("description")
@@ -81,10 +81,10 @@ class BookValidationTest {
 
     @Test
     void shouldReturnValidationErrorWhenPagesIsNegative() {
-        Book book = createValidBook();
+        BookEntity book = createValidBook();
         book.setPages(-5);
 
-        Set<ConstraintViolation<Book>> violations = validator.validate(book);
+        Set<ConstraintViolation<BookEntity>> violations = validator.validate(book);
 
         assertThat(violations)
                 .anyMatch(v -> v.getPropertyPath().toString().equals("pages")
@@ -93,10 +93,10 @@ class BookValidationTest {
 
     @Test
     void shouldReturnValidationErrorWhenAuthorsListIsEmpty() {
-        Book book = createValidBook();
+        BookEntity book = createValidBook();
         book.setAuthors(Set.of());
 
-        Set<ConstraintViolation<Book>> violations = validator.validate(book);
+        Set<ConstraintViolation<BookEntity>> violations = validator.validate(book);
 
         assertThat(violations)
                 .anyMatch(v -> v.getPropertyPath().toString().equals("authors")
@@ -105,20 +105,20 @@ class BookValidationTest {
 
     @Test
     void shouldNotReturnValidationErrorWhenGenresListIsEmpty() {
-        Book book = createValidBook();
+        BookEntity book = createValidBook();
         book.setGenres(Set.of());
 
-        Set<ConstraintViolation<Book>> violations = validator.validate(book);
+        Set<ConstraintViolation<BookEntity>> violations = validator.validate(book);
 
         assertThat(violations).isEmpty();
     }
 
     @Test
     void shouldReturnValidationErrorWhenAuthorIsBlank() {
-        Book book = createValidBook();
-        book.setAuthors(Set.of(new Author(" ")));
+        BookEntity book = createValidBook();
+        book.setAuthors(Set.of(new AuthorEntity(" ")));
 
-        Set<ConstraintViolation<Book>> violations = validator.validate(book);
+        Set<ConstraintViolation<BookEntity>> violations = validator.validate(book);
 
         assertThat(violations)
                 .anyMatch(v -> v.getPropertyPath().toString().contains("authors")
@@ -127,10 +127,10 @@ class BookValidationTest {
 
     @Test
     void shouldReturnValidationErrorWhenGenreIsBlank() {
-        Book book = createValidBook();
-        book.setGenres(Set.of(new Genre(" ")));
+        BookEntity book = createValidBook();
+        book.setGenres(Set.of(new GenreEntity(" ")));
 
-        Set<ConstraintViolation<Book>> violations = validator.validate(book);
+        Set<ConstraintViolation<BookEntity>> violations = validator.validate(book);
 
         assertThat(violations)
                 .anyMatch(v -> v.getPropertyPath().toString().contains("genres")
@@ -139,10 +139,10 @@ class BookValidationTest {
 
     @Test
     void shouldReturnValidationErrorWhenRatingIsNegative() {
-        Book book = createValidBook();
+        BookEntity book = createValidBook();
         book.setRating(-1);
 
-        Set<ConstraintViolation<Book>> violations = validator.validate(book);
+        Set<ConstraintViolation<BookEntity>> violations = validator.validate(book);
 
         assertThat(violations)
                 .anyMatch(v -> v.getPropertyPath().toString().contains("rating")
@@ -151,10 +151,10 @@ class BookValidationTest {
 
     @Test
     void shouldReturnValidationErrorWhenRatingExceedsFive() {
-        Book book = createValidBook();
+        BookEntity book = createValidBook();
         book.setRating(6);
 
-        Set<ConstraintViolation<Book>> violations = validator.validate(book);
+        Set<ConstraintViolation<BookEntity>> violations = validator.validate(book);
 
         assertThat(violations)
                 .anyMatch(v -> v.getPropertyPath().toString().contains("rating")
@@ -163,11 +163,11 @@ class BookValidationTest {
 
     @Test
     void shouldReturnValidationErrorWhenBorrowedBookDoesNotHaveBorrower() {
-        Book book = createValidBook();
+        BookEntity book = createValidBook();
         book.setBorrowedBy("");
         book.setStatus(BookStatus.BORROWED);
 
-        Set<ConstraintViolation<Book>> violations = validator.validate(book);
+        Set<ConstraintViolation<BookEntity>> violations = validator.validate(book);
 
         assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().contains("borrowedBy")
                 && "book.validation.borrowedBy".equals(v.getMessage()));
@@ -175,20 +175,20 @@ class BookValidationTest {
 
     @Test
     void shouldReturnValidationErrorWhenReadDateIsFromFuture() {
-        Book book = createValidBook();
+        BookEntity book = createValidBook();
         LocalDate readDate = LocalDate.now().plusDays(1);
         book.setReadDate(readDate);
 
-        Set<ConstraintViolation<Book>> violations = validator.validate(book);
+        Set<ConstraintViolation<BookEntity>> violations = validator.validate(book);
 
         assertThat(violations)
                 .anyMatch(v -> v.getPropertyPath().toString().contains("readDate")
                         && "book.validation.readDate".equals(v.getMessage()));
     }
 
-    private Book createValidBook() {
+    private BookEntity createValidBook() {
         LocalDateTime currentTime = LocalDateTime.now();
-        return Book.builder()
+        return BookEntity.builder()
                 .id(UUID.randomUUID())
                 .title("Valid Title")
                 .isbn("")
@@ -201,8 +201,8 @@ class BookValidationTest {
                 .modificationDate(currentTime)
                 .readDate(LocalDate.now())
                 .status(BookStatus.ON_SHELF)
-                .authors(Set.of(new Author("Author One"), new Author("Author Two")))
-                .genres(Set.of(new Genre("Genre One"), new Genre("Genre Two")))
+                .authors(Set.of(new AuthorEntity("Author One"), new AuthorEntity("Author Two")))
+                .genres(Set.of(new GenreEntity("Genre One"), new GenreEntity("Genre Two")))
                 .build();
     }
 }

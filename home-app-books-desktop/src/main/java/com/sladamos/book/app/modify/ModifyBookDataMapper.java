@@ -1,8 +1,8 @@
 package com.sladamos.book.app.modify;
 
-import com.sladamos.book.model.Author;
-import com.sladamos.book.model.Book;
-import com.sladamos.book.model.Genre;
+import com.sladamos.book.model.AuthorEntity;
+import com.sladamos.book.model.BookEntity;
+import com.sladamos.book.model.GenreEntity;
 import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -50,7 +50,7 @@ public class ModifyBookDataMapper {
         vm.getGenres().setAll(draft.getGenres());
     }
 
-    public void updateDraftFromBook(ModifyBookDraft draft, Book book) {
+    public void updateDraftFromBook(ModifyBookDraft draft, BookEntity book) {
         draft.setId(book.getId());
         draft.setTitle(book.getTitle());
         draft.setIsbn(book.getIsbn());
@@ -63,12 +63,12 @@ public class ModifyBookDataMapper {
         draft.setReadDate(book.getReadDate());
         draft.setCoverImage(book.getCoverImage());
         draft.setStatus(book.getStatus());
-        draft.getAuthors().addAll(book.getAuthors().stream().map(Author::getName).collect(Collectors.toSet()));
-        draft.getGenres().addAll(book.getGenres().stream().map(Genre::getName).collect(Collectors.toSet()));
+        draft.getAuthors().addAll(book.getAuthors().stream().map(AuthorEntity::getName).collect(Collectors.toSet()));
+        draft.getGenres().addAll(book.getGenres().stream().map(GenreEntity::getName).collect(Collectors.toSet()));
     }
 
-    public Book.BookBuilder toBookBuilder(ModifyBookViewModel viewModel) {
-        return Book.builder()
+    public BookEntity.BookEntityBuilder toBookBuilder(ModifyBookViewModel viewModel) {
+        return BookEntity.builder()
                 .id(viewModel.getId().get())
                 .title(viewModel.getTitle().get())
                 .isbn(viewModel.getIsbn().get())
@@ -83,11 +83,11 @@ public class ModifyBookDataMapper {
                 .status(viewModel.getStatus().get())
                 .authors(viewModel.getAuthors().stream()
                         .filter(StringUtils::isNotBlank)
-                        .map(Author::new)
+                        .map(AuthorEntity::new)
                         .collect(Collectors.toSet()))
                 .genres(viewModel.getGenres().stream()
                         .filter(StringUtils::isNotBlank)
-                        .map(Genre::new)
+                        .map(GenreEntity::new)
                         .collect(Collectors.toSet()));
     }
 }

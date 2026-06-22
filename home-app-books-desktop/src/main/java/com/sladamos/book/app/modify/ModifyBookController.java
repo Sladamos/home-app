@@ -12,8 +12,8 @@ import com.sladamos.book.app.modify.component.status.SelectStatusController;
 import com.sladamos.book.app.modify.component.status.SelectStatusViewModel;
 import com.sladamos.book.app.modify.mode.ModifyBookMode;
 import com.sladamos.book.app.modify.validation.FormValidationHandler;
-import com.sladamos.book.exception.BookValidationException;
-import com.sladamos.book.model.Book;
+import com.sladamos.common.exception.ValidationException;
+import com.sladamos.book.model.BookEntity;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -25,8 +25,8 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import static com.sladamos.book.model.Book.MIN_NUMBER_OF_AUTHORS;
-import static com.sladamos.book.model.Book.MIN_NUMBER_OF_GENRES;
+import static com.sladamos.book.model.BookEntity.MIN_NUMBER_OF_AUTHORS;
+import static com.sladamos.book.model.BookEntity.MIN_NUMBER_OF_GENRES;
 
 @Slf4j
 @Component
@@ -156,11 +156,11 @@ public class ModifyBookController {
     private void onSubmitBookClicked() {
         log.info("Submit button clicked");
         validationHandler.disableLabels();
-        Book book = mode.convert(viewModel);
+        BookEntity book = mode.convert(viewModel);
         try {
             mode.persist(book);
             mode.onSuccess(book);
-        } catch (BookValidationException e) {
+        } catch (ValidationException e) {
             log.error("Book validation failed: [reason: {}]", e.getMessage());
             validationHandler.display(e.getViolations()).ifPresent(field -> {
                 log.info("Focusing and scrolling to field: [{}]", field);
@@ -238,7 +238,7 @@ public class ModifyBookController {
         validationHandler.registerField("genres", genresValidationLabel);
         validationHandler.registerField("pages", pagesValidationLabel);
         validationHandler.registerField("borrowedBy", selectStatusController.getBorrowedByValidationLabel());
-        validationHandler.registerFieldWithLimit("description", descriptionValidationLabel, Book.MAX_DESCRIPTION_SIZE);
+        validationHandler.registerFieldWithLimit("description", descriptionValidationLabel, BookEntity.MAX_DESCRIPTION_SIZE);
         validationHandler.disableLabels();
     }
 }

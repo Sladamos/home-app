@@ -5,8 +5,8 @@ import com.sladamos.book.app.modify.ModifyBookDataMapper;
 import com.sladamos.book.app.modify.ModifyBookDraft;
 import com.sladamos.book.app.modify.ModifyBookViewModel;
 import com.sladamos.book.app.modify.event.OnBookCreated;
-import com.sladamos.book.exception.BookValidationException;
-import com.sladamos.book.model.Book;
+import com.sladamos.common.exception.ValidationException;
+import com.sladamos.book.model.BookEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
@@ -37,7 +37,7 @@ public class AddBookMode implements ModifyBookMode {
     }
 
     @Override
-    public Book convert(ModifyBookViewModel viewModel) {
+    public BookEntity convert(ModifyBookViewModel viewModel) {
         LocalDateTime now = LocalDateTime.now();
         return modifyBookDataMapper.toBookBuilder(viewModel)
                 .creationDate(now)
@@ -46,12 +46,12 @@ public class AddBookMode implements ModifyBookMode {
     }
 
     @Override
-    public void persist(Book book) throws BookValidationException {
+    public void persist(BookEntity book) throws ValidationException {
         bookService.createBook(book);
     }
 
     @Override
-    public void onSuccess(Book book) {
+    public void onSuccess(BookEntity book) {
         addBookDraft.reset();
         eventPublisher.publishEvent(new OnBookCreated(book));
     }

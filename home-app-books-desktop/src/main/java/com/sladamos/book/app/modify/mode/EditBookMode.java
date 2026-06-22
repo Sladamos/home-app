@@ -4,8 +4,8 @@ import com.sladamos.book.app.modify.ModifyBookDraft;
 import com.sladamos.book.app.modify.ModifyBookDataMapper;
 import com.sladamos.book.app.modify.event.OnBookEdited;
 import com.sladamos.book.app.modify.ModifyBookViewModel;
-import com.sladamos.book.exception.BookValidationException;
-import com.sladamos.book.model.Book;
+import com.sladamos.common.exception.ValidationException;
+import com.sladamos.book.model.BookEntity;
 import com.sladamos.book.BookService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -25,9 +25,9 @@ public class EditBookMode implements ModifyBookMode {
     private final ModifyBookDataMapper modifyBookDataMapper;
     private final ModifyBookDraft editBookDraft;
 
-    private Book originalBook;
+    private BookEntity originalBook;
 
-    public void init(Book originalBook) {
+    public void init(BookEntity originalBook) {
         this.originalBook = originalBook;
         modifyBookDataMapper.updateDraftFromBook(editBookDraft, originalBook);
     }
@@ -48,7 +48,7 @@ public class EditBookMode implements ModifyBookMode {
     }
 
     @Override
-    public Book convert(ModifyBookViewModel viewModel) {
+    public BookEntity convert(ModifyBookViewModel viewModel) {
         return modifyBookDataMapper.toBookBuilder(viewModel)
                 .creationDate(originalBook.getCreationDate())
                 .modificationDate(LocalDateTime.now())
@@ -56,12 +56,12 @@ public class EditBookMode implements ModifyBookMode {
     }
 
     @Override
-    public void persist(Book book) throws BookValidationException {
+    public void persist(BookEntity book) throws ValidationException {
         bookService.updateBook(book);
     }
 
     @Override
-    public void onSuccess(Book book) {
+    public void onSuccess(BookEntity book) {
         eventPublisher.publishEvent(new OnBookEdited(book));
     }
 

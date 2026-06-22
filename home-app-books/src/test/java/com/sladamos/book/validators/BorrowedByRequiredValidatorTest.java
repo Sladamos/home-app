@@ -1,6 +1,6 @@
 package com.sladamos.book.validators;
 
-import com.sladamos.book.model.Book;
+import com.sladamos.book.model.BookEntity;
 import com.sladamos.book.model.BookStatus;
 import jakarta.validation.ConstraintValidatorContext;
 import jakarta.validation.ConstraintValidatorContext.ConstraintViolationBuilder;
@@ -17,7 +17,7 @@ class BorrowedByRequiredValidatorTest {
 
     @Test
     void shouldMarkBookAsInvalidWhenBookIsBorrowedAndBorrowedByIsEmpty() {
-        Book book = Book.builder().status(BookStatus.BORROWED).build();
+        BookEntity book = BookEntity.builder().status(BookStatus.BORROWED).build();
         String defaultMessage = "Field 'borrowedBy' must not be blank when status is BORROWED";
 
         ConstraintValidatorContext context = mock(ConstraintValidatorContext.class);
@@ -40,7 +40,7 @@ class BorrowedByRequiredValidatorTest {
 
     @Test
     void shouldMarkBookAsValidWhenBookIsBorrowedAndBorrowedByIsNotEmpty() {
-        Book book = Book.builder()
+        BookEntity book = BookEntity.builder()
                 .status(BookStatus.ON_SHELF)
                 .borrowedBy("RandomPerson")
                 .build();
@@ -53,7 +53,7 @@ class BorrowedByRequiredValidatorTest {
 
     @Test
     void shouldMarkBookAsValidWhenBookIsNotBorrowed() {
-        Book book = Book.builder().status(BookStatus.ON_SHELF).build();
+        BookEntity book = BookEntity.builder().status(BookStatus.ON_SHELF).build();
         ConstraintValidatorContext context = mock(ConstraintValidatorContext.class);
 
         boolean isValid = validator.isValid(book, context);

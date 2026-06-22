@@ -1,6 +1,6 @@
 package com.sladamos.book.app.items.event;
 
-import com.sladamos.book.model.Book;
+import com.sladamos.book.model.BookEntity;
 
-public record OnBookDuplicated (Book book) {
+public record OnBookDuplicated (BookEntity book) {
 }

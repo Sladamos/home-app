@@ -1,7 +1,7 @@
 package com.sladamos.book.app.items;
 
 import com.sladamos.book.app.items.viewmodel.RateableViewModel;
-import com.sladamos.book.model.Book;
+import com.sladamos.book.model.BookEntity;
 import javafx.beans.binding.Bindings;
 import javafx.css.PseudoClass;
 import javafx.scene.control.Label;
@@ -20,7 +20,7 @@ public class StarFactory {
 
     public List<Label> createStars(RateableViewModel viewModel) {
         List<Label> stars = new ArrayList<>();
-        for (int i = Book.MIN_RATING; i < Book.MAX_RATING; i++) {
+        for (int i = BookEntity.MIN_RATING; i < BookEntity.MAX_RATING; i++) {
             Label star = new Label();
             star.getStyleClass().add(RATING_STAR_CLASS);
             setStarText(star, viewModel, i);
