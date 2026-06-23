@@ -11,8 +11,8 @@ import java.util.UUID;
 public interface BookService {
     List<BookEntity> getAllBooks();
     BookEntity getBookById(UUID id) throws NotFoundException;
-    void createBook(BookEntity book) throws ValidationException;
-    void updateBook(BookEntity book) throws ValidationException;
+    BookEntity createBook(BookEntity book) throws ValidationException;
+    BookEntity updateBook(BookEntity book) throws ValidationException;
     BookEntity duplicateBook(BookEntity sourceBook, List<String> existingTitles) throws ValidationException, DuplicationException;
     BookEntity duplicateBook(UUID id) throws NotFoundException, ValidationException, DuplicationException;
     void deleteBook(UUID id) throws NotFoundException;

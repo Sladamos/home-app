@@ -15,7 +15,7 @@ public interface ModifyBookMode {
 
     ModifyBookDraft getBookDraft();
 
-    void persist(BookEntity book) throws ValidationException;
+    BookEntity persist(BookEntity book) throws ValidationException;
 
     void onSuccess(BookEntity book);
 

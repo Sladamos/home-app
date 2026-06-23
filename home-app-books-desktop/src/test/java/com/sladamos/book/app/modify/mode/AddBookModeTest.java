@@ -14,8 +14,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.ApplicationEventPublisher;
 
-import java.time.LocalDateTime;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
@@ -40,18 +38,6 @@ class AddBookModeTest {
 
     @Nested
     class Convert {
-
-        @Test
-        void shouldSetBothTimestampsToNow() {
-            ModifyBookViewModel vm = createViewModel();
-            LocalDateTime before = LocalDateTime.now();
-
-            BookEntity result = mode.convert(vm);
-
-            LocalDateTime after = LocalDateTime.now();
-            assertThat(result.getCreationDate()).isBetween(before, after);
-            assertThat(result.getModificationDate()).isBetween(before, after);
-        }
 
         @Test
         void shouldMapBasicFields() {

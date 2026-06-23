@@ -134,6 +134,7 @@ class BookRepositoryTest {
     void shouldFindBookByAuthorName() {
         BookEntity book = BookEntity.builder()
                 .id(UUID.randomUUID())
+                .status(BookStatus.ON_SHELF)
                 .title("Title 2")
                 .authors(Set.of(new AuthorEntity("A2")))
                 .build();
@@ -149,10 +150,12 @@ class BookRepositoryTest {
     void shouldFindBookByGenreName() {
         BookEntity book = BookEntity.builder()
                 .id(UUID.randomUUID())
+                .status(BookStatus.ON_SHELF)
                 .title("Title 3")
                 .authors(Set.of(new AuthorEntity("A3")))
                 .genres(Set.of(new GenreEntity("G3")))
                 .build();
+
         bookRepository.save(book);
 
         List<BookEntity> found = bookRepository.findByGenresName("G3");

@@ -6,12 +6,12 @@ import com.sladamos.book.model.GenreEntity;
 import com.sladamos.book.repository.AuthorRepository;
 import com.sladamos.book.repository.BookRepository;
 import com.sladamos.book.repository.GenreRepository;
-import com.sladamos.common.converter.StringDuplicator;
 import com.sladamos.common.exception.DuplicationException;
 import com.sladamos.common.exception.NotFoundException;
 import com.sladamos.common.exception.ValidationException;
 import com.sladamos.common.image.ImageCoverResizer;
 import com.sladamos.common.image.ImageParameters;
+import com.sladamos.common.string.StringDuplicator;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -58,16 +57,16 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public void createBook(BookEntity book) throws ValidationException {
+    public BookEntity createBook(BookEntity book) throws ValidationException {
         log.info("Creating book: [title: {}]", book.getTitle());
-        processAndSaveBook(book);
+        return processAndSaveBook(book);
     }
 
     @Override
     @Transactional
-    public void updateBook(BookEntity book) throws ValidationException {
+    public BookEntity updateBook(BookEntity book) throws ValidationException {
         log.info("Updating book: [id: {}, title: {}]", book.getId(), book.getTitle());
-        processAndSaveBook(book);
+        return processAndSaveBook(book);
     }
 
     @Override
@@ -92,12 +91,9 @@ public class BookServiceImpl implements BookService {
         }
 
         String duplicatedTitle = stringDuplicator.duplicateStringWithCounter(sourceBook.getTitle(), existingTitles);
-        LocalDateTime now = LocalDateTime.now();
         BookEntity duplicatedBook = sourceBook.toBuilder()
-                .id(UUID.randomUUID())
                 .title(duplicatedTitle)
-                .creationDate(now)
-                .modificationDate(now)
+                .id(UUID.randomUUID())
                 .build();
 
         return processAndSaveBook(duplicatedBook);

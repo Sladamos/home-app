@@ -44,29 +44,6 @@ class EditBookModeTest {
     class Convert {
 
         @Test
-        void shouldPreserveOriginalCreationDate() {
-            BookEntity originalBook = createBook();
-            EditBookMode mode = createMode(originalBook);
-            ModifyBookViewModel vm = createViewModel(originalBook);
-
-            BookEntity result = mode.convert(vm);
-
-            assertThat(result.getCreationDate()).isEqualTo(originalBook.getCreationDate());
-        }
-
-        @Test
-        void shouldUpdateModificationDate() {
-            BookEntity originalBook = createBook();
-            EditBookMode mode = createMode(originalBook);
-            ModifyBookViewModel vm = createViewModel(originalBook);
-            LocalDateTime before = LocalDateTime.now();
-
-            BookEntity result = mode.convert(vm);
-
-            assertThat(result.getModificationDate()).isAfterOrEqualTo(before);
-        }
-
-        @Test
         void shouldPreserveOriginalId() {
             BookEntity originalBook = createBook();
             EditBookMode mode = createMode(originalBook);

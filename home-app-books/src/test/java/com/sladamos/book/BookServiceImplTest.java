@@ -4,7 +4,7 @@ import com.sladamos.book.model.BookEntity;
 import com.sladamos.book.repository.AuthorRepository;
 import com.sladamos.book.repository.BookRepository;
 import com.sladamos.book.repository.GenreRepository;
-import com.sladamos.common.converter.StringDuplicator;
+import com.sladamos.common.string.StringDuplicator;
 import com.sladamos.common.exception.DuplicationException;
 import com.sladamos.common.exception.NotFoundException;
 import com.sladamos.common.exception.ValidationException;

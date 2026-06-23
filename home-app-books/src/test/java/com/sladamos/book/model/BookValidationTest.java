@@ -186,6 +186,18 @@ class BookValidationTest {
                         && "book.validation.readDate".equals(v.getMessage()));
     }
 
+    @Test
+    void shouldReturnValidationErrorWhenStatusIsNotSet() {
+        BookEntity book = createValidBook();
+        book.setStatus(null);
+
+        Set<ConstraintViolation<BookEntity>> violations = validator.validate(book);
+
+        assertThat(violations)
+                .anyMatch(v -> v.getPropertyPath().toString().contains("status")
+                        && "book.validation.status".equals(v.getMessage()));
+    }
+
     private BookEntity createValidBook() {
         LocalDateTime currentTime = LocalDateTime.now();
         return BookEntity.builder()

@@ -158,8 +158,8 @@ public class ModifyBookController {
         validationHandler.disableLabels();
         BookEntity book = mode.convert(viewModel);
         try {
-            mode.persist(book);
-            mode.onSuccess(book);
+            BookEntity persistedBook = mode.persist(book);
+            mode.onSuccess(persistedBook);
         } catch (ValidationException e) {
             log.error("Book validation failed: [reason: {}]", e.getMessage());
             validationHandler.display(e.getViolations()).ifPresent(field -> {

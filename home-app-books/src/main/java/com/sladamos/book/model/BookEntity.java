@@ -1,25 +1,26 @@
 package com.sladamos.book.model;
 
 import com.sladamos.book.validators.BorrowedByRequired;
+import com.sladamos.common.model.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Set;
-import java.util.UUID;
 
 @Entity
-@Builder(toBuilder = true)
+@SuperBuilder(toBuilder = true)
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @BorrowedByRequired(message = "book.validation.borrowedBy")
 @Table(name = "BOOK")
-public class BookEntity {
+public class BookEntity extends BaseEntity {
 
     public static final int MAX_RATING = 5;
 
@@ -34,9 +35,6 @@ public class BookEntity {
     public static final int MAX_COVER_WIDTH = 200;
 
     public static final int MAX_COVER_HEIGHT = 300;
-
-    @Id
-    private UUID id;
 
     @NotBlank(message = "book.validation.title")
     private String title;
@@ -63,14 +61,12 @@ public class BookEntity {
 
     private boolean favorite;
 
-    private LocalDateTime creationDate;
-
-    private LocalDateTime modificationDate;
-
     @PastOrPresent(message = "book.validation.readDate")
     private LocalDate readDate;
 
     @Enumerated(EnumType.STRING)
+    @NotNull(message = "book.validation.status")
+    @Column(nullable = false)
     private BookStatus status;
 
     @Valid
@@ -104,7 +100,7 @@ public class BookEntity {
         this.readDate = book.getReadDate();
         this.status = book.getStatus();
         this.coverImage = book.getCoverImage();
-        this.modificationDate = LocalDateTime.now();
+        setModificationDate(book.getModificationDate());
         if (this.authors != null) {
             this.authors.clear();
             this.authors.addAll(book.getAuthors());
@@ -117,5 +113,11 @@ public class BookEntity {
         } else {
             this.genres = book.getGenres();
         }
+    }
+
+    @Override
+    @Transient
+    public String getName() {
+        return title;
     }
 }

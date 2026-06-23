@@ -67,7 +67,7 @@ public class MultipleFieldsController {
 
     private EventHandler<ActionEvent> onDeleteButtonClicked(TextField field) {
         return e -> {
-            log.info("Delete button clicked for field: {}", field.getText());
+            log.info("Delete button clicked: [field: {}]", field.getText());
             fieldsContainer.getChildren().remove(field.getParent());
             updateCollectionInViewModel();
             updateVisibilityOfDeleteButtons();
