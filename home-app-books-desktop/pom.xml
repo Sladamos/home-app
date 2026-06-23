@@ -98,7 +98,7 @@
                             <noHeaderFiles>true</noHeaderFiles>
                             <options>
                                 <option>-Dlogback.configurationFile=src/main/resources/logback-dev.xml</option>
-<!--                                <option>-Dspring.profiles.active=cloud</option>-->
+<!--                                <option>-Dspring.profiles.active=cloud-eu</option>-->
                             </options>
                         </configuration>
                     </execution>

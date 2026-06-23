@@ -14,6 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -39,6 +42,7 @@ public class BookBackupService {
         log.info("Creating backup in: [path: {}]", targetPath);
 
         List<BookEntity> books = bookRepository.findAll();
+        ensureParentDirsExist(targetPath);
         objectMapper.writeValue(new File(targetPath), books);
 
         log.info("Successfully created backup in: [path: {}]", targetPath);
@@ -66,6 +70,14 @@ public class BookBackupService {
 
     private String resolvePath(String filePath) {
         return (filePath != null && !filePath.isEmpty()) ? filePath : defaultPath;
+    }
+
+    private void ensureParentDirsExist(String targetPath) throws IOException {
+        Path parentDir = Paths.get(targetPath).getParent();
+        if (parentDir != null) {
+            log.info("Creating parent directory: [path: {}]", parentDir.toAbsolutePath());
+            Files.createDirectories(parentDir);
+        }
     }
 
     private Set<AuthorEntity> processAuthors(Set<AuthorEntity> rawAuthors, Map<String, AuthorEntity> cache) {
