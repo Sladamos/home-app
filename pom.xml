@@ -35,7 +35,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<imageio.version>3.13.1</imageio.version>
 		<testfx.version>4.0.18</testfx.version>
-		<testfx.monocle.version>jdk-17+0</testfx.monocle.version>
+		<openjfx.monocle.version>21.0.2</openjfx.monocle.version>
 	</properties>
 
 	<dependencyManagement>
@@ -140,8 +140,8 @@
 			</dependency>
 			<dependency>
 				<groupId>org.testfx</groupId>
-				<artifactId>testfx-monocle</artifactId>
-				<version>${testfx.monocle.version}</version>
+				<artifactId>openjfx-monocle</artifactId>
+				<version>${openjfx.monocle.version}</version>
 				<scope>test</scope>
 			</dependency>
 		</dependencies>
@@ -158,6 +158,14 @@
 		<profile>
 			<id>activity</id>
 			<modules>
+				<module>home-app-activity</module>
+			</modules>
+		</profile>
+		<profile>
+			<id>all</id>
+			<modules>
+				<module>home-app-books</module>
+				<module>home-app-books-desktop</module>
 				<module>home-app-activity</module>
 			</modules>
 		</profile>
