@@ -35,7 +35,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<imageio.version>3.13.1</imageio.version>
 		<testfx.version>4.0.18</testfx.version>
-		<testfx.monocle.version>jdk-12+26</testfx.monocle.version>
+		<testfx.monocle.version>jdk-17+0</testfx.monocle.version>
 	</properties>
 
 	<dependencyManagement>

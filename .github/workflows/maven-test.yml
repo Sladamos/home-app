@@ -19,11 +19,10 @@ jobs:
           distribution: 'temurin'
 
       - name: Run Maven tests
-        run: >
-          xvfb-run --auto-servernum 
-          mvn test 
-          -Dtestfx.robot=glass 
-          -Dtestfx.headless=true 
-          -Dprism.order=sw 
-          -Dglass.platform=Monocle 
-          -Dmonocle.platform=Headless
+        run: |
+          mvn test \
+          -Dtestfx.robot=glass \
+          -Dtestfx.headless=true \
+          -Dglass.platform=Monocle \
+          -Dmonocle.platform=Headless \
+          -Dprism.order=sw
