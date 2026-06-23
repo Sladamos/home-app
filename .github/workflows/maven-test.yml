@@ -21,4 +21,4 @@ jobs:
           distribution: 'temurin'
 
       - name: Run Maven tests
-        run: mvn test
+        run: xvfb-run --auto-servernum mvn test
