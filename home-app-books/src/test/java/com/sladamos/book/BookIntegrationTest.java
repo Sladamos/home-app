@@ -117,8 +117,13 @@ class BookIntegrationTest {
                         .content(objectMapper.writeValueAsString(patch)))
                 .andExpect(status().isOk());
         BookEntity updated = bookRepository.findById(existingId).orElseThrow();
-        assertThat(updated.getTitle()).isEqualTo(updatedTitle);
-        assertThat(updated.getModificationDate()).isCloseTo(LocalDateTime.now(), within(1, ChronoUnit.MINUTES));
+
+
+        assertAll(
+                () -> assertThat(updated.getTitle()).isEqualTo(updatedTitle),
+                () -> assertThat(updated.getCreationDate()).isNotNull(),
+                () -> assertThat(updated.getModificationDate()).isCloseTo(LocalDateTime.now(), within(1, ChronoUnit.MINUTES))
+        );
     }
 
     @Test

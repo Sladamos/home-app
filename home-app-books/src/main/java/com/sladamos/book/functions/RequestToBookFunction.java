@@ -1,10 +1,10 @@
 package com.sladamos.book.functions;
 
+import com.sladamos.book.dto.PutBookRequest;
 import com.sladamos.book.model.AuthorEntity;
 import com.sladamos.book.model.BookEntity;
 import com.sladamos.book.model.BookStatus;
 import com.sladamos.book.model.GenreEntity;
-import com.sladamos.book.dto.PutBookRequest;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
