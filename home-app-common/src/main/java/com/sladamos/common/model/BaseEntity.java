@@ -27,7 +27,4 @@ public abstract class BaseEntity {
 
     @UpdateTimestamp
     private LocalDateTime modificationDate;
-
-    @Transient
-    public abstract String getName();
 }

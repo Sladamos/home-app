@@ -101,8 +101,8 @@ public class BookController {
         return new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
 
-    private static void onValidationExceptionOccurred(UUID id, String request, ValidationException e) {
-        log.info("Book validation failed: [id: {}, title: {}, reason: {}]", id, request, e.getMessage());
+    private static void onValidationExceptionOccurred(UUID id, String title, ValidationException e) {
+        log.info("Book validation failed: [id: {}, title: {}, reason: {}]", id, title, e.getMessage());
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
     }
 }

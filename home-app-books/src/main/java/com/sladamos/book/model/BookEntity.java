@@ -114,10 +114,4 @@ public class BookEntity extends BaseEntity {
             this.genres = book.getGenres();
         }
     }
-
-    @Override
-    @Transient
-    public String getName() {
-        return title;
-    }
 }

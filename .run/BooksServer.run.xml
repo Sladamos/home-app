@@ -1,5 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="BooksServer" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <option name="ACTIVE_PROFILES" value="local" />
     <module name="home-app-books" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="com.sladamos.Main" />
     <extension name="coverage">
