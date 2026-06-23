@@ -1,4 +1,4 @@
-package com.sladamos.common.converter;
+package com.sladamos.common.string;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;

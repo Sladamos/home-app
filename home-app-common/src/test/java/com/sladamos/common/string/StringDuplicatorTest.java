@@ -1,4 +1,4 @@
-package com.sladamos.common.converter;
+package com.sladamos.common.string;
 
 import com.sladamos.common.exception.DuplicationException;
 import org.junit.jupiter.api.Test;

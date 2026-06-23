@@ -1,4 +1,4 @@
-package com.sladamos.common.converter;
+package com.sladamos.common.string;
 
 import com.sladamos.common.exception.DuplicationException;
 import lombok.extern.slf4j.Slf4j;
