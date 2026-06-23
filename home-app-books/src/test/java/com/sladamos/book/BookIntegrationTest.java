@@ -1,6 +1,7 @@
 package com.sladamos.book;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.JsonPath;
 import com.sladamos.book.dto.PatchBookRequest;
 import com.sladamos.book.dto.PutBookRequest;
 import com.sladamos.book.model.AuthorEntity;
@@ -18,16 +19,18 @@ import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.within;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.not;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -49,11 +52,10 @@ class BookIntegrationTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private UUID existingId;
+    private final UUID existingId = UUID.randomUUID();
 
     @BeforeEach
     void setUp() {
-        existingId = UUID.randomUUID();
         BookEntity existingBook = BookEntity.builder()
                 .id(existingId)
                 .title("Test Book")
@@ -116,6 +118,7 @@ class BookIntegrationTest {
                 .andExpect(status().isOk());
         BookEntity updated = bookRepository.findById(existingId).orElseThrow();
         assertThat(updated.getTitle()).isEqualTo(updatedTitle);
+        assertThat(updated.getModificationDate()).isCloseTo(LocalDateTime.now(), within(1, ChronoUnit.MINUTES));
     }
 
     @Test
@@ -128,7 +131,6 @@ class BookIntegrationTest {
     }
 
     @Test
-    @Transactional
     void shouldProperlyCreateNewBook() throws Exception {
         UUID id = UUID.randomUUID();
         PutBookRequest request = PutBookRequest.builder()
@@ -165,12 +167,33 @@ class BookIntegrationTest {
                 () -> assertThat(created.getRating()).isEqualTo(4),
                 () -> assertThat(created.isFavorite()).isTrue(),
                 () -> assertThat(created.getReadDate()).isEqualTo(LocalDate.of(2024, 3, 3)),
-                () -> assertThat(created.getCoverImage()).isEqualTo("newImage".getBytes())
+                () -> assertThat(created.getCoverImage()).isEqualTo("newImage".getBytes()),
+                () -> assertThat(created.getCreationDate()).isCloseTo(LocalDateTime.now(), within(1, ChronoUnit.MINUTES)),
+                () -> assertThat(created.getModificationDate()).isCloseTo(LocalDateTime.now(), within(1, ChronoUnit.MINUTES))
         );
     }
 
     @Test
-    @Transactional
+    void shouldProperlyDuplicateBook() throws Exception {
+        mockMvc.perform(post("/api/books/" + existingId + "/duplicate")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", not(existingId.toString())))
+                .andExpect(jsonPath("$.title").value("Test Book (1)"))
+                .andExpect(result -> {
+                    String json = result.getResponse().getContentAsString();
+                    LocalDateTime creationDate = LocalDateTime.parse(JsonPath.read(json, "$.creationDate"));
+                    LocalDateTime modificationDate = LocalDateTime.parse(JsonPath.read(json, "$.modificationDate"));
+                    assertAll(
+                            () -> assertThat(creationDate)
+                                    .isCloseTo(LocalDateTime.now(), within(1, ChronoUnit.MINUTES)),
+                            () -> assertThat(modificationDate)
+                                    .isCloseTo(LocalDateTime.now(), within(1, ChronoUnit.MINUTES))
+                    );
+                });
+    }
+
+    @Test
     void shouldProperlyReplaceExistingBook() throws Exception {
         PutBookRequest request = PutBookRequest.builder()
                 .title("New Book")
@@ -206,7 +229,9 @@ class BookIntegrationTest {
                 () -> assertThat(updated.getRating()).isEqualTo(4),
                 () -> assertThat(updated.isFavorite()).isFalse(),
                 () -> assertThat(updated.getReadDate()).isEqualTo(LocalDate.of(2024, 4, 4)),
-                () -> assertThat(updated.getCoverImage()).isEqualTo("replaceImage".getBytes())
+                () -> assertThat(updated.getCoverImage()).isEqualTo("replaceImage".getBytes()),
+                () -> assertThat(updated.getCreationDate()).isCloseTo(LocalDateTime.now(), within(1, ChronoUnit.MINUTES)),
+                () -> assertThat(updated.getModificationDate()).isCloseTo(LocalDateTime.now(), within(1, ChronoUnit.MINUTES))
         );
     }
 

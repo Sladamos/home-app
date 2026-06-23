@@ -1,15 +1,17 @@
 package com.sladamos.book;
 
+import com.sladamos.book.dto.GetBookResponse;
 import com.sladamos.book.dto.GetBooksResponse;
 import com.sladamos.book.dto.PatchBookRequest;
 import com.sladamos.book.dto.PutBookRequest;
-import com.sladamos.common.exception.DuplicationException;
-import com.sladamos.common.exception.NotFoundException;
-import com.sladamos.common.exception.ValidationException;
+import com.sladamos.book.functions.BookToResponseFunction;
 import com.sladamos.book.functions.BooksToResponseFunction;
 import com.sladamos.book.functions.RequestToBookFunction;
 import com.sladamos.book.functions.RequestToUpdateBookFunction;
 import com.sladamos.book.model.BookEntity;
+import com.sladamos.common.exception.DuplicationException;
+import com.sladamos.common.exception.NotFoundException;
+import com.sladamos.common.exception.ValidationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -27,6 +29,8 @@ public class BookController {
     private final BookService service;
 
     private final BooksToResponseFunction booksToResponse;
+
+    private final BookToResponseFunction bookToResponse;
 
     private final RequestToBookFunction requestToBook;
 
@@ -60,7 +64,7 @@ public class BookController {
             service.updateBook(requestToUpdateBook.apply(book, request));
             log.info("Book updated: [id: {}, title: {}]", book.getId(), request.getTitle());
         } catch (NotFoundException e) {
-            onNotFoundExceptionOccurred(id);
+            throw responseStatusException(id);
         } catch (ValidationException e) {
             onValidationExceptionOccurred(id, request.getTitle(), e);
         }
@@ -73,27 +77,28 @@ public class BookController {
             service.deleteBook(id);
             log.info("Book deleted: [id: {}]", id);
         } catch (NotFoundException e) {
-            onNotFoundExceptionOccurred(id);
+            throw responseStatusException(id);
         }
     }
 
     @PostMapping("/{id}/duplicate")
-    public void duplicateBook(@PathVariable("id") UUID id) {
+    public GetBookResponse duplicateBook(@PathVariable("id") UUID id) {
         log.info("Request duplicating book: [id: {}]", id);
         try {
-            service.duplicateBook(id);
+            BookEntity book = service.duplicateBook(id);
             log.info("Book duplicated: [id: {}]", id);
+            return bookToResponse.apply(book);
         } catch (NotFoundException e) {
-            onNotFoundExceptionOccurred(id);
+            throw responseStatusException(id);
         } catch (ValidationException | DuplicationException e) {
             log.info("Book duplication failed: [id: {}, reason: {}]", id, e.getMessage());
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
     }
 
-    private static void onNotFoundExceptionOccurred(UUID id) {
+    private static ResponseStatusException responseStatusException(UUID id) throws ResponseStatusException {
         log.info("Book not found: [id: {}]", id);
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        return new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
 
     private static void onValidationExceptionOccurred(UUID id, String request, ValidationException e) {

@@ -112,7 +112,7 @@ public class BookServiceImpl implements BookService {
         validateBook(book);
         resizeBookCover(book);
         attachExistingAuthorsAndGenres(book);
-        return bookRepository.save(book);
+        return bookRepository.saveAndFlush(book);
     }
 
     private void validateBook(BookEntity book) throws ValidationException {

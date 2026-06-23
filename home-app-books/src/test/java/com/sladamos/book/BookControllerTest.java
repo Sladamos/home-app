@@ -1,15 +1,17 @@
 package com.sladamos.book;
 
+import com.sladamos.book.dto.GetBookResponse;
 import com.sladamos.book.dto.GetBooksResponse;
 import com.sladamos.book.dto.PatchBookRequest;
 import com.sladamos.book.dto.PutBookRequest;
-import com.sladamos.common.exception.DuplicationException;
-import com.sladamos.common.exception.NotFoundException;
-import com.sladamos.common.exception.ValidationException;
+import com.sladamos.book.functions.BookToResponseFunction;
 import com.sladamos.book.functions.BooksToResponseFunction;
 import com.sladamos.book.functions.RequestToBookFunction;
 import com.sladamos.book.functions.RequestToUpdateBookFunction;
 import com.sladamos.book.model.BookEntity;
+import com.sladamos.common.exception.DuplicationException;
+import com.sladamos.common.exception.NotFoundException;
+import com.sladamos.common.exception.ValidationException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -23,6 +25,7 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -33,6 +36,9 @@ class BookControllerTest {
 
     @Mock
     private BooksToResponseFunction booksToResponse;
+
+    @Mock
+    private BookToResponseFunction bookToResponse;
 
     @Mock
     private RequestToBookFunction requestToBook;
@@ -99,11 +105,21 @@ class BookControllerTest {
     @Test
     void shouldDuplicateExistingBook() throws NotFoundException, ValidationException, DuplicationException {
         UUID id = UUID.randomUUID();
-        when(service.duplicateBook(id)).thenReturn(BookEntity.builder().id(UUID.randomUUID()).title("copy").build());
+        BookEntity book = BookEntity.builder().id(id).title("A").build();
+        GetBookResponse response = GetBookResponse.builder()
+                .id(id)
+                .title("A")
+                .build();
 
-        controller.duplicateBook(id);
+        when(service.duplicateBook(id)).thenReturn(book);
+        when(bookToResponse.apply(book)).thenReturn(response);
 
-        verify(service).duplicateBook(id);
+        GetBookResponse duplicatedBook = controller.duplicateBook(id);
+
+        assertAll(
+                () -> assertThat(duplicatedBook).isSameAs(response),
+                () -> verify(service).duplicateBook(id)
+        );
     }
 
     @Test

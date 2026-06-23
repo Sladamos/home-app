@@ -10,12 +10,8 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>home-app-books</module>
-		<module>home-app-books-desktop</module>
-		<module>home-app-desktop</module>
-        <module>home-app-common-desktop</module>
-		<module>home-app-activity</module>
-        <module>home-app-common</module>
+		<module>home-app-common</module>
+		<module>home-app-common-desktop</module>
     </modules>
 
 	<properties>
@@ -143,6 +139,22 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
+
+	<profiles>
+		<profile>
+			<id>books</id>
+			<modules>
+				<module>home-app-books</module>
+				<module>home-app-books-desktop</module>
+			</modules>
+		</profile>
+		<profile>
+			<id>activity</id>
+			<modules>
+				<module>home-app-activity</module>
+			</modules>
+		</profile>
+	</profiles>
 
 	<build>
 		<pluginManagement>

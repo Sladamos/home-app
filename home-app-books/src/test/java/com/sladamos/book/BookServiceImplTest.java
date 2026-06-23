@@ -61,7 +61,7 @@ class BookServiceImplTest {
         lenient().when(authorRepository.findByName(anyString())).thenReturn(Optional.empty());
         lenient().when(genreRepository.findByName(anyString())).thenReturn(Optional.empty());
         lenient().when(imageCoverResizer.resizeImage(any())).thenAnswer(invocation -> invocation.<ImageParameters>getArgument(0).originalBytes());
-        lenient().when(bookRepository.save(any(BookEntity.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        lenient().when(bookRepository.saveAndFlush(any(BookEntity.class))).thenAnswer(invocation -> invocation.getArgument(0));
     }
 
     @Nested
@@ -112,7 +112,7 @@ class BookServiceImplTest {
 
             bookService.createBook(book);
 
-            verify(bookRepository).save(book);
+            verify(bookRepository).saveAndFlush(book);
         }
 
         @Test
@@ -135,7 +135,7 @@ class BookServiceImplTest {
 
             bookService.updateBook(book);
 
-            verify(bookRepository).save(book);
+            verify(bookRepository).saveAndFlush(book);
         }
 
         @Test
@@ -203,7 +203,7 @@ class BookServiceImplTest {
 
             assertThat(result.getTitle()).isEqualTo(expectedTitle);
             assertThat(result.getId()).isNotEqualTo(id);
-            verify(bookRepository).save(result);
+            verify(bookRepository).saveAndFlush(result);
         }
     }
 }

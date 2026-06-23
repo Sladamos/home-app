@@ -11,12 +11,14 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.within;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @DataJpaTest
@@ -39,11 +41,9 @@ class BookRepositoryTest {
                 .genres(Set.of(new GenreEntity("Genre")))
                 .status(BookStatus.ON_SHELF)
                 .readDate(LocalDate.of(2000, 1, 1))
-                .creationDate(currentDate)
-                .modificationDate(currentDate)
                 .build();
 
-        bookRepository.save(book);
+        bookRepository.saveAndFlush(book);
 
         Optional<BookEntity> foundBook = bookRepository.findById(book.getId());
         assertAll("Saves and finds book by ID",
@@ -54,8 +54,8 @@ class BookRepositoryTest {
                 () -> assertThat(foundBook.get().getCoverImage()).isEqualTo(new byte[]{1, 2, 3}),
                 () -> assertThat(foundBook.get().getStatus()).isEqualTo(BookStatus.ON_SHELF),
                 () -> assertThat(foundBook.get().getReadDate()).isEqualTo(LocalDate.of(2000, 1, 1)),
-                () -> assertThat(foundBook.get().getCreationDate()).isEqualTo(currentDate),
-                () -> assertThat(foundBook.get().getModificationDate()).isEqualTo(currentDate),
+                () -> assertThat(foundBook.get().getCreationDate()).isCloseTo(currentDate, within(1, ChronoUnit.MINUTES)),
+                () -> assertThat(foundBook.get().getModificationDate()).isCloseTo(currentDate, within(1, ChronoUnit.MINUTES)),
                 () -> assertThat(foundBook.get().getPages()).isEqualTo(100),
                 () -> assertThat(foundBook.get().getAuthors()).extracting(AuthorEntity::getName).containsExactly("Author"),
                 () -> assertThat(foundBook.get().getGenres()).extracting(GenreEntity::getName).containsExactly("Genre")
