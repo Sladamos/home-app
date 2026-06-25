@@ -1,36 +1,38 @@
 package com.sladamos.activity;
 
+import com.sladamos.activity.handler.ActivityHandler;
 import com.sladamos.activity.model.ActivityEntity;
-import com.sladamos.activity.model.ActivityPoolEntity;
 import com.sladamos.activity.model.ActivityType;
-import com.sladamos.activity.model.key.ActivityPoolKey;
 import com.sladamos.common.exception.NotFoundException;
-import com.sladamos.common.exception.RuntimeValidationException;
 import com.sladamos.common.exception.ValidationException;
-import com.sladamos.pool.PoolService;
-import com.sladamos.pool.model.PoolEntity;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class ActivityServiceImpl implements ActivityService {
 
     private final ActivityRepository activityRepository;
 
-    private final PoolService poolService;
-
     private final Validator validator;
+
+    private final Map<ActivityType, ActivityHandler> handlers;
+
+    public ActivityServiceImpl(ActivityRepository activityRepository, Validator validator, List<ActivityHandler> handlerList) {
+        this.activityRepository = activityRepository;
+        this.validator = validator;
+        this.handlers = handlerList.stream()
+                .collect(Collectors.toMap(ActivityHandler::supportedActivity, h -> h));
+    }
 
     @Override
     public List<ActivityEntity> getAllActivities() {
@@ -86,7 +88,9 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     private ActivityEntity processAndSaveActivity(ActivityEntity activity) throws ValidationException {
-        attachExistingPools(activity);
+        log.info("Executing handler for activity: [id: {}, activityType: {}, activityDate: {}]", activity.getId(), activity.getActivityType(), activity.getActivityDate());
+        handlers.get(activity.getActivityType()).handle(activity);
+        log.info("Validating activity: [id: {}, activityType: {}, activityDate: {}]", activity.getId(), activity.getActivityType(), activity.getActivityDate());
         Set<ConstraintViolation<ActivityEntity>> violations = validator.validate(activity);
         if (!violations.isEmpty()) {
             log.error("Validation errors occurred for activity: [id: {}, activityType: {}, activityDate: {}]", activity.getId(), activity.getActivityType(), activity.getActivityDate());
@@ -95,32 +99,4 @@ public class ActivityServiceImpl implements ActivityService {
         return activityRepository.save(activity);
     }
 
-    private void attachExistingPools(ActivityEntity activity) throws RuntimeValidationException {
-        if (activity.getActivityType() == ActivityType.SWIMMING) {
-            log.info("Attaching existing pools for activity: [id: {}, activityType: {}, activityDate: {}]", activity.getId(), activity.getActivityType(), activity.getActivityDate());
-            if (activity.getPoolSegments() != null) {
-                activity.getPoolSegments().forEach(this.attachActivityToPool(activity));
-            }
-        }
-    }
-
-    private Consumer<ActivityPoolEntity> attachActivityToPool(ActivityEntity activity) {
-        return segment -> {
-            PoolEntity pool = segment.getPool();
-            PoolEntity managedPool = poolService.getPoolEntityByName(pool.getName()).orElseGet(() -> poolService.createPool(pool));
-            if (pool.getDefaultLength() != null && !pool.getDefaultLength().equals(managedPool.getDefaultLength())) {
-                log.info("Modifying default distance from, to: [from: {}, to: {}]", managedPool.getDefaultLength(), pool.getDefaultLength());
-                managedPool.setDefaultLength(pool.getDefaultLength());
-            }
-
-            log.info("Attaching pool to segment: [id: {}, poolName: {}]", managedPool.getId(), managedPool.getName());
-            segment.setPool(managedPool);
-            segment.setActivity(activity);
-
-            if (activity.getId() != null && managedPool.getId() != null) {
-                log.info("Attaching ActivityPoolKey: [activityId: {}, poolId: {}]", activity.getId(), managedPool.getId());
-                segment.setId(new ActivityPoolKey(activity.getId(), managedPool.getId()));
-            }
-        };
-    }
-    }
+}
