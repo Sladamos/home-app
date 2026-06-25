@@ -30,6 +30,7 @@ public class SwimmingHandler implements ActivityHandler {
         if (activity.getPoolSegments() != null) {
             activity.getPoolSegments().forEach(this.attachActivityToPool(activity));
         }
+        calculateTotalDistance(activity);
     }
 
     private Consumer<ActivityPoolEntity> attachActivityToPool(ActivityEntity activity) {
@@ -50,5 +51,15 @@ public class SwimmingHandler implements ActivityHandler {
                 segment.setId(new ActivityPoolKey(activity.getId(), managedPool.getId()));
             }
         };
+    }
+
+    private void calculateTotalDistance(ActivityEntity activity) {
+        if (activity.getPoolSegments() != null) {
+            int totalDistance = activity.getPoolSegments().stream()
+                    .mapToInt(segment -> segment.getPoolLength() != null ? segment.getPoolLength() * segment.getNumberOfPools() : 0)
+                    .sum();
+            log.info("Calculated total distance in meters for activity: [id: {}, totalDistance: {}]", activity.getId(), totalDistance);
+            activity.setDistanceM(totalDistance);
+        }
     }
 }
