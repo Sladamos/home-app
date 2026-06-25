@@ -32,5 +32,6 @@ public class PatchActivityRequest {
         private Integer defaultLength;
         private Integer numberOfPools;
         private String swimmingStyle;
+        private boolean savePool;
     }
 }

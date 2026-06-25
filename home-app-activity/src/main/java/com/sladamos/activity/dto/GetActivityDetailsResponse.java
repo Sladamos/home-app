@@ -14,7 +14,7 @@ import java.util.UUID;
 public class GetActivityDetailsResponse {
     @Data
     @Builder
-    public static class ActivityPool {
+    public static class PoolSegment {
         private UUID id;
         private String poolName;
         private Integer numberOfPools;
@@ -38,5 +38,5 @@ public class GetActivityDetailsResponse {
     private List<String> routePoints;
 
     @Singular
-    private List<ActivityPool> pools;
+    private List<PoolSegment> pools;
 }

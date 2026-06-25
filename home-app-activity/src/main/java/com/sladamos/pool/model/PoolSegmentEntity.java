@@ -1,11 +1,11 @@
-package com.sladamos.activity.model;
+package com.sladamos.pool.model;
 
-import com.sladamos.activity.model.key.ActivityPoolKey;
-import com.sladamos.pool.model.PoolEntity;
-import com.sladamos.pool.model.SwimmingStyle;
+import com.sladamos.activity.model.ActivityEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.*;
+
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -14,21 +14,18 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @ToString
-@Table(name = "ACTIVITY_POOL")
-public class ActivityPoolEntity {
+@Table(name = "POOL_SEGMENT")
+public class PoolSegmentEntity {
 
-    @EmbeddedId
-    private ActivityPoolKey id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("activityId")
-    @JoinColumn(name = "activity_id")
     private ActivityEntity activity;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("poolId")
-    @JoinColumn(name = "pool_id")
-    private PoolEntity pool;
+    @Column(nullable = false)
+    private String poolName;
 
     @PositiveOrZero(message = "activity.validation.numberOfPools")
     private Integer numberOfPools;
@@ -38,4 +35,7 @@ public class ActivityPoolEntity {
 
     @Enumerated(EnumType.STRING)
     private SwimmingStyle swimmingStyle;
+
+    @Transient
+    private boolean savePool;
 }

@@ -28,9 +28,9 @@ public class ActivityDetailsToResponseFunction implements Function<ActivityEntit
                 .modificationDate(activity.getModificationDate())
                 .pools(
                         activity.getPoolSegments().stream()
-                                .map(poolSegment -> GetActivityDetailsResponse.ActivityPool.builder()
-                                        .id(poolSegment.getPool().getId())
-                                        .poolName(poolSegment.getPool().getName())
+                                .map(poolSegment -> GetActivityDetailsResponse.PoolSegment.builder()
+                                        .id(poolSegment.getId())
+                                        .poolName(poolSegment.getPoolName())
                                         .numberOfPools(poolSegment.getNumberOfPools())
                                         .poolLength(poolSegment.getPoolLength())
                                         .swimmingStyle(Optional.ofNullable(poolSegment.getSwimmingStyle()).map(Enum::name).orElse(null))

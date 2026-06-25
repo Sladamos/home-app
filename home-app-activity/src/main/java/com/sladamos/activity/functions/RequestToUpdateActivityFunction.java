@@ -2,20 +2,19 @@ package com.sladamos.activity.functions;
 
 import com.sladamos.activity.dto.PatchActivityRequest;
 import com.sladamos.activity.model.ActivityEntity;
-import com.sladamos.activity.model.ActivityPoolEntity;
 import com.sladamos.activity.model.ActivityType;
-import com.sladamos.pool.model.PoolEntity;
-import com.sladamos.pool.model.SwimmingStyle;
+import com.sladamos.pool.mapper.PoolSegmentMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.function.BiFunction;
-import java.util.stream.Collectors;
 
 @Component
+@RequiredArgsConstructor
 public class RequestToUpdateActivityFunction implements BiFunction<ActivityEntity, PatchActivityRequest, ActivityEntity> {
+
+    private final PoolSegmentMapper poolSegmentMapper;
 
     @Override
     public ActivityEntity apply(ActivityEntity entity, PatchActivityRequest patchActivityRequest) {
@@ -33,24 +32,7 @@ public class RequestToUpdateActivityFunction implements BiFunction<ActivityEntit
                 .activityDate(Optional.ofNullable(patchActivityRequest.getActivityDate()).orElse(entity.getActivityDate()))
                 .activityType(Optional.ofNullable(patchActivityRequest.getActivityType()).map(ActivityType::valueOf).orElse(entity.getActivityType()))
                 .creationDate(entity.getCreationDate())
-                .poolSegments(toPoolSegments(patchActivityRequest.getPools()))
+                .poolSegments(poolSegmentMapper.toPatchPoolSegments(patchActivityRequest.getPools()))
                 .build();
-    }
-
-    private List<ActivityPoolEntity> toPoolSegments(List<PatchActivityRequest.PoolSegmentDto> pools) {
-        if (pools == null) return new ArrayList<>();
-        return pools.stream().map(dto -> {
-            ActivityPoolEntity segment = new ActivityPoolEntity();
-            segment.setNumberOfPools(dto.getNumberOfPools());
-            segment.setPoolLength(dto.getDefaultLength());
-            segment.setSwimmingStyle(Optional.ofNullable(dto.getSwimmingStyle()).map(SwimmingStyle::valueOf).orElse(SwimmingStyle.FREESTYLE));
-
-            PoolEntity pool = new PoolEntity();
-            pool.setName(dto.getPoolName());
-            pool.setDefaultLength(dto.getDefaultLength());
-            segment.setPool(pool);
-
-            return segment;
-        }).collect(Collectors.toList());
     }
 }

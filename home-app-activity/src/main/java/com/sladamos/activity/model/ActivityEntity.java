@@ -2,6 +2,7 @@ package com.sladamos.activity.model;
 
 import com.sladamos.common.model.BaseEntity;
 import com.sladamos.common.string.StringListConverter;
+import com.sladamos.pool.model.PoolSegmentEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
@@ -50,7 +51,7 @@ public class ActivityEntity extends BaseEntity {
 
     // SWIMMING
     @OneToMany(mappedBy = "activity", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ActivityPoolEntity> poolSegments = new ArrayList<>();
+    private List<PoolSegmentEntity> poolSegments = new ArrayList<>();
 
     // HIKING / BIKING
     private String routeName;

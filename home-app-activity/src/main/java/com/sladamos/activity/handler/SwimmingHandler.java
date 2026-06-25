@@ -1,9 +1,8 @@
 package com.sladamos.activity.handler;
 
 import com.sladamos.activity.model.ActivityEntity;
-import com.sladamos.activity.model.ActivityPoolEntity;
+import com.sladamos.pool.model.PoolSegmentEntity;
 import com.sladamos.activity.model.ActivityType;
-import com.sladamos.activity.model.key.ActivityPoolKey;
 import com.sladamos.pool.PoolService;
 import com.sladamos.pool.model.PoolEntity;
 import lombok.RequiredArgsConstructor;
@@ -33,24 +32,32 @@ public class SwimmingHandler implements ActivityHandler {
         calculateTotalDistance(activity);
     }
 
-    private Consumer<ActivityPoolEntity> attachActivityToPool(ActivityEntity activity) {
+    private Consumer<PoolSegmentEntity> attachActivityToPool(ActivityEntity activity) {
         return segment -> {
-            PoolEntity pool = segment.getPool();
-            PoolEntity managedPool = poolService.getPoolEntityByName(pool.getName()).orElseGet(() -> poolService.createPool(pool));
-            if (pool.getDefaultLength() != null && !pool.getDefaultLength().equals(managedPool.getDefaultLength())) {
-                log.info("Modifying default distance from, to: [from: {}, to: {}]", managedPool.getDefaultLength(), pool.getDefaultLength());
-                managedPool.setDefaultLength(pool.getDefaultLength());
+            String poolName = segment.getPoolName();
+            if (segment.isSavePool()) {
+                PoolEntity managedPool = poolService.getPoolEntityByName(poolName).orElseGet(() -> this.createPoolFromSegment(segment));
+                if (segment.getPoolLength() != null && !segment.getPoolLength().equals(managedPool.getDefaultLength()) && segment.isSavePool()) {
+                    log.info("Modifying default distance from, to: [from: {}, to: {}]", managedPool.getDefaultLength(), segment.getPoolLength());
+                    managedPool.setDefaultLength(segment.getPoolLength());
+                }
+            } else {
+                log.info("Segment is not marked to save pool: [poolName: {}]", poolName);
             }
-
-            log.info("Attaching pool to segment: [id: {}, poolName: {}]", managedPool.getId(), managedPool.getName());
-            segment.setPool(managedPool);
             segment.setActivity(activity);
-
-            if (activity.getId() != null && managedPool.getId() != null) {
-                log.info("Attaching ActivityPoolKey: [activityId: {}, poolId: {}]", activity.getId(), managedPool.getId());
-                segment.setId(new ActivityPoolKey(activity.getId(), managedPool.getId()));
-            }
         };
+    }
+
+    private PoolEntity createPoolFromSegment(PoolSegmentEntity segment) {
+        String poolName = segment.getPoolName();
+        log.info("Creating new pool for segment: [poolName: {}]", poolName);
+        PoolEntity newPool = PoolEntity.builder()
+                .name(poolName)
+                .defaultLength(segment.getPoolLength())
+                .build();
+        PoolEntity savedPool = poolService.createPool(newPool);
+        log.info("Created new pool: [id: {}, name: {}]", savedPool.getId(), savedPool.getName());
+        return savedPool;
     }
 
     private void calculateTotalDistance(ActivityEntity activity) {
