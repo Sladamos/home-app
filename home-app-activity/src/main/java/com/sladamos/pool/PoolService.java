@@ -3,11 +3,11 @@ package com.sladamos.pool;
 import com.sladamos.common.exception.RuntimeValidationException;
 import com.sladamos.pool.model.PoolEntity;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 public interface PoolService {
-    Optional<PoolEntity> getPoolEntityById(UUID id);
+    List<PoolEntity> getAllPools();
 
     Optional<PoolEntity> getPoolEntityByName(String poolName);
 

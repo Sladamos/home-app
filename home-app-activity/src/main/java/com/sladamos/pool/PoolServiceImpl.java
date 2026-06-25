@@ -9,9 +9,9 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
 
 @Slf4j
 @Service
@@ -23,9 +23,9 @@ public class PoolServiceImpl implements PoolService {
     private final Validator validator;
 
     @Override
-    public Optional<PoolEntity> getPoolEntityById(UUID id) {
-        log.info("Fetching pool from the repository: [id: {}]", id);
-        return poolRepository.findById(id);
+    public List<PoolEntity> getAllPools() {
+        log.info("Fetching all pools from the repository");
+        return poolRepository.findAll();
     }
 
     @Override
