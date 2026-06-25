@@ -19,6 +19,7 @@ import java.util.Set;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @BorrowedByRequired(message = "book.validation.borrowedBy")
+@ToString(callSuper = true)
 @Table(name = "BOOK")
 public class BookEntity extends BaseEntity {
 

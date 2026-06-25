@@ -11,6 +11,7 @@ import com.sladamos.book.functions.RequestToUpdateBookFunction;
 import com.sladamos.book.model.BookEntity;
 import com.sladamos.common.exception.DuplicationException;
 import com.sladamos.common.exception.NotFoundException;
+import com.sladamos.common.exception.RuntimeValidationException;
 import com.sladamos.common.exception.ValidationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,7 +51,7 @@ public class BookController {
         try {
             service.createBook(requestToBook.apply(id, request));
             log.info("Book created: [id: {}, title: {}]", id, request.getTitle());
-        } catch (ValidationException e) {
+        } catch (ValidationException | RuntimeValidationException e) {
             onValidationExceptionOccurred(id, request.getTitle(), e);
         }
     }
@@ -65,7 +66,7 @@ public class BookController {
             log.info("Book updated: [id: {}, title: {}]", book.getId(), request.getTitle());
         } catch (NotFoundException e) {
             throw responseStatusException(id);
-        } catch (ValidationException e) {
+        } catch (ValidationException | RuntimeValidationException e) {
             onValidationExceptionOccurred(id, request.getTitle(), e);
         }
     }
@@ -90,7 +91,7 @@ public class BookController {
             return bookToResponse.apply(book);
         } catch (NotFoundException e) {
             throw responseStatusException(id);
-        } catch (ValidationException | DuplicationException e) {
+        } catch (ValidationException | RuntimeValidationException | DuplicationException e) {
             log.info("Book duplication failed: [id: {}, reason: {}]", id, e.getMessage());
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
@@ -101,7 +102,7 @@ public class BookController {
         return new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
 
-    private static void onValidationExceptionOccurred(UUID id, String title, ValidationException e) {
+    private static void onValidationExceptionOccurred(UUID id, String title, Throwable e) {
         log.info("Book validation failed: [id: {}, title: {}, reason: {}]", id, title, e.getMessage());
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
     }

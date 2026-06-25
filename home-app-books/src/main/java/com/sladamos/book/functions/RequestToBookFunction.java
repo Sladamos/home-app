@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
 public class RequestToBookFunction implements BiFunction<UUID, PutBookRequest, BookEntity> {
     @Override
     public BookEntity apply(UUID id, PutBookRequest request) {
-        LocalDateTime currentTime = LocalDateTime.now();
         return BookEntity.builder()
                 .id(id)
                 .title(request.getTitle())
@@ -33,8 +32,7 @@ public class RequestToBookFunction implements BiFunction<UUID, PutBookRequest, B
                 .borrowedBy(request.getBorrowedBy())
                 .rating(request.getRating())
                 .favorite(request.isFavorite())
-                .creationDate(currentTime)
-                .modificationDate(currentTime)
+                .creationDate(LocalDateTime.now())
                 .readDate(request.getReadDate())
                 .status(Optional.ofNullable(request.getStatus()).map(BookStatus::valueOf).orElse(BookStatus.ON_SHELF))
                 .build();
