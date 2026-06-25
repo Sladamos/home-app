@@ -9,3 +9,5 @@ public class Main {
         SpringApplication.run(Main.class, args);
     }
 }
+
+// TODO: custom validators per activity type (np. basen: poolLength *

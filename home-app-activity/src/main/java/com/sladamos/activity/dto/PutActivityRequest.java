@@ -20,14 +20,17 @@ public class PutActivityRequest {
     private String location;
     private Integer distanceM;
     private Integer durationSeconds;
-    private Integer poolLength;
-    private String swimmingStyle;
     private String routeName;
     private Integer elevationGain;
     private String encodedPolyline;
     private List<String> routePoints;
+    private List<PoolSegmentDto> pools;
 
-    public String getName() {
-        return activityType;
+    @Data
+    public static class PoolSegmentDto {
+        private String poolName;
+        private Integer defaultLength;
+        private Integer numberOfPools;
+        private String swimmingStyle;
     }
 }

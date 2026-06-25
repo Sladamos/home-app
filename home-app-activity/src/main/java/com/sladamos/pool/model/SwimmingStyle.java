@@ -1,4 +1,4 @@
-package com.sladamos.activity.model;
+package com.sladamos.pool.model;
 
 public enum SwimmingStyle {
     FREESTYLE,

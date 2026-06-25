@@ -24,10 +24,8 @@ public class GetActivitiesResponse {
         private String comment;
         private String location;
         private String encodedPolyline;
-        private String swimmingStyle;
         private String routeName;
         private Integer durationSeconds;
-        private Integer poolLength;
         private Integer elevationGain;
         private Integer distanceM;
         private List<String> team;

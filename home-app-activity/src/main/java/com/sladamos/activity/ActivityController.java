@@ -1,14 +1,17 @@
 package com.sladamos.activity;
 
 import com.sladamos.activity.dto.GetActivitiesResponse;
+import com.sladamos.activity.dto.GetActivityDetailsResponse;
 import com.sladamos.activity.dto.PatchActivityRequest;
 import com.sladamos.activity.dto.PutActivityRequest;
-import com.sladamos.activity.model.ActivityEntity;
 import com.sladamos.activity.functions.ActivitiesToResponseFunction;
+import com.sladamos.activity.functions.ActivityDetailsToResponseFunction;
 import com.sladamos.activity.functions.RequestToActivityFunction;
 import com.sladamos.activity.functions.RequestToUpdateActivityFunction;
+import com.sladamos.activity.model.ActivityEntity;
 import com.sladamos.common.exception.DuplicationException;
 import com.sladamos.common.exception.NotFoundException;
+import com.sladamos.common.exception.RuntimeValidationException;
 import com.sladamos.common.exception.ValidationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +32,8 @@ public class ActivityController {
 
     private final ActivitiesToResponseFunction activitiesToResponse;
 
+    private final ActivityDetailsToResponseFunction activityDetailsToResponse;
+
     private final RequestToActivityFunction requestToActivity;
 
     private final RequestToUpdateActivityFunction requestToUpdateActivity;
@@ -41,13 +46,25 @@ public class ActivityController {
         return response;
     }
 
+    @GetMapping("/{id}")
+    public GetActivityDetailsResponse getActivityDetails(@PathVariable("id") UUID id) {
+        try {
+            log.info("Request fetching activity details: [id: {}]", id);
+            GetActivityDetailsResponse response = activityDetailsToResponse.apply(service.getActivityById(id));
+            log.info("Fetched activity details: [id: {}]", id);
+            return response;
+        } catch (NotFoundException e) {
+            throw onNotFoundExceptionOccurred(id);
+        }
+    }
+
     @PutMapping("/{id}")
     public void putActivity(@PathVariable("id") UUID id, @RequestBody PutActivityRequest request) {
         log.info("Request creating activity: [id: {}, activityType: {}, activityDate: {}]", id, request.getActivityType(), request.getActivityDate());
         try {
             service.createActivity(requestToActivity.apply(id, request));
             log.info("Activity created: [id: {}, activityType: {}, activityDate: {}]", id, request.getActivityType(), request.getActivityDate());
-        } catch (ValidationException e) {
+        } catch (ValidationException | RuntimeValidationException e) {
             onValidationExceptionOccurred(id, request.getActivityType(), request.getActivityDate(), e);
         }
     }
@@ -61,8 +78,8 @@ public class ActivityController {
             service.updateActivity(requestToUpdateActivity.apply(activityEntity, request));
             log.info("Activity updated: [id: {}, activityType: {}, activityDate: {}]", activityEntity.getId(), request.getActivityType(), request.getActivityDate());
         } catch (NotFoundException e) {
-            onNotFoundExceptionOccurred(id);
-        } catch (ValidationException e) {
+            throw onNotFoundExceptionOccurred(id);
+        } catch (ValidationException | RuntimeValidationException e) {
             onValidationExceptionOccurred(id, request.getActivityType(), request.getActivityDate(), e);
         }
     }
@@ -74,7 +91,7 @@ public class ActivityController {
             service.deleteActivity(id);
             log.info("Activity deleted: [id: {}]", id);
         } catch (NotFoundException e) {
-            onNotFoundExceptionOccurred(id);
+            throw onNotFoundExceptionOccurred(id);
         }
     }
 
@@ -85,19 +102,19 @@ public class ActivityController {
             service.duplicateActivity(id);
             log.info("Activity duplicated: [id: {}]", id);
         } catch (NotFoundException e) {
-            onNotFoundExceptionOccurred(id);
-        } catch (ValidationException | DuplicationException e) {
+            throw onNotFoundExceptionOccurred(id);
+        } catch (ValidationException | RuntimeValidationException | DuplicationException e) {
             log.info("Activity duplication failed: [id: {}, reason: {}]", id, e.getMessage());
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
     }
 
-    private static void onNotFoundExceptionOccurred(UUID id) {
+    private static ResponseStatusException onNotFoundExceptionOccurred(UUID id) {
         log.info("Activity not found: [id: {}]", id);
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        return new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
 
-    private static void onValidationExceptionOccurred(UUID id, String activityType, LocalDate activityDate, ValidationException e) {
+    private static void onValidationExceptionOccurred(UUID id, String activityType, LocalDate activityDate, Throwable e) {
         log.info("Activity validation failed: [id: {}, activityType: {}, activityDate: {}, reason: {}]", id, activityType, activityDate, e.getMessage());
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
     }

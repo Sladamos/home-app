@@ -1,4 +1,4 @@
-package com.sladamos.activity.repository;
+package com.sladamos.activity;
 
 import com.sladamos.activity.model.ActivityEntity;
 import com.sladamos.activity.model.ActivityType;

@@ -10,6 +10,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -19,6 +20,7 @@ import java.util.List;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder(toBuilder = true)
+@ToString(callSuper = true)
 @Table(name = "ACTIVITY")
 public class ActivityEntity extends BaseEntity {
 
@@ -47,12 +49,8 @@ public class ActivityEntity extends BaseEntity {
     private Integer durationSeconds;
 
     // SWIMMING
-
-    @PositiveOrZero(message = "activity.validation.poolLength")
-    private Integer poolLength;
-
-    @Enumerated(EnumType.STRING)
-    private SwimmingStyle swimmingStyle;
+    @OneToMany(mappedBy = "activity", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ActivityPoolEntity> poolSegments = new ArrayList<>();
 
     // HIKING / BIKING
     private String routeName;

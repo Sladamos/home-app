@@ -1,10 +1,14 @@
 package com.sladamos.activity;
 
 import com.sladamos.activity.model.ActivityEntity;
+import com.sladamos.activity.model.ActivityPoolEntity;
 import com.sladamos.activity.model.ActivityType;
-import com.sladamos.activity.repository.ActivityRepository;
+import com.sladamos.activity.model.key.ActivityPoolKey;
 import com.sladamos.common.exception.NotFoundException;
+import com.sladamos.common.exception.RuntimeValidationException;
 import com.sladamos.common.exception.ValidationException;
+import com.sladamos.pool.PoolService;
+import com.sladamos.pool.model.PoolEntity;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 @Slf4j
 @Service
@@ -22,6 +27,8 @@ import java.util.UUID;
 public class ActivityServiceImpl implements ActivityService {
 
     private final ActivityRepository activityRepository;
+
+    private final PoolService poolService;
 
     private final Validator validator;
 
@@ -45,18 +52,21 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
+    @Transactional
     public void createActivity(ActivityEntity activity) throws ValidationException {
         log.info("Creating activity: [activity: {}]", activity);
         processAndSaveActivity(activity);
     }
 
     @Override
+    @Transactional
     public void updateActivity(ActivityEntity activity) throws ValidationException {
         log.info("Updating activity: [id: {}, activityType: {}, activityDate: {}]", activity.getId(), activity.getActivityType(), activity.getActivityDate());
         processAndSaveActivity(activity);
     }
 
     @Override
+    @Transactional
     public ActivityEntity duplicateActivity(UUID id) throws NotFoundException, ValidationException {
         ActivityEntity sourceActivity = getActivityById(id);
         log.info("Duplicating activity: [id: {}, activityType: {}, activityDate: {}]", sourceActivity.getId(), sourceActivity.getActivityType(), sourceActivity.getActivityDate());
@@ -76,6 +86,7 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     private ActivityEntity processAndSaveActivity(ActivityEntity activity) throws ValidationException {
+        attachExistingPools(activity);
         Set<ConstraintViolation<ActivityEntity>> violations = validator.validate(activity);
         if (!violations.isEmpty()) {
             log.error("Validation errors occurred for activity: [id: {}, activityType: {}, activityDate: {}]", activity.getId(), activity.getActivityType(), activity.getActivityDate());
@@ -83,4 +94,33 @@ public class ActivityServiceImpl implements ActivityService {
         }
         return activityRepository.save(activity);
     }
-}
+
+    private void attachExistingPools(ActivityEntity activity) throws RuntimeValidationException {
+        if (activity.getActivityType() == ActivityType.SWIMMING) {
+            log.info("Attaching existing pools for activity: [id: {}, activityType: {}, activityDate: {}]", activity.getId(), activity.getActivityType(), activity.getActivityDate());
+            if (activity.getPoolSegments() != null) {
+                activity.getPoolSegments().forEach(this.attachActivityToPool(activity));
+            }
+        }
+    }
+
+    private Consumer<ActivityPoolEntity> attachActivityToPool(ActivityEntity activity) {
+        return segment -> {
+            PoolEntity pool = segment.getPool();
+            PoolEntity managedPool = poolService.getPoolEntityByName(pool.getName()).orElseGet(() -> poolService.createPool(pool));
+            if (pool.getDefaultLength() != null && !pool.getDefaultLength().equals(managedPool.getDefaultLength())) {
+                log.info("Modifying default distance from, to: [from: {}, to: {}]", managedPool.getDefaultLength(), pool.getDefaultLength());
+                managedPool.setDefaultLength(pool.getDefaultLength());
+            }
+
+            log.info("Attaching pool to segment: [id: {}, poolName: {}]", managedPool.getId(), managedPool.getName());
+            segment.setPool(managedPool);
+            segment.setActivity(activity);
+
+            if (activity.getId() != null && managedPool.getId() != null) {
+                log.info("Attaching ActivityPoolKey: [activityId: {}, poolId: {}]", activity.getId(), managedPool.getId());
+                segment.setId(new ActivityPoolKey(activity.getId(), managedPool.getId()));
+            }
+        };
+    }
+    }

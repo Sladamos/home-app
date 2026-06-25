@@ -6,4 +6,5 @@ public enum ActivityType {
     GYM,
     SWIMMING,
     CLIMBING,
+    MULTISPORT
 }
